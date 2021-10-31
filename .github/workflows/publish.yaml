@@ -60,6 +60,4 @@ jobs:
         with:
           file: ${{ env.BACKEND_DIRECTORY }}/SecretsService/Dockerfile
           context: ${{ env.BACKEND_DIRECTORY }}
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest,${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
