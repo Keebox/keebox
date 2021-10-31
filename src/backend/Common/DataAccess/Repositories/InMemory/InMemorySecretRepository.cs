@@ -12,10 +12,10 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemorySecretRepository : ISecretsRepository
 	{
-		private readonly List<Secret> _storage;
-
-		public InMemorySecretRepository() =>
+		public InMemorySecretRepository()
+		{
 			_storage = new List<Secret>();
+		}
 
 		private void UpdateSecret(Secret secret)
 		{
@@ -113,5 +113,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			DeleteSecretByGroupId(groupId);
 		}
+
+		private readonly List<Secret> _storage;
 	}
 }
