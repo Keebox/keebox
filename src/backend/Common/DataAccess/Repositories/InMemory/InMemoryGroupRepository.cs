@@ -13,10 +13,10 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemoryGroupRepository : IGroupRepository
 	{
-		private readonly List<Group> _storage;
-
-		public InMemoryGroupRepository() =>
+		public InMemoryGroupRepository()
+		{
 			_storage = new List<Group>();
+		}
 
 		public bool Exists(string name, string path)
 		{
@@ -67,5 +67,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 
 			items.ForEach(x => _storage.Remove(x));
 		}
+
+		private readonly List<Group> _storage;
 	}
 }
