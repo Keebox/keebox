@@ -45,7 +45,7 @@ jobs:
 
       - name: extract version
         run: |
-          temp_version=$( cat ProductSettings.cs | grep -oP '(?<=AssemblyVersion\(\")[\d\w-\.]*(?=\")' );
+          temp_version=$( cat ${{ env.BACKEND_DIRECTORY }}/ProductSettings.cs | grep -oP '(?<=AssemblyVersion\(\")[\d\w-\.]*(?=\")' );
           echo "VERSION=$temp_version" >> $GITHUB_ENV;
 
       - name: log to container registry
