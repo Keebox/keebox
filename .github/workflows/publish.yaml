@@ -56,7 +56,7 @@ jobs:
           password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build and push secret service
-        uses: docker/build-push-action@2
+        uses: docker/build-push-action@v1
         with:
           file: ${{ env.BACKEND_DIRECTORY }}/SecretsService/Dockerfile
           context: ${{ env.BACKEND_DIRECTORY }}
