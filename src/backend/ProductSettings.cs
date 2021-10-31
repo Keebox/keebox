@@ -4,6 +4,6 @@ using System.Resources;
 
 
 [assembly: AssemblyCompany("Keebox")]
-[assembly: AssemblyVersion("0.1")]
+[assembly: AssemblyVersion("0.2")]
 [assembly: CLSCompliant(false)]
 [assembly: NeutralResourcesLanguage("en-US")]
