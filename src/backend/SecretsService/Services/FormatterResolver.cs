@@ -1,11 +1,11 @@
 ﻿using System;
 
-using Ralfred.Common.DependencyInjection;
-using Ralfred.Common.Types;
-using Ralfred.SecretsService.Services.Formatters;
+using Keebox.Common.DependencyInjection;
+using Keebox.Common.Types;
+using Keebox.SecretsService.Services.Formatters;
 
 
-namespace Ralfred.SecretsService.Services
+namespace Keebox.SecretsService.Services
 {
 	public class FormatterResolver : IFormatterResolver
 	{

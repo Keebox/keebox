@@ -4,14 +4,14 @@ using System.Linq;
 
 using EnsureThat;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+
 using LinqToDB;
 using LinqToDB.Data;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
 
-
-namespace Ralfred.Common.DataAccess.Repositories.Postgres
+namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
 	public class PostgresSecretRepository : ISecretsRepository
 	{

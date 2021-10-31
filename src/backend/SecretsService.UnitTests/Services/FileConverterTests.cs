@@ -7,14 +7,14 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.SecretsService.Services;
+
 using Microsoft.AspNetCore.Http;
 
 using NUnit.Framework;
 
-using Ralfred.SecretsService.Services;
 
-
-namespace SecretsService.UnitTests.Services
+namespace Keebox.SecretsService.UnitTests.Services
 {
 	public class FileConverterTests
 	{
@@ -63,7 +63,7 @@ namespace SecretsService.UnitTests.Services
 		{
 			// act
 			var dictionary = _target.Convert(null);
-			
+
 			// assert
 			dictionary.Keys.Count.Should().Be(0);
 		}

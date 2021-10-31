@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using Keebox.Common.Types;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-using Ralfred.Common.Types;
 
-
-namespace Ralfred.SecretsService.Models
+namespace Keebox.SecretsService.Models
 {
 	[Serializable]
 	public record RequestPayload(string? Route)

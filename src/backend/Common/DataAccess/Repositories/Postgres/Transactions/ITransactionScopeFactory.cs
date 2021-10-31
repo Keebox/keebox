@@ -1,4 +1,4 @@
-﻿namespace Ralfred.Common.DataAccess.Repositories.Postgres.Transactions
+﻿namespace Keebox.Common.DataAccess.Repositories.Postgres.Transactions
 {
 	public interface ITransactionScopeFactory
 	{

@@ -3,14 +3,14 @@ using System.Linq;
 
 using EnsureThat;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
+
 using LinqToDB;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Exceptions;
 
-
-namespace Ralfred.Common.DataAccess.Repositories.Postgres
+namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
 	public class PostgresGroupRepository : IGroupRepository
 	{
@@ -56,7 +56,7 @@ namespace Ralfred.Common.DataAccess.Repositories.Postgres
 				Path = path
 			};
 
-			connection.GetTable<Group>().Insert(() => new Group
+			LinqExtensions.Insert(connection.GetTable<Group>(), () => new Group
 			{
 				Name = name,
 				Path = path
@@ -71,7 +71,7 @@ namespace Ralfred.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			connection.GetTable<Group>().Delete(x => x.Name.Equals(name) && x.Path.Equals(path));
+			LinqExtensions.Delete(connection.GetTable<Group>(), x => x.Name.Equals(name) && x.Path.Equals(path));
 		}
 	}
 }

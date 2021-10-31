@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Linq;
 
+using Keebox.Common.DataAccess.Repositories.Postgres.EntityConfigurations;
+using Keebox.Common.Types;
+
 using LinqToDB.Configuration;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.PostgreSQL;
 using LinqToDB.Mapping;
 
-using Ralfred.Common.DataAccess.Repositories.Postgres.EntityConfigurations;
-using Ralfred.Common.Types;
 
-
-namespace Ralfred.Common.DataAccess.Repositories.Postgres
+namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
 	public class ConnectionFactory : IConnectionFactory
 	{

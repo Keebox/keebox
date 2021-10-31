@@ -5,7 +5,7 @@ using System.Xml;
 using InternalXmlSerializer = System.Xml.Serialization.XmlSerializer;
 
 
-namespace Ralfred.Common.Helpers.Serialization
+namespace Keebox.Common.Helpers.Serialization
 {
 	public class XmlSerializer : ISerializer
 	{

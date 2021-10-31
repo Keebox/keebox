@@ -1,8 +1,8 @@
-﻿using Ralfred.Common.Types;
-using Ralfred.SecretsService.Services.Formatters;
+﻿using Keebox.Common.Types;
+using Keebox.SecretsService.Services.Formatters;
 
 
-namespace Ralfred.SecretsService.Services
+namespace Keebox.SecretsService.Services
 {
 	public interface IFormatterResolver
 	{

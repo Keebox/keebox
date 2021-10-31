@@ -4,12 +4,12 @@ using System.Linq;
 
 using EnsureThat;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Exceptions;
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.InMemory
+namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemoryAccountRepository : IAccountRepository
 	{
@@ -56,7 +56,7 @@ namespace Ralfred.Common.DataAccess.Repositories.InMemory
 			if (index == -1)
 			{
 				throw new NotFoundException($"Cannot find account with id {accountId}");
-			}	
+			}
 
 			_storage.RemoveAt(index);
 		}

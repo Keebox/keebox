@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Helpers;
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Helpers;
 
 
-namespace Ralfred.Common.Managers
+namespace Keebox.Common.Managers
 {
 	public class AccountManager : IAccountManager
 	{

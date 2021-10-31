@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
 
-namespace Common.IntegrationTests
+namespace Keebox.Common.IntegrationTests
 {
 	[SetUpFixture]
 	public class SetupFixture

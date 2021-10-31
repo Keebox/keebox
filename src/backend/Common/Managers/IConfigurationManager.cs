@@ -1,7 +1,7 @@
-﻿using Ralfred.Common.Types;
+﻿using Keebox.Common.Types;
 
 
-namespace Ralfred.Common.Managers
+namespace Keebox.Common.Managers
 {
 	public interface IConfigurationManager
 	{

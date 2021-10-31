@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public class CryptoService : ICryptoService
 	{

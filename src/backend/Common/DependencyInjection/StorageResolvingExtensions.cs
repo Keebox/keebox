@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Reflection;
 
-using Microsoft.Extensions.DependencyInjection;
-
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.InMemory;
-using Ralfred.Common.DataAccess.Repositories.Postgres;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.Common.Types;
-
 using FluentMigrator.Runner;
 
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.InMemory;
+using Keebox.Common.DataAccess.Repositories.Postgres;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.Common.Types;
 
-namespace Ralfred.Common.DependencyInjection
+using Microsoft.Extensions.DependencyInjection;
+
+
+namespace Keebox.Common.DependencyInjection
 {
 	public static class StorageResolvingExtensions
 	{

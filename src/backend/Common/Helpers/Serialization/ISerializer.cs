@@ -1,4 +1,4 @@
-﻿namespace Ralfred.Common.Helpers.Serialization
+﻿namespace Keebox.Common.Helpers.Serialization
 {
 	public interface ISerializer
 	{

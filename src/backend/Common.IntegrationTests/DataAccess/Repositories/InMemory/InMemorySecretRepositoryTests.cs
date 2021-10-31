@@ -6,12 +6,12 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Repositories.InMemory;
+
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Repositories.InMemory;
 
-
-namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
+namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 {
 	[TestFixture]
 	[Category("Integration")]
@@ -22,10 +22,6 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 		{
 			_target = new InMemorySecretRepository();
 		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private InMemorySecretRepository _target;
 
 		[Test]
 		public void DeleteSecretsByGroupIdTest()
@@ -102,5 +98,9 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 			result.Select(x => x.Name).OrderBy(x => x).Should()
 				.BeEquivalentTo(newSecrets.Keys.Concat(files.Keys).OrderBy(x => x));
 		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private InMemorySecretRepository _target;
 	}
 }

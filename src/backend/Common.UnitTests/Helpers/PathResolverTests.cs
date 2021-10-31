@@ -1,14 +1,14 @@
-﻿using Moq;
+﻿using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Helpers;
+using Keebox.Common.Types;
+
+using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Types;
 
-
-namespace SecretsProvider.UnitTests.Helpers
+namespace Keebox.Common.UnitTests.Helpers
 {
 	[TestFixture]
 	public class PathResolverTests

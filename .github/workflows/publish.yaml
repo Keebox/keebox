@@ -15,7 +15,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: ralfred_db
+          POSTGRES_DB: keebox_db
         ports:
           - 5432:5432
 
@@ -30,3 +30,5 @@ jobs:
 
       - name: running integration tests
         run: dotnet test ${{ env.BACKEND_DIRECTORY }} --filter "TestCategory~Integration"
+
+  publish_images: depe

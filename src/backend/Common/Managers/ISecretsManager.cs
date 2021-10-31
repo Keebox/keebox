@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-using Ralfred.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Entities;
 
 
-namespace Ralfred.Common.Managers
+namespace Keebox.Common.Managers
 {
 	public interface ISecretsManager
 	{

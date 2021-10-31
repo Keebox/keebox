@@ -1,11 +1,11 @@
 ﻿using FluentAssertions;
 
+using Keebox.Common.Helpers.Serialization;
+
 using NUnit.Framework;
 
-using Ralfred.Common.Helpers.Serialization;
 
-
-namespace SecretsProvider.UnitTests.Helpers
+namespace Keebox.Common.UnitTests.Helpers
 {
 	[TestFixture]
 	public class YamlSerializerTests

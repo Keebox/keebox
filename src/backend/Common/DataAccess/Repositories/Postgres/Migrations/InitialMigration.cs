@@ -1,9 +1,9 @@
 ﻿using FluentMigrator;
 
-using Ralfred.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Entities;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.Postgres.Migrations
+namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 {
 	[Migration(1)]
 	public class InitialMigration : AutoReversingMigration

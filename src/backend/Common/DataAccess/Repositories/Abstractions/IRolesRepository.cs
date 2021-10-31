@@ -1,4 +1,4 @@
-﻿namespace Ralfred.Common.DataAccess.Repositories.Abstractions
+﻿namespace Keebox.Common.DataAccess.Repositories.Abstractions
 {
 	public interface IRolesRepository { }
 }

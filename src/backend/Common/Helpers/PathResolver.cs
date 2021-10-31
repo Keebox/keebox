@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Text.RegularExpressions;
 
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Types;
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Types;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public class PathResolver : IPathResolver
 	{

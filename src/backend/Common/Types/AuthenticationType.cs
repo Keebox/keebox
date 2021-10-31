@@ -1,4 +1,4 @@
-﻿namespace Ralfred.Common.Types
+﻿namespace Keebox.Common.Types
 {
 	public enum AuthenticationType
 	{

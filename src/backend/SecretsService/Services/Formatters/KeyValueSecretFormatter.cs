@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Ralfred.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Entities;
 
 
-namespace Ralfred.SecretsService.Services.Formatters
+namespace Keebox.SecretsService.Services.Formatters
 {
 	public class KeyValueSecretFormatter : ISecretFormatter
 	{

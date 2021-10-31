@@ -2,7 +2,7 @@
 using System.Text;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public class ContentManager : IContentManager
 	{

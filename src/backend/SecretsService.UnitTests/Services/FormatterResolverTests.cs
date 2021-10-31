@@ -5,18 +5,18 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DependencyInjection;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.Common.Types;
+using Keebox.SecretsService.Services;
+using Keebox.SecretsService.Services.Formatters;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DependencyInjection;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.Common.Types;
-using Ralfred.SecretsService.Services;
-using Ralfred.SecretsService.Services.Formatters;
 
-
-namespace SecretsService.UnitTests.Services
+namespace Keebox.SecretsService.UnitTests.Services
 {
 	[TestFixture]
 	public class FormatterResolverTests

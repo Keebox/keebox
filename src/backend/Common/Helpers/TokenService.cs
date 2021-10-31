@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public class TokenService : ITokenService
 	{

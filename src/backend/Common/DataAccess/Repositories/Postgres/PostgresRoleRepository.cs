@@ -1,18 +1,14 @@
-﻿using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Types;
+﻿using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.Postgres
+namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
 	public class PostgresRoleRepository : IRolesRepository
 	{
 		private readonly IConnectionFactory _connectionFactory;
 
-		private readonly StorageConnection _storageConnection;
-
-		public PostgresRoleRepository(StorageConnection storageConnection, IConnectionFactory connectionFactory)
+		public PostgresRoleRepository(IConnectionFactory connectionFactory)
 		{
-			_storageConnection = storageConnection;
 			_connectionFactory = connectionFactory;
 		}
 	}

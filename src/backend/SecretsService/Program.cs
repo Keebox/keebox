@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 
-namespace Ralfred.SecretsService
+namespace Keebox.SecretsService
 {
 	public static class Program
 	{

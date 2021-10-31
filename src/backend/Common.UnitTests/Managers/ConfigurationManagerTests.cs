@@ -2,17 +2,17 @@
 
 using FluentAssertions;
 
+using Keebox.Common.Helpers;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.Common.Managers;
+using Keebox.Common.Types;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.Common.Managers;
-using Ralfred.Common.Types;
 
-
-namespace SecretsProvider.UnitTests.Managers
+namespace Keebox.Common.UnitTests.Managers
 {
 	[TestFixture]
 	public class ConfigurationManagerTests

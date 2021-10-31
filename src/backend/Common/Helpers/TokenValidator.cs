@@ -1,8 +1,8 @@
-﻿using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
+﻿using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public class TokenValidator : ITokenValidator
 	{

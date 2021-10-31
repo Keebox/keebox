@@ -1,3 +1,11 @@
+using Keebox.Common.DependencyInjection;
+using Keebox.Common.Helpers;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.Common.Managers;
+using Keebox.Common.Types;
+using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Services;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,18 +13,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using Ralfred.Common.DependencyInjection;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.Common.Managers;
-using Ralfred.Common.Types;
-using Ralfred.SecretsService.RequestFiltering;
-using Ralfred.SecretsService.Services;
-
 using Serilog;
 
 
-namespace Ralfred.SecretsService
+namespace Keebox.SecretsService
 {
 	public class Startup
 	{

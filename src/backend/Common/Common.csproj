@@ -9,8 +9,8 @@
         <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
-        <RootNamespace>Ralfred.Common</RootNamespace>
-        <AssemblyName>Ralfred.Common</AssemblyName>
+        <RootNamespace>Keebox.Common</RootNamespace>
+        <AssemblyName>Keebox.Common</AssemblyName>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 

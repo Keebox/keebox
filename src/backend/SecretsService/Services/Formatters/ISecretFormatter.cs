@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 
-using Ralfred.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Entities;
 
 
-namespace Ralfred.SecretsService.Services.Formatters
+namespace Keebox.SecretsService.Services.Formatters
 {
 	public interface ISecretFormatter
 	{

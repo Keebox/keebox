@@ -1,4 +1,4 @@
-﻿namespace Ralfred.SecretsService.Models
+﻿namespace Keebox.SecretsService.Models
 {
 	public record Secret
 	{

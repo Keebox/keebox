@@ -2,16 +2,16 @@
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Postgres;
+using Keebox.Common.DataAccess.Repositories.Postgres.Transactions;
+using Keebox.Common.Exceptions;
+using Keebox.Common.Types;
+
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Postgres;
-using Ralfred.Common.DataAccess.Repositories.Postgres.Transactions;
-using Ralfred.Common.Exceptions;
-using Ralfred.Common.Types;
 
-
-namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
+namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 {
 	[TestFixture]
 	[Category("Integration")]
@@ -36,13 +36,6 @@ namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
 		{
 			_transaction.Dispose();
 		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private ITransactionScope _transaction;
-		private ITransactionScopeFactory _transactionScopeFactory;
-
-		private PostgresGroupRepository _target;
 
 		[Test]
 		public void DeleteGroupTest()
@@ -94,10 +87,18 @@ namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
 			// assert
 			result.Should().NotBeNull();
 
-			result.Should().BeEquivalentTo(new Group {
+			result.Should().BeEquivalentTo(new Group
+			{
 				Name = groupName,
 				Path = groupPath
 			}, e => e.Excluding(x => x.Id));
 		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private ITransactionScope _transaction;
+		private ITransactionScopeFactory _transactionScopeFactory;
+
+		private PostgresGroupRepository _target;
 	}
 }

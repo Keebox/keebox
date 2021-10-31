@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 
 
-namespace Ralfred.Common.Helpers.Serialization
+namespace Keebox.Common.Helpers.Serialization
 {
 	public class JsonSerializer : ISerializer
 	{

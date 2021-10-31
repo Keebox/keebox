@@ -6,15 +6,15 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Postgres;
+using Keebox.Common.DataAccess.Repositories.Postgres.Transactions;
+using Keebox.Common.Types;
+
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Postgres;
-using Ralfred.Common.DataAccess.Repositories.Postgres.Transactions;
-using Ralfred.Common.Types;
 
-
-namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
+namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 {
 	[TestFixture]
 	[Category("Integration")]
@@ -39,34 +39,6 @@ namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
 		{
 			_transaction.Dispose();
 		}
-
-		private string CreateStringWithMaxLength(int length)
-		{
-			return string.Join(string.Empty, _fixture.CreateMany<char>(length));
-		}
-
-		private Account CreateAccount()
-		{
-			var nameLength = _fixture.Create<Generator<int>>().First(x => x < 255);
-			var tokenHashLength = _fixture.Create<Generator<int>>().First(x => x < 64);
-			var certificateThumbprintLength = _fixture.Create<Generator<int>>().First(x => x < 40);
-
-			var account = _fixture.Build<Account>()
-				.With(x => x.Name, CreateStringWithMaxLength(nameLength))
-				.With(x => x.TokenHash, CreateStringWithMaxLength(tokenHashLength))
-				.With(x => x.CertificateThumbprint, CreateStringWithMaxLength(certificateThumbprintLength))
-				.Without(x => x.RoleIds)
-				.Create();
-
-			return account;
-		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private ITransactionScope _transaction;
-		private ITransactionScopeFactory _transactionScopeFactory;
-
-		private PostgresAccountRepository _target;
 
 		[Test]
 		public void DeleteTest()
@@ -170,5 +142,33 @@ namespace Common.IntegrationTests.DataAccess.Repositories.Postgres
 			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
 			id.Should().NotBe(Guid.Empty);
 		}
+
+		private string CreateStringWithMaxLength(int length)
+		{
+			return string.Join(string.Empty, _fixture.CreateMany<char>(length));
+		}
+
+		private Account CreateAccount()
+		{
+			var nameLength = _fixture.Create<Generator<int>>().First(x => x < 255);
+			var tokenHashLength = _fixture.Create<Generator<int>>().First(x => x < 64);
+			var certificateThumbprintLength = _fixture.Create<Generator<int>>().First(x => x < 40);
+
+			var account = _fixture.Build<Account>()
+				.With(x => x.Name, CreateStringWithMaxLength(nameLength))
+				.With(x => x.TokenHash, CreateStringWithMaxLength(tokenHashLength))
+				.With(x => x.CertificateThumbprint, CreateStringWithMaxLength(certificateThumbprintLength))
+				.Without(x => x.RoleIds)
+				.Create();
+
+			return account;
+		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private ITransactionScope _transaction;
+		private ITransactionScopeFactory _transactionScopeFactory;
+
+		private PostgresAccountRepository _target;
 	}
 }

@@ -4,6 +4,10 @@
         <TargetFramework>net5.0</TargetFramework>
 
         <IsPackable>false</IsPackable>
+
+        <AssemblyName>Keebox.Common.IntegrationTests</AssemblyName>
+
+        <RootNamespace>Keebox.Common.IntegrationTests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

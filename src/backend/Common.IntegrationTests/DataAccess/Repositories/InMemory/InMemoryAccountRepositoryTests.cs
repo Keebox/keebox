@@ -6,13 +6,13 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.InMemory;
+
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.InMemory;
 
-
-namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
+namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 {
 	[TestFixture]
 	[Category("Integration")]
@@ -23,22 +23,6 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 		{
 			_target = new InMemoryAccountRepository();
 		}
-
-		private Account CreateAccount()
-		{
-			var account = _fixture.Build<Account>()
-				.With(x => x.Name, _fixture.Create<string>())
-				.With(x => x.TokenHash, _fixture.Create<string>())
-				.With(x => x.CertificateThumbprint, _fixture.Create<string>())
-				.Without(x => x.RoleIds)
-				.Create();
-
-			return account;
-		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private InMemoryAccountRepository _target;
 
 		[Test]
 		public void DeleteTest()
@@ -140,5 +124,21 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
 			id.Should().NotBe(Guid.Empty);
 		}
+
+		private Account CreateAccount()
+		{
+			var account = _fixture.Build<Account>()
+				.With(x => x.Name, _fixture.Create<string>())
+				.With(x => x.TokenHash, _fixture.Create<string>())
+				.With(x => x.CertificateThumbprint, _fixture.Create<string>())
+				.Without(x => x.RoleIds)
+				.Create();
+
+			return account;
+		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private InMemoryAccountRepository _target;
 	}
 }

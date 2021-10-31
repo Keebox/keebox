@@ -1,15 +1,15 @@
 ﻿using System;
 
+using Keebox.Common.Exceptions;
+using Keebox.Common.Helpers;
+using Keebox.Common.Types;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
-using Ralfred.Common.Exceptions;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Types;
 
-
-namespace Ralfred.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.RequestFiltering
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class AuthenticateAttribute : Attribute, IActionFilter
@@ -18,8 +18,8 @@ namespace Ralfred.SecretsService.RequestFiltering
 		{
 			var serviceProvider = context.HttpContext.RequestServices;
 
-			var tokenService = serviceProvider.GetService<ITokenValidator>()!;
-			var configuration = serviceProvider.GetService<Configuration>()!;
+			var tokenService = serviceProvider.GetRequiredService<ITokenValidator>();
+			var configuration = serviceProvider.GetRequiredService<Configuration>();
 
 			var authenticationType = ResolveAuthenticationType(context.HttpContext);
 

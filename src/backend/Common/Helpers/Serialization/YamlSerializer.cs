@@ -2,7 +2,7 @@
 using YamlDotNet.Serialization.NamingConventions;
 
 
-namespace Ralfred.Common.Helpers.Serialization
+namespace Keebox.Common.Helpers.Serialization
 {
 	public class YamlSerializer : ISerializer
 	{

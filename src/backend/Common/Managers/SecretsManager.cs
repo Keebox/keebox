@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Exceptions;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Types;
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
+using Keebox.Common.Helpers;
+using Keebox.Common.Types;
 
 
-namespace Ralfred.Common.Managers
+namespace Keebox.Common.Managers
 {
 	public class SecretsManager : ISecretsManager
 	{

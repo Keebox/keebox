@@ -5,7 +5,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Http;
 
 
-namespace Ralfred.SecretsService.Services
+namespace Keebox.SecretsService.Services
 {
 	public class FileConverter : IFileConverter
 	{

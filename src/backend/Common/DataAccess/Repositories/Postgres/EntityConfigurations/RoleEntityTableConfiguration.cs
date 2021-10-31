@@ -1,10 +1,10 @@
-﻿using LinqToDB;
+﻿using Keebox.Common.DataAccess.Entities;
+
+using LinqToDB;
 using LinqToDB.Mapping;
 
-using Ralfred.Common.DataAccess.Entities;
 
-
-namespace Ralfred.Common.DataAccess.Repositories.Postgres.EntityConfigurations
+namespace Keebox.Common.DataAccess.Repositories.Postgres.EntityConfigurations
 {
 	internal sealed class RoleEntityTableConfiguration : IEntityTableConfiguration
 	{

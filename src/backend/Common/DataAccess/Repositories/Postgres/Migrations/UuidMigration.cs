@@ -1,7 +1,7 @@
 ﻿using FluentMigrator;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.Postgres.Migrations
+namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 {
 	[Migration(0)]
 	public class UuidMigration : ForwardOnlyMigration

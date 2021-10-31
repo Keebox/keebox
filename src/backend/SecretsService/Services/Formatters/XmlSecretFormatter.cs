@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.Helpers.Serialization;
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.Helpers.Serialization;
 
 
-namespace Ralfred.SecretsService.Services.Formatters
+namespace Keebox.SecretsService.Services.Formatters
 {
 	public class XmlSecretFormatter : ISecretFormatter
 	{

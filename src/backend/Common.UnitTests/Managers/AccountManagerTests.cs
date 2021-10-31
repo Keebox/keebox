@@ -5,18 +5,18 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Helpers;
+using Keebox.Common.Managers;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Managers;
 
-
-namespace SecretsProvider.UnitTests.Managers
+namespace Keebox.Common.UnitTests.Managers
 {
 	[TestFixture]
 	public class AccountManagerTests

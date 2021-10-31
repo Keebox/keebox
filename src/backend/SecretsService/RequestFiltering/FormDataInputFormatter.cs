@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 
 
-namespace Ralfred.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.RequestFiltering
 {
 	public class BypassFormDataInputFormatter : IInputFormatter
 	{

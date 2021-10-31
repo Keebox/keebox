@@ -4,20 +4,20 @@ using System.Linq;
 
 using AutoFixture;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
+using Keebox.Common.Helpers;
+using Keebox.Common.Managers;
+using Keebox.Common.Types;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.Exceptions;
-using Ralfred.Common.Helpers;
-using Ralfred.Common.Managers;
-using Ralfred.Common.Types;
 
-
-namespace SecretsProvider.UnitTests.Managers
+namespace Keebox.Common.UnitTests.Managers
 {
 	[TestFixture]
 	public class SecretsManagerTests

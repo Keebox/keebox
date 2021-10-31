@@ -1,9 +1,9 @@
-﻿using Ralfred.Common.Helpers;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.Common.Types;
+﻿using Keebox.Common.Helpers;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.Common.Types;
 
 
-namespace Ralfred.Common.Managers
+namespace Keebox.Common.Managers
 {
 	public class ConfigurationManager : IConfigurationManager
 	{

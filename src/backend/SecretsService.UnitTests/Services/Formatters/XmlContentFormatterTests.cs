@@ -4,16 +4,16 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.SecretsService.Services.Formatters;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.SecretsService.Services.Formatters;
 
-
-namespace SecretsService.UnitTests.Services.Formatters
+namespace Keebox.SecretsService.UnitTests.Services.Formatters
 {
 	[TestFixture]
 	public class XmlContentFormatterTests
@@ -40,7 +40,7 @@ namespace SecretsService.UnitTests.Services.Formatters
 			// arrange
 			var data = _fixture.CreateMany<Secret>().ToList();
 
-			var projection = data.Select(x => new Ralfred.SecretsService.Models.Secret
+			var projection = data.Select(x => new Keebox.SecretsService.Models.Secret
 			{
 				Name = x.Name,
 				Value = x.Value

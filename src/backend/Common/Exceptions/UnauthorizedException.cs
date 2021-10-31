@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Ralfred.Common.Exceptions
+namespace Keebox.Common.Exceptions
 {
 	public class UnauthorizedException : Exception
 	{

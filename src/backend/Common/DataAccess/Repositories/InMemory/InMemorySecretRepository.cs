@@ -4,11 +4,11 @@ using System.Linq;
 
 using EnsureThat;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.InMemory
+namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemorySecretRepository : ISecretsRepository
 	{

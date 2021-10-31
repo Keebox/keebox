@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Ralfred.Common.Types
+namespace Keebox.Common.Types
 {
 	[Serializable]
 	public record Configuration

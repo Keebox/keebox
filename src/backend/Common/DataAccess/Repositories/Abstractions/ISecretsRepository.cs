@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using Ralfred.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Entities;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.Abstractions
+namespace Keebox.Common.DataAccess.Repositories.Abstractions
 {
 	public interface ISecretsRepository
 	{

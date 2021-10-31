@@ -1,14 +1,14 @@
 ﻿using System.Net;
 
+using Keebox.Common.Exceptions;
+using Keebox.SecretsService.Models;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
-using Ralfred.Common.Exceptions;
-using Ralfred.SecretsService.Models;
 
-
-namespace Ralfred.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.RequestFiltering
 {
 	public class ExceptionsFilter : IExceptionFilter
 	{

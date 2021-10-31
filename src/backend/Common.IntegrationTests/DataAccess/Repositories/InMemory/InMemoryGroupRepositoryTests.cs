@@ -2,14 +2,14 @@
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories.InMemory;
+using Keebox.Common.Exceptions;
+
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.DataAccess.Repositories.InMemory;
-using Ralfred.Common.Exceptions;
 
-
-namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
+namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 {
 	[TestFixture]
 	[Category("Integration")]
@@ -20,10 +20,6 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 		{
 			_target = new InMemoryGroupRepository();
 		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private InMemoryGroupRepository _target;
 
 		[Test]
 		public void DeleteGroupTest()
@@ -81,5 +77,9 @@ namespace Common.IntegrationTests.DataAccess.Repositories.InMemory
 				Path = groupPath
 			}, e => e.Excluding(x => x.Id));
 		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private InMemoryGroupRepository _target;
 	}
 }

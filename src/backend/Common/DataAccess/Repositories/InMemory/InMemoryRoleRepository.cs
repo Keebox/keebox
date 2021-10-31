@@ -1,7 +1,7 @@
-﻿using Ralfred.Common.DataAccess.Repositories.Abstractions;
+﻿using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.InMemory
+namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemoryRoleRepository : IRolesRepository { }
 }

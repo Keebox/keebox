@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
 
+using Keebox.Common.Managers;
+using Keebox.Common.Types;
+using Keebox.SecretsService.Models;
+using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Services;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-using Ralfred.Common.Managers;
-using Ralfred.Common.Types;
-using Ralfred.SecretsService.Models;
-using Ralfred.SecretsService.RequestFiltering;
-using Ralfred.SecretsService.Services;
 
-
-namespace Ralfred.SecretsService.Controllers
+namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
 	[Authenticate]

@@ -1,12 +1,12 @@
 ﻿using System;
 
+using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.DataAccess.Repositories.InMemory;
+
 using Microsoft.Extensions.DependencyInjection;
 
-using Ralfred.Common.DataAccess.Repositories.Abstractions;
-using Ralfred.Common.DataAccess.Repositories.InMemory;
 
-
-namespace Ralfred.Common.DataAccess.Repositories
+namespace Keebox.Common.DataAccess.Repositories
 {
 	public class InMemoryRepositoryContext : IRepositoryContext
 	{

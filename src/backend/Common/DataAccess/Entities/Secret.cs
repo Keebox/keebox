@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Ralfred.Common.DataAccess.Entities
+namespace Keebox.Common.DataAccess.Entities
 {
 	public record Secret : Entity
 	{

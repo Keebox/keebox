@@ -1,7 +1,7 @@
 ﻿using LinqToDB.Mapping;
 
 
-namespace Ralfred.Common.DataAccess.Repositories.Postgres.EntityConfigurations
+namespace Keebox.Common.DataAccess.Repositories.Postgres.EntityConfigurations
 {
 	public interface IEntityTableConfiguration
 	{

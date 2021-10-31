@@ -4,16 +4,16 @@ using AutoFixture;
 
 using FluentAssertions;
 
+using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.Helpers.Serialization;
+using Keebox.SecretsService.Services.Formatters;
+
 using Moq;
 
 using NUnit.Framework;
 
-using Ralfred.Common.DataAccess.Entities;
-using Ralfred.Common.Helpers.Serialization;
-using Ralfred.SecretsService.Services.Formatters;
 
-
-namespace SecretsService.UnitTests.Services.Formatters
+namespace Keebox.SecretsService.UnitTests.Services.Formatters
 {
 	[TestFixture]
 	public class JsonContentFormatterTests

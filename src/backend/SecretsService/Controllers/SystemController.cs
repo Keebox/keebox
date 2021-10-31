@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Keebox.SecretsService.Models;
 
-using Ralfred.SecretsService.Models;
+using Microsoft.AspNetCore.Mvc;
 
 
-namespace Ralfred.SecretsService.Controllers
+namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
 	[Route("system")]

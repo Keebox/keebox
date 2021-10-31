@@ -1,7 +1,7 @@
-﻿using Ralfred.Common.Types;
+﻿using Keebox.Common.Types;
 
 
-namespace Ralfred.Common.Helpers
+namespace Keebox.Common.Helpers
 {
 	public interface IPathResolver
 	{

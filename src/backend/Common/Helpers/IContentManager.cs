@@ -1,4 +1,4 @@
-﻿namespace Ralfred.Common.Helpers
+﻿namespace Keebox.Common.Helpers
 {
 	public interface IContentManager
 	{
