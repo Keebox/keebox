@@ -1,5 +1,5 @@
 ﻿using System;
-using Keebox.Common.Managers;
+using System.Diagnostics;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -20,12 +20,13 @@ namespace Keebox.SecretsService.Controllers
         public SystemInfo GetSystemInfo()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
-            var fileVersionInfo = System.Diagnostics.FileVersionInfo.GetVersionInfo(assembly.Location);
+            var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
             var version = fileVersionInfo.ProductVersion ?? throw new InvalidOperationException();
             return new SystemInfo
             {
                 Version = version,
-                StorageType = _configuration.Engine.ToString()!
+                StorageType = _configuration.Engine.ToString()!,
+                Runtime = (DateTime.Now - Process.GetCurrentProcess().StartTime).Milliseconds
             };
         }
 

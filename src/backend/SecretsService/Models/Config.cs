@@ -4,10 +4,10 @@ namespace Keebox.SecretsService.Models
 {
     public record Config
     {
-        public bool EnableWebUi { get; set; }
+        public bool EnableWebUi { init; get; }
 
-        public string DefaultFormat { get; set; }
+        public string DefaultFormat { init; get; }
 
-        public string Engine { get; set; }
+        public string Engine { init; get; }
     }
 }
