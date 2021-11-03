@@ -17,7 +17,6 @@ namespace Keebox.SecretsService.Controllers
         }
 
         [HttpGet("status")]
-        [ProducesResponseType(200)]
         public SystemInfo GetSystemInfo()
         {
             var assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -31,11 +30,14 @@ namespace Keebox.SecretsService.Controllers
         }
 
         [HttpGet("config")]
-        [ProducesResponseType(200)]
         public Config GetConfig()
         {
-            // TODO: add real config
-            return new Config();
+            return new Config
+            {
+                Engine = _configuration.Engine.ToString()!,
+                DefaultFormat = _configuration.DefaultFormat.ToString()!,
+                EnableWebUi = _configuration.EnableWebUi!.Value
+            };
         }
 
         [HttpGet("start")]
