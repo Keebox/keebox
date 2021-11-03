@@ -1,9 +1,7 @@
 ﻿using System;
-
 using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
 using Keebox.Common.Types;
-
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,54 +9,78 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Keebox.SecretsService.RequestFiltering
 {
-	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-	public class AuthenticateAttribute : Attribute, IActionFilter
-	{
-		public void OnActionExecuting(ActionExecutingContext context)
-		{
-			var serviceProvider = context.HttpContext.RequestServices;
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    public class AuthenticateAttribute : Attribute, IActionFilter
+    {
+        public void OnActionExecuting(ActionExecutingContext context)
+        {
+            var serviceProvider = context.HttpContext.RequestServices;
 
-			var tokenService = serviceProvider.GetRequiredService<ITokenValidator>();
-			var configuration = serviceProvider.GetRequiredService<Configuration>();
+            var tokenService = serviceProvider.GetRequiredService<ITokenValidator>();
+            var configuration = serviceProvider.GetRequiredService<Configuration>();
 
-			var authenticationType = ResolveAuthenticationType(context.HttpContext);
+            var authenticationType = ResolveAuthenticationType(context.HttpContext);
 
-			switch (authenticationType)
-			{
-				case AuthenticationType.Token:
-				{
-					var token = context.HttpContext.Request.Headers[TokenHeader];
+            switch (authenticationType)
+            {
+                case AuthenticationType.Token:
+                {
+                    var token = context.HttpContext.Request.Headers[TokenHeader];
 
-					if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
-						return;
+                    if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
+                        return;
 
-					if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
-						throw new RestrictedAccessException("Account management only for admins");
+                    if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
+                        throw new RestrictedAccessException("Account management only for admins");
 
-					if (!tokenService.Validate(token))
-						throw new UnauthorizedException("Token is not valid.");
+                    if (!tokenService.Validate(token))
+                        throw new UnauthorizedException("Token is not valid.");
 
-					break;
-				}
+                    break;
+                }
+                case AuthenticationType.Cookie:
+                {
+                    var token = context.HttpContext.Request.Cookies[TokenHeader];
 
-				default:
-					throw new ArgumentOutOfRangeException();
-			}
-		}
+                    if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
+                        return;
 
-		public void OnActionExecuted(ActionExecutedContext context) { }
+                    if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
+                        throw new RestrictedAccessException("Account management only for admins");
 
-		private static AuthenticationType ResolveAuthenticationType(HttpContext context)
-		{
-			if (context.Connection.ClientCertificate != null)
-				return AuthenticationType.Certificate;
+                    if (!tokenService.Validate(token))
+                        throw new UnauthorizedException("Token is not valid.");
 
-			if (context.Request.Headers.ContainsKey(TokenHeader))
-				return AuthenticationType.Token;
+                    break;
+                }
+                case AuthenticationType.None:
+                    throw new UnauthorizedException("Authentication was not successful");
 
-			return AuthenticationType.None;
-		}
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
-		private const string TokenHeader = "X-Token";
-	}
+        public void OnActionExecuted(ActionExecutedContext context)
+        {
+        }
+
+        private static AuthenticationType ResolveAuthenticationType(HttpContext context)
+        {
+            if (context.Connection.ClientCertificate != null)
+                return AuthenticationType.Certificate;
+
+            if (context.Request.Headers.ContainsKey(TokenHeader))
+                return AuthenticationType.Token;
+
+            if (context.Request.Cookies.ContainsKey(TokenHeader))
+            {
+                return AuthenticationType.Cookie;
+            }
+
+            return AuthenticationType.None;
+        }
+
+        private const string TokenHeader = "X-Token";
+    }
 }

@@ -14,6 +14,6 @@ services:
     build: ..
     container_name: keebox
     ports:
-      - 9000:9000
+      - 9000:80
     volumes:
       - ./overrides.yaml:/etc/Keebox/overrides.yaml
