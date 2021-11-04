@@ -4,13 +4,13 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
 WORKDIR /src
 
-COPY ["./Common", "./Common"]
-COPY ["./SecretsService", "./SecretsService"]
+COPY ["./src/Common", "./src/Common"]
+COPY ["./src/SecretsService", "./src/SecretsService"]
 COPY ["./ProductSettings.cs", "./ProductSettings.cs"]
 
-RUN dotnet restore "./SecretsService/SecretsService.csproj"
+RUN dotnet restore "./src/SecretsService/SecretsService.csproj"
 
-WORKDIR /src/SecretsService
+WORKDIR /src/src/SecretsService
 RUN dotnet build "SecretsService.csproj" -c Release -o /app/build
 
 FROM build as publish

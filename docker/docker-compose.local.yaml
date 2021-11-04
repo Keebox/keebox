@@ -11,6 +11,8 @@ services:
     ports:
       - 5432:5432
   keebox:
+    depends_on:
+      - keebox_db
     build: ..
     container_name: keebox
     ports:
@@ -20,4 +22,4 @@ services:
       - keebox_defaults:/app/config
 
 volumes:
-  keebox_defaults: {}
+  keebox_defaults: { }

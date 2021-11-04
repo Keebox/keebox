@@ -45,15 +45,17 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
             using var connection = _connectionFactory.Create();
 
-            var newAccount = connection.GetTable<Account>().InsertWithOutputAsync(() => new Account
+            // NOTE: InsertWithOutput is not yet supported for PostreSQL https://github.com/linq2db/linq2db/issues/2958
+            var accountId = account.Id == default ? Guid.NewGuid() : account.Id;
+            connection.GetTable<Account>().Insert(() => new Account
             {
-                Id = account.Id,
+                Id = accountId,
                 Name = account.Name,
                 CertificateThumbprint = account.CertificateThumbprint,
                 TokenHash = account.TokenHash
-            }).Result;
+            });
 
-            return newAccount.Id;
+            return accountId;
         }
 
         public void Delete(Guid accountId)

@@ -48,13 +48,17 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
             using var connection = _connectionFactory.Create();
 
-            var group = connection.GetTable<Group>().InsertWithOutputAsync(() => new Group
-            {
-                Name = name,
-                Path = path
-            }).Result;
+            // NOTE: InsertWithOutput is not yet supported for PostreSQL https://github.com/linq2db/linq2db/issues/2958
+            var groupId = Guid.NewGuid();
+            connection.GetTable<Group>()
+                .Insert(() => new Group
+                {
+                    Id = groupId,
+                    Name = name,
+                    Path = path
+                });
 
-            return group.Id;
+            return groupId;
         }
 
         public void DeleteGroup(string name, string path)
