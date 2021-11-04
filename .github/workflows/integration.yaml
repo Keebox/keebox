@@ -38,7 +38,7 @@ jobs:
           fi
       - name: Run integration tests
         run: |
-          for test_dir in src/*.Integration; do
+          for test_dir in src/*.IntegrationTests; do
             dotnet test --no-restore --no-build --filter "TestCategory~Integration" --logger:"liquid.md" --results-directory=${{ github.workspace }}/test-results $test_dir;
           done;
 
