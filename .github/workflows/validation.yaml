@@ -3,7 +3,7 @@ name: 'Validation'
 on: [pull_request]
 
 env:
-  BACKEND_DIRECTORY: .
+  BACKEND_DIRECTORY: ./src
 
 jobs:
   validate_backend:
