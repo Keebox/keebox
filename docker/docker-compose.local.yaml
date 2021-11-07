@@ -13,7 +13,7 @@ services:
   keebox:
     depends_on:
       - keebox_db
-    build: ..
+    build: ../src
     container_name: keebox
     ports:
       - 9000:80
