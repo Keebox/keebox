@@ -20,10 +20,12 @@ env:
 
 jobs:
   unit_tests:
-    uses: keebox/keebox/.github/workflows/unit.yml@master
+    name: Run unit tests
+    uses: ${{ github.repository }}/.github/workflows/unit.yml@master
 
   integration_tests:
-    uses: keebox/keebox/.github/workflows/integration.yml@master
+    name: Run integration tests
+    uses: ${{ github.repository }}/.github/workflows/integration.yml@master
 
   release:
     needs:
@@ -45,8 +47,7 @@ jobs:
           increase-minor: ${{ github.event.inputs.minor }}
           increase-build: true
           tag: ${{ github.event.inputs.tag }}
-          # TODO: Enable creating commit
-          make-commit: false
+          make-commit: true
 
       - name: Log to container registry
         uses: docker/login-action@v1
