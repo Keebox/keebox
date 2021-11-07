@@ -40,7 +40,7 @@ jobs:
 
       - name: Update version
         id: assembly_version
-        uses: keebox/update-assembly-version@v0.17
+        uses: keebox/update-assembly-version@v0.18
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           assembly-file: src/ProductSettings.cs
