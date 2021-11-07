@@ -19,9 +19,9 @@ env:
 
 jobs:
   unit-tests:
-    uses: keebox/keebox/.github/workflows/unit.yml@904b8eb
+    uses: keebox/keebox/.github/workflows/unit.yml@904b8ebe606e90798a6152463f05a5c70e156f05
   integration-tests:
-    uses: keebox/keebox/.github/workflows/integration.yml@904b8eb
+    uses: keebox/keebox/.github/workflows/integration.yml@904b8ebe606e90798a6152463f05a5c70e156f05
   pull_request:
     needs:
       - unit-tests
