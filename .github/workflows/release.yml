@@ -28,17 +28,18 @@ jobs:
     uses: ${{ github.repository }}/.github/workflows/integration.yml@master
 
   release:
+    name: 'Build and publish docker image, release'
     needs:
       - unit_tests
       - integration_tests
     runs-on: ubuntu-latest
-    name: 'Build and publish docker image, release'
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
 
       - name: Update version
-        id: assembly-version
+        id: assembly_version
         uses: keebox/update-assembly-version@v0.17
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,7 +48,17 @@ jobs:
           increase-minor: ${{ github.event.inputs.minor }}
           increase-build: true
           tag: ${{ github.event.inputs.tag }}
-          make-commit: true
+          make-commit: false
+
+      - name: Set channel
+        id: channel
+        run: |
+          if [ ${{ github.event.inputs.minor }} == true ] || [ ${{ github.event.inputs.major }} == true ];
+            then channel='latest';
+            else channel='unstable';
+          fi
+
+          echo "::set-output name=channel::${channel}"
 
       - name: Log to container registry
         uses: docker/login-action@v1
@@ -62,14 +73,15 @@ jobs:
           push: true
           file: src/Dockerfile
           context: src
-          # TODO: add latest tag if major or minor release, add unstable tag otherwise
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.assembly-version.outputs.new-version }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.assembly_version.outputs.new-version }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.channel.outputs.channel }}
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: ${{ steps.assembly-version.outputs.new-version }}
-          title: Release ${{ steps.assembly-version.outputs.new-version }}
+          automatic_release_tag: ${{ steps.assembly_version.outputs.new-version }}
+          title: Release ${{ steps.assembly_version.outputs.new-version }}
           draft: true
           prerelease: false
