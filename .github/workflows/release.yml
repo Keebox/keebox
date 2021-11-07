@@ -1,8 +1,5 @@
 name: Release
 
-env:
-  REGISTRY: ghcr.io
-
 on:
   workflow_dispatch:
     inputs:
@@ -17,11 +14,14 @@ on:
       tag:
         description: 'Tag that will be added to release'
 
+env:
+  REGISTRY: ghcr.io
+
 jobs:
   unit-tests:
-    uses: keebox/keebox/.github/workflows/unit.yml
+    uses: keebox/keebox/.github/workflows/unit.yml@main
   integration-tests:
-    uses: keebox/keebox/.github/workflows/integration.yml
+    uses: keebox/keebox/.github/workflows/integration.yml@main
   pull_request:
     needs:
       - unit-tests
