@@ -1,17 +1,16 @@
-name: Integration tests
+name: Unit tests
 
 on:
   - pull_request
+  - workflow_call
 
 jobs:
   backend:
     runs-on: ubuntu-latest
-    name: 'Run integration tests'
+    name: 'Run unit tests'
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
-      - name: Launch database
-        run: docker-compose -f docker/docker-compose.local.yaml up -d keebox_db
       - name: Set up dotnet
         uses: actions/setup-dotnet@v1
         with:
@@ -30,16 +29,16 @@ jobs:
         run: |
           if ${{ github.event_name == 'pull_request' }}
           then
-            echo "title=Integration tests run for PR #${{ steps.pr_number.outputs.pr }} (${{ github.run_number }})" >> $GITHUB_ENV
+            echo "title=Unit tests run for PR #${{ steps.pr_number.outputs.pr }} (${{ github.run_number }})" >> $GITHUB_ENV
             echo "file_name=testreport.${{ steps.pr_number.outputs.pr }}.${{ github.run_number }}.md" >> $GITHUB_ENV
           else
-            echo "title=Integration tests run ${{ github.run_number }}" >> $GITHUB_ENV
+            echo "title=Unit tests run ${{ github.run_number }}" >> $GITHUB_ENV
             echo "file_name=testreport.${{ github.run_number }}.md" >> $GITHUB_ENV
           fi
-      - name: Run integration tests
+      - name: Run unit tests
         run: |
-          for test_dir in src/*.IntegrationTests; do
-            dotnet test --no-restore --no-build --filter "TestCategory~Integration" --logger:"liquid.md" --results-directory=${{ github.workspace }}/test-results $test_dir;
+          for test_dir in src/*.UnitTests; do
+            dotnet test --no-restore --no-build --filter "TestCategory!~Integration" --logger:"liquid.md" --results-directory=${{ github.workspace }}/test-results $test_dir;
           done;
 
           cat ${{ github.workspace }}/test-results/* > ${{ github.workspace }}/${{ env.file_name }};

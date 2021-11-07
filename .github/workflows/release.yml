@@ -1,0 +1,66 @@
+name: Release
+
+env:
+  REGISTRY: ghcr.io
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        description: 'Whether to release major'
+        default: false
+        type: boolean
+      minor:
+        description: 'Whether to release minor'
+        default: false
+        type: boolean
+      tag:
+        description: 'Tag that will be added to release'
+
+jobs:
+  unit-tests:
+    uses: keebox/keebox/.github/workflows/unit.yml
+  integration-tests:
+    uses: keebox/keebox/.github/workflows/integration.yml
+  pull_request:
+    needs:
+      - unit-tests
+      - integration-tests
+    runs-on: ubuntu-latest
+    name: 'Create release pull request'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Update version
+        id: assembly-version
+        uses: keebox/update-assembly-version@v0.17
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          assembly-file: ProductSettings.cs
+          increase-major: ${{ github.event.inputs.major }}
+          increase-minor: ${{ github.event.inputs.minor }}
+          increase-build: true
+          tag: ${{ github.event.inputs.tag }}
+          make-commit: false
+      - name: Log to container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and push secret service
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: Dockerfile
+          tags: ${{ env.REGISTRY }}/keebox:${{ assembly-version.new-version }}
+      - name: Create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ assembly-version.new-version }}
+          release_name: Release ${{ assembly-version.new-version }}
+          draft: true
+          prerelease: false
