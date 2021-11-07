@@ -3,13 +3,13 @@
 
 namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
-    public class PostgresRoleRepository : IRolesRepository
-    {
-        public PostgresRoleRepository(IConnectionFactory connectionFactory)
-        {
-            _connectionFactory = connectionFactory;
-        }
+	public class PostgresRoleRepository : IRolesRepository
+	{
+		public PostgresRoleRepository(IConnectionFactory connectionFactory)
+		{
+			_connectionFactory = connectionFactory;
+		}
 
-        private readonly IConnectionFactory _connectionFactory;
-    }
+		private readonly IConnectionFactory _connectionFactory;
+	}
 }

@@ -12,8 +12,10 @@ namespace Keebox.Common.DataAccess.Repositories
 	{
 		private readonly IServiceProvider _serviceProvider;
 
-		public InMemoryRepositoryContext(IServiceProvider serviceProvider) =>
+		public InMemoryRepositoryContext(IServiceProvider serviceProvider)
+		{
 			_serviceProvider = serviceProvider;
+		}
 
 		public ISecretsRepository GetSecretRepository()
 		{
