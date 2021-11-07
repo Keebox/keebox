@@ -18,14 +18,14 @@ env:
   REGISTRY: ghcr.io
 
 jobs:
-  unit-tests:
+  unit_tests:
     uses: keebox/keebox/.github/workflows/unit.yml@main
-  integration-tests:
+  integration_tests:
     uses: keebox/keebox/.github/workflows/integration.yml@main
   pull_request:
     needs:
-      - unit-tests
-      - integration-tests
+      - unit_tests
+      - integration_tests
     runs-on: ubuntu-latest
     name: 'Create release pull request'
     steps:
@@ -55,12 +55,12 @@ jobs:
           push: true
           file: Dockerfile
           # TODO: add latest tag if major or minor release, add unstable tag otherwise
-          tags: ${{ env.REGISTRY }}/keebox:${{ assembly-version.new-version }}
+          tags: ${{ env.REGISTRY }}/keebox:${{ steps.assembly-version.outputs.new-version }}
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: ${{ assembly-version.new-version }}
-          title: Release ${{ assembly-version.new-version }}
+          automatic_release_tag: ${{ steps.assembly-version.outputs.assembly-version.new-version }}
+          title: Release ${{ steps.assembly-version.outputs.assembly-version.new-version }}
           draft: true
           prerelease: false
