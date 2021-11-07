@@ -16,6 +16,7 @@ on:
 
 env:
   REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
 
 jobs:
   unit_tests:
@@ -61,7 +62,7 @@ jobs:
           file: src/Dockerfile
           context: src
           # TODO: add latest tag if major or minor release, add unstable tag otherwise
-          tags: ${{ env.REGISTRY }}/keebox:${{ steps.assembly-version.outputs.new-version }}
+          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.assembly-version.outputs.new-version }}
 
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
