@@ -39,7 +39,7 @@ jobs:
         uses: keebox/update-assembly-version@v0.17
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          assembly-file: ProductSettings.cs
+          assembly-file: src/ProductSettings.cs
           increase-major: ${{ github.event.inputs.major }}
           increase-minor: ${{ github.event.inputs.minor }}
           increase-build: true
