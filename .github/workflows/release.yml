@@ -22,12 +22,12 @@ jobs:
     uses: keebox/keebox/.github/workflows/unit.yml@master
   integration_tests:
     uses: keebox/keebox/.github/workflows/integration.yml@master
-  pull_request:
+  release:
     needs:
       - unit_tests
       - integration_tests
     runs-on: ubuntu-latest
-    name: 'Create release pull request'
+    name: 'Build and publish docker image, release'
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
