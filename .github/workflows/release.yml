@@ -41,6 +41,7 @@ jobs:
           increase-minor: ${{ github.event.inputs.minor }}
           increase-build: true
           tag: ${{ github.event.inputs.tag }}
+          # TODO: Enable creating commit
           make-commit: false
       - name: Log to container registry
         uses: docker/login-action@v1
@@ -53,6 +54,7 @@ jobs:
         with:
           push: true
           file: Dockerfile
+          # TODO: add latest tag if major or minor release, add unstable tag otherwise
           tags: ${{ env.REGISTRY }}/keebox:${{ assembly-version.new-version }}
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
