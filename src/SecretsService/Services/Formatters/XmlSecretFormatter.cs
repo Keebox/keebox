@@ -14,7 +14,7 @@ namespace Keebox.SecretsService.Services.Formatters
 		public XmlSecretFormatter(ISerializer? serializer) =>
 			_serializer = serializer;
 
-		public string? Format(IEnumerable<Secret> data)
+		public object? Format(IEnumerable<Secret> data)
 		{
 			var outputData = data.Select(x => new Models.Secret
 			{
