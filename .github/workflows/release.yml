@@ -68,7 +68,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@latest
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          automatic_release_tag: ${{ steps.assembly-version.outputs.assembly-version.new-version }}
-          title: Release ${{ steps.assembly-version.outputs.assembly-version.new-version }}
+          automatic_release_tag: ${{ steps.assembly-version.outputs.new-version }}
+          title: Release ${{ steps.assembly-version.outputs.new-version }}
           draft: true
           prerelease: false
