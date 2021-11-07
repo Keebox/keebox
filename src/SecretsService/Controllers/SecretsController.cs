@@ -54,7 +54,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		public string? GetSecrets([FromRoute] RequestPayload payload)
+		public IActionResult GetSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogDebug($"Getting secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
@@ -69,7 +69,7 @@ namespace Keebox.SecretsService.Controllers
 			var formatter = _formatterResolver.Resolve(format);
 			HttpContext.Response.ContentType = ResolveContentType(format);
 
-			return formatter.Format(secrets);
+			return Ok(formatter.Format(secrets));
 		}
 
 		[HttpDelete]

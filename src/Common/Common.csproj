@@ -15,7 +15,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="..\..\ProductSettings.cs" Link="Properties\ProductSettings.cs"/>
+        <Compile Include="..\ProductSettings.cs" Link="Properties\ProductSettings.cs"/>
     </ItemGroup>
 
     <ItemGroup>
