@@ -1,6 +1,7 @@
 ﻿using System.Net;
 
 using Keebox.Common.Exceptions;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,11 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+				case EmptyRouteException:
+					status = HttpStatusCode.NotFound;
+					message = "Route is empty";
 
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 

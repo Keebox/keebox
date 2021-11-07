@@ -22,5 +22,10 @@ namespace Keebox.SecretsService.Services
 				return System.Convert.ToBase64String(ms.ToArray());
 			});
 		}
+
+		public byte[] Decode(string encoded)
+		{
+			return System.Convert.FromBase64String(encoded);
+		}
 	}
 }
