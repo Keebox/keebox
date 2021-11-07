@@ -1,0 +1,66 @@
+name: Unit tests
+
+on:
+  - pull_request
+  - workflow_call
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    name: 'Run unit tests'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Set up dotnet
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Set up liquid
+        run: dotnet tool install --global LiquidTestReports.Cli --version 1.2.1-beta
+
+      - name: Install dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --no-restore
+
+      - name: Set pull request build number
+        id: pr_number
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: kkak10/pr-number-action@v1.3
+
+      - name: Set test run title
+        run: |
+          if ${{ github.event_name == 'pull_request' }}
+          then
+            echo "title=Unit tests run for PR #${{ steps.pr_number.outputs.pr }} (${{ github.run_number }})" >> $GITHUB_ENV
+            echo "file_name=testreport.${{ steps.pr_number.outputs.pr }}.${{ github.run_number }}.md" >> $GITHUB_ENV
+          else
+            echo "title=Unit tests run ${{ github.run_number }}" >> $GITHUB_ENV
+            echo "file_name=testreport.${{ github.run_number }}.md" >> $GITHUB_ENV
+          fi
+
+      - name: Run unit tests
+        run: |
+          for test_dir in src/*.UnitTests; do
+            dotnet test --no-restore --no-build --filter "TestCategory!~Integration" --logger:"liquid.md" --results-directory=${{ github.workspace }}/test-results $test_dir;
+          done;
+
+          cat ${{ github.workspace }}/test-results/* > ${{ github.workspace }}/${{ env.file_name }};
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v2
+        if: ${{ always() }}
+        with:
+          name: 'test run'
+          path: ${{ github.workspace }}/${{ env.file_name }}
+
+      - name: Add test run statistics to pull request
+        uses: machine-learning-apps/pr-comment@master
+        if: ${{ github.event_name == 'pull_request' }} && ${{ always() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          path: ${{ env.file_name }}

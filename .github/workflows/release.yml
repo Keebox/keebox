@@ -1,0 +1,72 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      major:
+        description: 'Whether to release major'
+        default: false
+        type: boolean
+      minor:
+        description: 'Whether to release minor'
+        default: false
+        type: boolean
+      tag:
+        description: 'Tag that will be added to release'
+
+env:
+  REGISTRY: ghcr.io
+
+jobs:
+  unit_tests:
+    uses: keebox/keebox/.github/workflows/unit.yml@master
+
+  integration_tests:
+    uses: keebox/keebox/.github/workflows/integration.yml@master
+
+  release:
+    needs:
+      - unit_tests
+      - integration_tests
+    runs-on: ubuntu-latest
+    name: 'Build and publish docker image, release'
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+
+      - name: Update version
+        id: assembly-version
+        uses: keebox/update-assembly-version@v0.17
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          assembly-file: ProductSettings.cs
+          increase-major: ${{ github.event.inputs.major }}
+          increase-minor: ${{ github.event.inputs.minor }}
+          increase-build: true
+          tag: ${{ github.event.inputs.tag }}
+          # TODO: Enable creating commit
+          make-commit: false
+
+      - name: Log to container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push secret service
+        uses: docker/build-push-action@v2
+        with:
+          push: true
+          file: src/Dockerfile
+          # TODO: add latest tag if major or minor release, add unstable tag otherwise
+          tags: ${{ env.REGISTRY }}/keebox:${{ steps.assembly-version.outputs.new-version }}
+
+      - name: Create release
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: ${{ steps.assembly-version.outputs.assembly-version.new-version }}
+          title: Release ${{ steps.assembly-version.outputs.assembly-version.new-version }}
+          draft: true
+          prerelease: false

@@ -1,0 +1,2 @@
+﻿engine: Postgres
+connectionString: Server=keebox_db;Port=5432;Database=keebox_db;User Id=postgres;Password=postgres

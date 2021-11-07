@@ -1,0 +1,25 @@
+﻿version: '3.8'
+services:
+  keebox_db:
+    image: postgres:alpine
+    restart: always
+    container_name: keebox_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=keebox_db
+    ports:
+      - 5432:5432
+  keebox:
+    depends_on:
+      - keebox_db
+    build: ../src
+    container_name: keebox
+    ports:
+      - 9000:80
+    volumes:
+      - ./overrides.yaml:/etc/Keebox/overrides.yaml
+      - keebox_defaults:/app/config
+
+volumes:
+  keebox_defaults: { }
