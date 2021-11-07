@@ -21,11 +21,11 @@ env:
 jobs:
   unit_tests:
     name: Run unit tests
-    uses: ${{ github.repository }}/.github/workflows/unit.yml@master
+    uses: keebox/keebox/.github/workflows/unit.yml@master
 
   integration_tests:
     name: Run integration tests
-    uses: ${{ github.repository }}/.github/workflows/integration.yml@master
+    uses: keebox/keebox/.github/workflows/integration.yml@master
 
   release:
     name: 'Build and publish docker image, release'
