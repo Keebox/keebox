@@ -5,12 +5,10 @@ on:
     inputs:
       major:
         description: 'Whether to release major'
-        default: false
-        type: boolean
+        default: 'false'
       minor:
         description: 'Whether to release minor'
-        default: false
-        type: boolean
+        default: 'false'
       tag:
         description: 'Tag that will be added to release'
 
