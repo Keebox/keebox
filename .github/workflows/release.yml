@@ -20,8 +20,10 @@ env:
 jobs:
   unit_tests:
     uses: keebox/keebox/.github/workflows/unit.yml@master
+
   integration_tests:
     uses: keebox/keebox/.github/workflows/integration.yml@master
+
   release:
     needs:
       - unit_tests
@@ -31,6 +33,7 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
+
       - name: Update version
         id: assembly-version
         uses: keebox/update-assembly-version@v0.17
@@ -43,12 +46,14 @@ jobs:
           tag: ${{ github.event.inputs.tag }}
           # TODO: Enable creating commit
           make-commit: false
+
       - name: Log to container registry
         uses: docker/login-action@v1
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build and push secret service
         uses: docker/build-push-action@v2
         with:
@@ -56,6 +61,7 @@ jobs:
           file: Dockerfile
           # TODO: add latest tag if major or minor release, add unstable tag otherwise
           tags: ${{ env.REGISTRY }}/keebox:${{ steps.assembly-version.outputs.new-version }}
+
       - name: Create release
         uses: marvinpinto/action-automatic-releases@latest
         with:
