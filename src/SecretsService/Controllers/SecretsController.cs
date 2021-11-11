@@ -49,7 +49,7 @@ namespace Keebox.SecretsService.Controllers
 			if (payload.Data is null || !payload.Data.Keys.Any())
 				throw new Exception("Secrets are not provided");
 
-			_secretsManager.AddSecrets(payload.Route ?? string.Empty, payload.Data,
+			_secretsManager.AddSecrets(payload.Route, payload.Data,
 				_fileConverter.Convert(payload.Files), secretNames);
 		}
 
