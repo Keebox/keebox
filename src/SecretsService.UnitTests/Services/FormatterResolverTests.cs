@@ -8,6 +8,7 @@ using FluentAssertions;
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Types;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Services;
 using Keebox.SecretsService.Services.Formatters;
 
@@ -71,7 +72,7 @@ namespace Keebox.SecretsService.UnitTests.Services
 			_serializerResolver.Setup(x => x(type)).Returns(_serializer.Object);
 
 			// act
-			Assert.Throws<ArgumentOutOfRangeException>(() => _target.Resolve(type));
+			Assert.Throws<UnsupportedFormatterException>(() => _target.Resolve(type));
 		}
 
 		[Test]
