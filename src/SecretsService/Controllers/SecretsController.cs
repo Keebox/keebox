@@ -70,7 +70,7 @@ namespace Keebox.SecretsService.Controllers
 
 			var secrets = _secretsManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 
-			if (secrets.Length == 1 && secrets.First().IsFile)
+			if (secrets.Length == 1 && secrets.Single().IsFile)
 			{
 				var stream = new MemoryStream(_fileConverter.Decode(secrets.Single().Value));
 
