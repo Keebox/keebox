@@ -60,7 +60,11 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+				case AlreadyExistsException:
+					status = HttpStatusCode.Conflict;
+					message = context.Exception.Message;
 
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 
