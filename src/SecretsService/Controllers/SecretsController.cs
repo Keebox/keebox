@@ -1,8 +1,10 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Models;
 using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
@@ -39,11 +41,18 @@ namespace Keebox.SecretsService.Controllers
 			_logger.LogDebug($"Adding secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
 
-			if (payload.Data is null || !payload.Data.Keys.Any())
+			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
 				throw new Exception("Secrets are not provided");
 
-			_secretsManager.AddSecrets(payload.Route, payload.Data,
-				_fileConverter.Convert(payload.Files), secretNames);
+			if (payload.Route is null)
+			{
+				throw new EmptyRouteException();
+			}
+
+			_secretsManager.AddSecrets(payload.Route,
+				payload.Data!,
+				_fileConverter.Convert(payload.Files),
+				secretNames);
 		}
 
 		[HttpGet]
@@ -52,10 +61,29 @@ namespace Keebox.SecretsService.Controllers
 			_logger.LogDebug($"Getting secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
 
-			var secrets = _secretsManager.GetSecrets(payload.Route ?? string.Empty, secretNames);
+			if (payload.Route is null)
+			{
+				throw new EmptyRouteException();
+			}
+
+			var secrets = _secretsManager.GetSecrets(payload.Route, secretNames).ToArray();
+
+			if (secrets.Length == 1)
+			{
+				var secret = secrets.Single();
+				if (!secret.IsFile)
+				{
+					return Ok(secret.Value);
+				}
+
+				var bytes = _fileConverter.Decode(secret.Value);
+				var stream = new MemoryStream(bytes);
+
+				return new FileStreamResult(stream, "application/octet-stream");
+			}
 
 			if (!payload.IncludeFiles)
-				secrets = secrets.Where(x => !x.IsFile);
+				secrets = secrets.Where(x => !x.IsFile).ToArray();
 
 			var format = payload.Format ?? _configuration.DefaultFormat;
 
@@ -70,6 +98,11 @@ namespace Keebox.SecretsService.Controllers
 		{
 			_logger.LogDebug($"Deleting secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
+
+			if (payload.Route is null)
+			{
+				throw new EmptyRouteException();
+			}
 
 			_secretsManager.DeleteSecrets(payload.Route ?? string.Empty, secretNames);
 		}

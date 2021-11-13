@@ -30,14 +30,21 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+
 				case UnauthorizedException:
 					status = HttpStatusCode.Unauthorized;
 					message = context.Exception.Message;
 
 					break;
+
 				case RestrictedAccessException:
 					status = HttpStatusCode.Forbidden;
 					message = context.Exception.Message;
+
+					break;
+				case EmptyRouteException:
+					status = HttpStatusCode.NotFound;
+					message = "Route is empty";
 
 					break;
 				case UnsupportedFormatException:
