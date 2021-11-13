@@ -34,12 +34,12 @@ namespace Keebox.Common.UnitTests.Managers
 			_repositoryContext.Setup(x => x.GetGroupRepository()).Returns(_groupRepository.Object);
 			_repositoryContext.Setup(x => x.GetSecretRepository()).Returns(_secretsRepository.Object);
 
-			_target = new SecretsManager(_pathResolver.Object, _repositoryContext.Object);
+			_target = new SecretManager(_pathResolver.Object, _repositoryContext.Object);
 		}
 
 		private readonly IFixture _fixture = new Fixture();
 
-		private ISecretsManager _target;
+		private ISecretManager _target;
 		private Mock<IPathResolver> _pathResolver;
 		private Mock<ISecretsRepository> _secretsRepository;
 		private Mock<IGroupRepository> _groupRepository;

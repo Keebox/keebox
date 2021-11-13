@@ -32,7 +32,7 @@ namespace Keebox.Common.DataAccess.Repositories
 			return _serviceProvider.GetService<PostgresGroupRepository>()!;
 		}
 
-		public IRolesRepository GetRoleRepository()
+		public IRoleRepository GetRoleRepository()
 		{
 			return _serviceProvider.GetService<PostgresRoleRepository>()!;
 		}

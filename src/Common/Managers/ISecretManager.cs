@@ -5,7 +5,7 @@ using Keebox.Common.DataAccess.Entities;
 
 namespace Keebox.Common.Managers
 {
-	public interface ISecretsManager
+	public interface ISecretManager
 	{
 		IEnumerable<Secret> GetSecrets(string path, string[] secrets);
 

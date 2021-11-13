@@ -57,10 +57,10 @@ namespace Keebox.SecretsService
 			services.AddTransient<IFileConverter, FileConverter>();
 
 			services.AddTransient<ICryptoService, CryptoService>();
-			services.AddTransient<ISecretsManager, SecretsManager>();
+			services.AddTransient<ISecretManager, SecretManager>();
 			services.AddTransient<ITokenService, TokenService>();
 
-			services.AddTransient<ISecretsManager, SecretsManager>();
+			services.AddTransient<ISecretManager, SecretManager>();
 			services.AddTransient<IAccountManager, AccountManager>();
 
 			services.AddTransient<IFormatterResolver, FormatterResolver>();

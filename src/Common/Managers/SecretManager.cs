@@ -12,14 +12,14 @@ using Keebox.Common.Types;
 
 namespace Keebox.Common.Managers
 {
-	public class SecretsManager : ISecretsManager
+	public class SecretManager : ISecretManager
 	{
 		private readonly IGroupRepository _groupRepository;
 
 		private readonly IPathResolver _pathResolver;
 		private readonly ISecretsRepository _secretsRepository;
 
-		public SecretsManager(IPathResolver pathResolver, IRepositoryContext repositoryContext)
+		public SecretManager(IPathResolver pathResolver, IRepositoryContext repositoryContext)
 		{
 			_pathResolver = pathResolver;
 

@@ -23,17 +23,17 @@ namespace Keebox.SecretsService.Controllers
 		private readonly IFormatterResolver _formatterResolver;
 		private readonly ILogger<SecretsController> _logger;
 
-		private readonly ISecretsManager _secretsManager;
+		private readonly ISecretManager _secretManager;
 
 		public SecretsController(
-			ISecretsManager            secretsManager,
+			ISecretManager            secretManager,
 			IFileConverter             fileConverter,
 			IFormatterResolver         formatterResolver,
 			Configuration              configuration,
 			ILogger<SecretsController> logger
 		)
 		{
-			_secretsManager = secretsManager;
+			_secretManager = secretManager;
 			_fileConverter = fileConverter;
 			_formatterResolver = formatterResolver;
 			_configuration = configuration;
@@ -49,7 +49,7 @@ namespace Keebox.SecretsService.Controllers
 			if (payload.Data is null || !payload.Data.Keys.Any())
 				throw new Exception("Secrets are not provided");
 
-			_secretsManager.AddSecrets(payload.Route ?? string.Empty, payload.Data,
+			_secretManager.AddSecrets(payload.Route ?? string.Empty, payload.Data,
 				_fileConverter.Convert(payload.Files), secretNames);
 		}
 
@@ -59,7 +59,7 @@ namespace Keebox.SecretsService.Controllers
 			_logger.LogDebug($"Getting secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
 
-			var secrets = _secretsManager.GetSecrets(payload.Route ?? string.Empty, secretNames);
+			var secrets = _secretManager.GetSecrets(payload.Route ?? string.Empty, secretNames);
 
 			if (!payload.IncludeFiles)
 				secrets = secrets.Where(x => !x.IsFile);
@@ -78,7 +78,7 @@ namespace Keebox.SecretsService.Controllers
 			_logger.LogDebug($"Deleting secrets {payload.Route}");
 			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
 
-			_secretsManager.DeleteSecrets(payload.Route ?? string.Empty, secretNames);
+			_secretManager.DeleteSecrets(payload.Route ?? string.Empty, secretNames);
 		}
 
 		private static string ResolveContentType(FormatType? format)

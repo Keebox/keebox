@@ -15,22 +15,22 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="..\ProductSettings.cs" Link="Properties\ProductSettings.cs"/>
+        <Compile Include="..\ProductSettings.cs" Link="Properties\ProductSettings.cs" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Ensure.That" Version="10.1.0"/>
-        <PackageReference Include="FluentMigrator" Version="3.3.1"/>
-        <PackageReference Include="FluentMigrator.Runner" Version="3.3.1"/>
-        <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.1"/>
-        <PackageReference Include="linq2db" Version="4.0.0-preview.8"/>
-        <PackageReference Include="linq2db.PostgreSQL" Version="4.0.0-preview.8"/>
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0"/>
-        <PackageReference Include="MongoDB.Driver" Version="2.13.1"/>
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.1"/>
-        <PackageReference Include="Npgsql" Version="5.0.10"/>
-        <PackageReference Include="StackExchange.Redis" Version="2.2.50"/>
-        <PackageReference Include="YamlDotNet" Version="11.2.1"/>
+        <PackageReference Include="Ensure.That" Version="10.1.0" />
+        <PackageReference Include="FluentMigrator" Version="3.3.1" />
+        <PackageReference Include="FluentMigrator.Runner" Version="3.3.1" />
+        <PackageReference Include="FluentMigrator.Runner.Postgres" Version="3.3.1" />
+        <PackageReference Include="linq2db" Version="4.0.0-preview.8" />
+        <PackageReference Include="linq2db.PostgreSQL" Version="4.0.0-preview.8" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.13.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Npgsql" Version="5.0.10" />
+        <PackageReference Include="StackExchange.Redis" Version="2.2.50" />
+        <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
 </Project>

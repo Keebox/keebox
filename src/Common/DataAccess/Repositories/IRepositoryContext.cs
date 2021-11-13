@@ -11,6 +11,6 @@ namespace Keebox.Common.DataAccess.Repositories
 
 		IGroupRepository GetGroupRepository();
 
-		IRolesRepository GetRoleRepository();
+		IRoleRepository GetRoleRepository();
 	}
 }
