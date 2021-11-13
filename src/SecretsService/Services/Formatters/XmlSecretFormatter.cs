@@ -11,8 +11,10 @@ namespace Keebox.SecretsService.Services.Formatters
 	{
 		private readonly ISerializer? _serializer;
 
-		public XmlSecretFormatter(ISerializer? serializer) =>
+		public XmlSecretFormatter(ISerializer? serializer)
+		{
 			_serializer = serializer;
+		}
 
 		public object? Format(IEnumerable<Secret> data)
 		{
