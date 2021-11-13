@@ -20,7 +20,7 @@ using NUnit.Framework;
 namespace Keebox.Common.UnitTests.Managers
 {
 	[TestFixture]
-	public class SecretsManagerTests
+	public class SecretManagerTests
 	{
 		[SetUp]
 		public void Setup()
@@ -36,14 +36,6 @@ namespace Keebox.Common.UnitTests.Managers
 
 			_target = new SecretManager(_pathResolver.Object, _repositoryContext.Object);
 		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private ISecretManager _target;
-		private Mock<IPathResolver> _pathResolver;
-		private Mock<ISecretRepository> _secretsRepository;
-		private Mock<IGroupRepository> _groupRepository;
-		private Mock<IRepositoryContext> _repositoryContext;
 
 		[Test]
 		public void AddSecretFileTest()
@@ -482,5 +474,13 @@ namespace Keebox.Common.UnitTests.Managers
 			Assert.AreEqual(result.Count, 1);
 			Assert.AreEqual(result[0], mockSecret);
 		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private ISecretManager _target;
+		private Mock<IPathResolver> _pathResolver;
+		private Mock<ISecretRepository> _secretsRepository;
+		private Mock<IGroupRepository> _groupRepository;
+		private Mock<IRepositoryContext> _repositoryContext;
 	}
 }
