@@ -10,43 +10,38 @@ using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
-	public class InMemorySecretRepository : ISecretsRepository
+	public class InMemorySecretRepository : InMemoryRepositoryBase<Secret>, ISecretsRepository
 	{
-		public InMemorySecretRepository()
-		{
-			_storage = new List<Secret>();
-		}
-
 		private void UpdateSecret(Secret secret)
 		{
-			var index = _storage.FindIndex(x => x.Id == secret.Id);
+			var index = Storage.FindIndex(x => x.Id == secret.Id);
 
 			if (index == -1)
 				return;
 
-			_storage[index] = secret;
+			Storage[index] = secret;
 		}
 
 		private void DeleteSecretByGroupId(Guid groupId)
 		{
-			var items = _storage.Where(x => x.GroupId.Equals(groupId)).ToList();
-			items.ForEach(x => _storage.Remove(x));
+			var items = Storage.Where(x => x.GroupId.Equals(groupId)).ToList();
+			items.ForEach(x => Storage.Remove(x));
 		}
 
 		private void DeleteSecretByGroupIdAndName(Guid groupId, string secret)
 		{
-			var items = _storage
+			var items = Storage
 				.Where(x => x.GroupId.Equals(groupId) && x.Name.Equals(secret, StringComparison.OrdinalIgnoreCase))
 				.ToList();
 
-			items.ForEach(x => _storage.Remove(x));
+			items.ForEach(x => Storage.Remove(x));
 		}
 
 		public IEnumerable<Secret> GetGroupSecrets(Guid groupId)
 		{
 			EnsureArg.IsNotDefault(groupId);
 
-			return _storage.Where(x => x.GroupId.Equals(groupId));
+			return Storage.Where(x => x.GroupId.Equals(groupId));
 		}
 
 		public void UpdateGroupSecrets(Guid groupId, Dictionary<string, string> secrets, Dictionary<string, string> files)
@@ -57,7 +52,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 
 			foreach (var (key, value) in secrets)
 			{
-				var secret = _storage.Single(x => x.GroupId == groupId && x.Name == key);
+				var secret = Storage.Single(x => x.GroupId == groupId && x.Name == key);
 				secret.Value = value;
 
 				UpdateSecret(secret);
@@ -65,7 +60,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 
 			foreach (var (key, value) in files)
 			{
-				var secret = _storage.Single(x => x.GroupId == groupId && x.Name == key);
+				var secret = Storage.Single(x => x.GroupId == groupId && x.Name == key);
 				secret.Value = value;
 
 				UpdateSecret(secret);
@@ -81,7 +76,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			DeleteSecretByGroupId(groupId);
 
 			foreach (var (key, value) in secrets)
-				_storage.Add(new Secret
+				Storage.Add(new Secret
 				{
 					Name = key,
 					Value = value,
@@ -91,7 +86,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				});
 
 			foreach (var (key, value) in files)
-				_storage.Add(new Secret
+				Storage.Add(new Secret
 				{
 					Name = key,
 					Value = value,
@@ -113,7 +108,5 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			DeleteSecretByGroupId(groupId);
 		}
-
-		private readonly List<Secret> _storage;
 	}
 }

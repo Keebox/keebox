@@ -11,25 +11,20 @@ using Keebox.Common.Exceptions;
 
 namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
-	public class InMemoryAccountRepository : IAccountRepository
+	public class InMemoryAccountRepository : InMemoryRepositoryBase<Account>, IAccountRepository
 	{
-		public InMemoryAccountRepository()
-		{
-			_storage = new List<Account>();
-		}
-
 		public bool Exists(string accountName)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(accountName);
 
-			return _storage.Any(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+			return Storage.Any(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public bool ExistsWithToken(string tokenHash)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(tokenHash);
 
-			return _storage.Any(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
+			return Storage.Any(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public Guid Create(Account account)
@@ -44,28 +39,28 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				account.Id = Guid.NewGuid();
 			}
 
-			_storage.Add(account);
+			Storage.Add(account);
 
 			return account.Id;
 		}
 
 		public void Delete(Guid accountId)
 		{
-			var index = _storage.FindIndex(x => x.Id == accountId);
+			var index = Storage.FindIndex(x => x.Id == accountId);
 
 			if (index == -1)
 			{
 				throw new NotFoundException($"Cannot find account with id {accountId}");
 			}
 
-			_storage.RemoveAt(index);
+			Storage.RemoveAt(index);
 		}
 
 		public Account GetByName(string accountName)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(accountName);
 
-			return _storage.Single(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+			return Storage.Single(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public Account? Update(Account account)
@@ -75,23 +70,21 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				EnsureArg.IsNotNullOrWhiteSpace(account.TokenHash);
 			}
 
-			var index = _storage.FindIndex(x => x.Id == account.Id);
+			var index = Storage.FindIndex(x => x.Id == account.Id);
 
 			if (index == -1)
 			{
 				return null;
 			}
 
-			_storage[index] = account;
+			Storage[index] = account;
 
 			return account;
 		}
 
 		public IEnumerable<Account> List()
 		{
-			return _storage;
+			return Storage;
 		}
-
-		private readonly List<Account> _storage;
 	}
 }
