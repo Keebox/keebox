@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
@@ -13,9 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Keebox.SecretsService.Controllers
 {
-	[ApiController]
 	[Authenticate]
-	[Route("account")]
+	[ApiController]
+	[Route(RouteMap.Account)]
 	public class AccountController : ControllerBase
 	{
 		public AccountController(IAccountManager accountManager, ITokenService tokenService)
@@ -57,6 +58,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{accountId}")]
+		[SuppressMessage("ReSharper", "RouteTemplates.ParameterConstraintCanBeSpecified")]
 		public void DeleteAccount([FromRoute] Guid accountId)
 		{
 			_accountManager.DeleteAccount(accountId);

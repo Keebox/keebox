@@ -1,6 +1,8 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 using Keebox.Common.Exceptions;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Keebox.SecretsService.RequestFiltering
 {
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class ExceptionsFilter : IExceptionFilter
 	{
 		private readonly ILogger<ExceptionsFilter> _logger;
@@ -38,6 +41,22 @@ namespace Keebox.SecretsService.RequestFiltering
 
 				case RestrictedAccessException:
 					status = HttpStatusCode.Forbidden;
+					message = context.Exception.Message;
+
+					break;
+				case EmptyRouteException:
+					status = HttpStatusCode.NotFound;
+					message = "Route is empty";
+
+					break;
+				case UnsupportedFormatException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
+
+				case SecretsNotProvidedException:
+					status = HttpStatusCode.BadRequest;
 					message = context.Exception.Message;
 
 					break;

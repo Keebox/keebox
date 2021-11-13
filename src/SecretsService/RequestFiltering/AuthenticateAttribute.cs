@@ -33,7 +33,7 @@ namespace Keebox.SecretsService.RequestFiltering
 						return;
 
 					if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
-						throw new RestrictedAccessException("Account management only for admins");
+						throw new RestrictedAccessException("Account management only for admins.");
 
 					if (!tokenService.Validate(token))
 						throw new UnauthorizedException("Token is not valid.");
@@ -48,7 +48,7 @@ namespace Keebox.SecretsService.RequestFiltering
 						return;
 
 					if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
-						throw new RestrictedAccessException("Account management only for admins");
+						throw new RestrictedAccessException("Account management only for admins.");
 
 					if (!tokenService.Validate(token))
 						throw new UnauthorizedException("Token is not valid.");
@@ -56,7 +56,7 @@ namespace Keebox.SecretsService.RequestFiltering
 					break;
 				}
 				case AuthenticationType.None:
-					throw new UnauthorizedException("Authentication was not successful");
+					throw new UnauthorizedException("Authentication was not successful.");
 
 				case AuthenticationType.Certificate:
 				default:
