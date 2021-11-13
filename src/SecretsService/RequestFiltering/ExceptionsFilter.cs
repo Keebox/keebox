@@ -1,6 +1,7 @@
 ﻿using System.Net;
 
 using Keebox.Common.Exceptions;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Models;
 
 using Microsoft.AspNetCore.Mvc;
@@ -29,19 +30,21 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
-
 				case UnauthorizedException:
 					status = HttpStatusCode.Unauthorized;
 					message = context.Exception.Message;
 
 					break;
-
 				case RestrictedAccessException:
 					status = HttpStatusCode.Forbidden;
 					message = context.Exception.Message;
 
 					break;
+				case UnsupportedFormatException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
 
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 
