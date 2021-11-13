@@ -87,6 +87,22 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			list.Count(x => x.Name == name).Should().Be(0);
 			list.Count(x => x.Name == newName).Should().Be(1);
 		}
+		
+		
+		[Test]
+		public void GetTest()
+		{
+			// arrange
+			var name = GenerateName();
+
+			var id = _target.Create(name);
+			
+			// act
+			var role = _target.Get(id);
+			
+			// assert
+			role.Name.Should().Be(name);
+		}
 
 		private string GenerateName() => Creator.CreateStringWithMaxLength(_fixture.Create<int>() % 256);
 

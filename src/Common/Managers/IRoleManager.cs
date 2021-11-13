@@ -15,5 +15,7 @@ namespace Keebox.Common.Managers
 		void UpdateRole(Role role);
 
 		void DeleteRole(Guid roleId);
+
+		Role GetRole(Guid roleId);
 	}
 }

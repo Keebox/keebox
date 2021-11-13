@@ -35,6 +35,11 @@ namespace Keebox.Common.Managers
 			_roleRepository.Delete(roleId);
 		}
 
+		public Role GetRole(Guid roleId)
+		{
+			return _roleRepository.Get(roleId);
+		}
+
 		private readonly IRoleRepository _roleRepository;
 	}
 }

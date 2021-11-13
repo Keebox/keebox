@@ -62,6 +62,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			connection.GetTable<Role>().Delete(x => x.Id == roleId);
 		}
 
+		public Role Get(Guid roleId)
+		{
+			using var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Role>().Single(x => x.Id == roleId);
+		}
+
 		private readonly IConnectionFactory _connectionFactory;
 	}
 }

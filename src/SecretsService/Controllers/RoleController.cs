@@ -12,7 +12,7 @@ namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
 	[Authenticate]
-	[Route("role")]
+	[Route(RouteMap.Role)]
 	public class RoleController : ControllerBase
 	{
 		public RoleController(IRoleManager roleManager)
@@ -20,6 +20,12 @@ namespace Keebox.SecretsService.Controllers
 			_roleManager = roleManager;
 		}
 
+		[HttpGet("{roleId:guid}")]
+		public Role GetRole([FromQuery] Guid roleId)
+		{
+			return _roleManager.GetRole(roleId);
+		}
+		
 		[HttpGet]
 		public IEnumerable<Role> ListRoles()
 		{

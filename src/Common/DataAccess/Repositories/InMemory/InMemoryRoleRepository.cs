@@ -56,5 +56,10 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			Storage.RemoveAll(x => x.Id == roleId);
 		}
+
+		public Role Get(Guid roleId)
+		{
+			return Storage.Single(x => x.Id == roleId);
+		}
 	}
 }
