@@ -2,6 +2,7 @@
 
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Types;
+using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Services.Formatters;
 
 
@@ -24,7 +25,8 @@ namespace Keebox.SecretsService.Services
 				FormatType.Json => new JsonSecretFormatter(serializer),
 				FormatType.Xml  => new XmlSecretFormatter(serializer),
 
-				_ => throw new ArgumentOutOfRangeException(nameof(type), type, null)
+				_ => throw new UnsupportedFormatException(type.ToString()
+															 ?? throw new ArgumentOutOfRangeException(nameof(type), type, null))
 			};
 		}
 	}

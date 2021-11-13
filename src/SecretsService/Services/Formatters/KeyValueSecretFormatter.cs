@@ -9,7 +9,7 @@ namespace Keebox.SecretsService.Services.Formatters
 {
 	public class KeyValueSecretFormatter : ISecretFormatter
 	{
-		public string Format(IEnumerable<Secret> data)
+		public object Format(IEnumerable<Secret> data)
 		{
 			return string.Join(Environment.NewLine, data.Select(x => $"{x.Name}={x.Value}"));
 		}

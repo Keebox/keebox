@@ -7,6 +7,6 @@ namespace Keebox.SecretsService.Services.Formatters
 {
 	public interface ISecretFormatter
 	{
-		string? Format(IEnumerable<Secret> data);
+		object? Format(IEnumerable<Secret> data);
 	}
 }

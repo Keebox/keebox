@@ -47,6 +47,11 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = "Route is empty";
 
 					break;
+				case UnsupportedFormatException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 

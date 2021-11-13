@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Keebox.SecretsService.Models
 {
 	[Serializable]
-	public record RequestPayload(string? Route)
+	public record RequestPayload(string Route)
 	{
 		[FromBody] public Dictionary<string, string>? Body { get; init; }
 

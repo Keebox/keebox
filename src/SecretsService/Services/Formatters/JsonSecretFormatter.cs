@@ -9,16 +9,16 @@ namespace Keebox.SecretsService.Services.Formatters
 {
 	public class JsonSecretFormatter : ISecretFormatter
 	{
-		private readonly ISerializer? _serializer;
-
-		public JsonSecretFormatter(ISerializer? serializer) =>
-			_serializer = serializer;
-
-		public string? Format(IEnumerable<Secret> data)
+		public JsonSecretFormatter(ISerializer serializer)
 		{
-			var dictionary = data.ToDictionary(x => x.Name, x => x.Value);
-
-			return _serializer?.Serialize(dictionary);
+			_serializer = serializer;
 		}
+
+		public object Format(IEnumerable<Secret> data)
+		{
+			return data.ToDictionary(x => x.Name, x => x.Value);
+		}
+
+		private readonly ISerializer _serializer;
 	}
 }

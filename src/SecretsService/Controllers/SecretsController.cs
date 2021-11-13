@@ -15,18 +15,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Keebox.SecretsService.Controllers
 {
-	[ApiController]
 	[Authenticate]
+	[ApiController]
 	[Route("{*route}")]
 	public class SecretsController : ControllerBase
 	{
-		private readonly Configuration _configuration;
-		private readonly IFileConverter _fileConverter;
-		private readonly IFormatterResolver _formatterResolver;
-		private readonly ILogger<SecretsController> _logger;
-
-		private readonly ISecretsManager _secretsManager;
-
 		public SecretsController(
 			ISecretsManager            secretsManager,
 			IFileConverter             fileConverter,
@@ -124,5 +117,12 @@ namespace Keebox.SecretsService.Controllers
 				_               => "text/plain"
 			};
 		}
+
+		private readonly Configuration _configuration;
+		private readonly IFileConverter _fileConverter;
+		private readonly IFormatterResolver _formatterResolver;
+		private readonly ILogger<SecretsController> _logger;
+
+		private readonly ISecretsManager _secretsManager;
 	}
 }

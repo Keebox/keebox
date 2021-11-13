@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 using AutoFixture;
 
@@ -28,30 +29,24 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 			_target = new JsonSecretFormatter(_serializer.Object);
 		}
 
-		private IFixture _fixture;
-
-		private Mock<ISerializer> _serializer;
-
-		private JsonSecretFormatter _target;
-
 		[Test]
 		public void FormatTest()
 		{
 			// arrange
 			var data = _fixture.CreateMany<Secret>().ToList();
-			var dictionary = data.ToDictionary(x => x.Name, x => x.Value);
-
-			var serializedData = _fixture.Create<string>();
-
-			_serializer.Setup(x => x.Serialize(dictionary)).Returns(serializedData);
+			var expectedData = data.ToDictionary(x => x.Name, x => x.Value);
 
 			// act
 			var result = _target.Format(data);
 
 			// assert
-			result.Should().Be(serializedData);
-
-			_serializer.Verify(x => x.Serialize(dictionary), Times.Once);
+			result.Should().BeEquivalentTo(expectedData);
 		}
+
+		private IFixture _fixture = new Fixture();
+
+		private Mock<ISerializer> _serializer;
+
+		private JsonSecretFormatter _target;
 	}
 }
