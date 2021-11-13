@@ -72,7 +72,7 @@ namespace Keebox.SecretsService.UnitTests.Services
 			_serializerResolver.Setup(x => x(type)).Returns(_serializer.Object);
 
 			// act
-			Assert.Throws<UnsupportedFormatterException>(() => _target.Resolve(type));
+			Assert.Throws<UnsupportedFormatException>(() => _target.Resolve(type));
 		}
 
 		[Test]

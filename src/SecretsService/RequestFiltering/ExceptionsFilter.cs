@@ -40,7 +40,7 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
-				case UnsupportedFormatterException:
+				case UnsupportedFormatException:
 					status = HttpStatusCode.BadRequest;
 					message = context.Exception.Message;
 

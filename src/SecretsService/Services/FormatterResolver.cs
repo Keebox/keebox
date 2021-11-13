@@ -25,7 +25,7 @@ namespace Keebox.SecretsService.Services
 				FormatType.Json => new JsonSecretFormatter(serializer),
 				FormatType.Xml  => new XmlSecretFormatter(serializer),
 
-				_ => throw new UnsupportedFormatterException(type.ToString()
+				_ => throw new UnsupportedFormatException(type.ToString()
 															 ?? throw new ArgumentOutOfRangeException(nameof(type), type, null))
 			};
 		}
