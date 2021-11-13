@@ -10,7 +10,7 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 	{
 		IEnumerable<Role> List();
 
-		Role Create(Role role);
+		Guid Create(string name);
 
 		void Update(Role role);
 

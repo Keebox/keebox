@@ -26,15 +26,20 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			return connection.GetTable<Role>().ToArray();
 		}
 
-		public Role Create(Role role)
+		public Guid Create(string name)
 		{
-			EnsureArg.IsNotNullOrWhiteSpace(role.Name);
+			EnsureArg.IsNotNullOrWhiteSpace(name);
 
 			using var connection = _connectionFactory.Create();
 
-			connection.GetTable<Role>().Insert(() => role);
+			var roleId = Guid.NewGuid();
+			connection.GetTable<Role>().Insert(() => new Role
+			{
+				Id = roleId,
+				Name = name
+			});
 
-			return role;
+			return roleId;
 		}
 
 		public void Update(Role role)
@@ -43,7 +48,11 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			connection.GetTable<Role>().Update(_ => role);
+			connection.GetTable<Role>().Update(_ => new Role
+			{
+				Id = role.Id,
+				Name = role.Name
+			});
 		}
 
 		public void Delete(Guid roleId)

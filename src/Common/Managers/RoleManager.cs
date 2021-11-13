@@ -19,9 +19,9 @@ namespace Keebox.Common.Managers
 			return _roleRepository.List();
 		}
 
-		public Role CreateRole(string name)
+		public Guid CreateRole(string name)
 		{
-			return _roleRepository.Create(new Role(name));
+			return _roleRepository.Create(name);
 		}
 
 		public void UpdateRole(Role role)

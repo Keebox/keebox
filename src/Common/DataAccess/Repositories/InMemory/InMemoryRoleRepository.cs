@@ -18,18 +18,24 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			return Storage;
 		}
 
-		public Role Create(Role role)
+		public Guid Create(string name)
 		{
-			EnsureArg.IsNotNullOrWhiteSpace(role.Name);
+			EnsureArg.IsNotNullOrWhiteSpace(name);
 
-			if (Storage.Any(x => x.Name == role.Name || x.Id == role.Id))
+			if (Storage.Any(x => x.Name == name))
 			{
 				throw new AlreadyExistsException("Role already exists");
 			}
 
+			var role = new Role
+			{
+				Id = Guid.NewGuid(),
+				Name = name
+			};
+
 			Storage.Add(role);
 
-			return role;
+			return role.Id;
 		}
 
 		public void Update(Role role)

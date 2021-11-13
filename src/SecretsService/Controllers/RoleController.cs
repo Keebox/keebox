@@ -27,7 +27,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		public Role CreateRole([FromBody] string name)
+		public Guid CreateRole([FromBody] string name)
 		{
 			return _roleManager.CreateRole(name);
 		}

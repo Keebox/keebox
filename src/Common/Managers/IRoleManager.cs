@@ -10,7 +10,7 @@ namespace Keebox.Common.Managers
 	{
 		IEnumerable<Role> GetRoles();
 
-		Role CreateRole(string name);
+		Guid CreateRole(string name);
 
 		void UpdateRole(Role role);
 
