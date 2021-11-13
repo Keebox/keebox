@@ -6,6 +6,7 @@ using EnsureThat;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
 
 using LinqToDB;
 
@@ -33,11 +34,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			using var connection = _connectionFactory.Create();
 
 			var roleId = Guid.NewGuid();
+
 			connection.GetTable<Role>().Insert(() => new Role
 			{
 				Id = roleId,
 				Name = name
 			});
+
 
 			return roleId;
 		}
@@ -67,6 +70,20 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			using var connection = _connectionFactory.Create();
 
 			return connection.GetTable<Role>().Single(x => x.Id == roleId);
+		}
+
+		public bool Exists(Guid roleId)
+		{
+			var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Role>().Any(x => x.Id == roleId);
+		}
+
+		public bool Exists(string name)
+		{
+			var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Role>().Any(x => x.Name.Equals(name));
 		}
 
 		private readonly IConnectionFactory _connectionFactory;

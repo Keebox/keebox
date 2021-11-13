@@ -22,11 +22,6 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			EnsureArg.IsNotNullOrWhiteSpace(name);
 
-			if (Storage.Any(x => x.Name == name))
-			{
-				throw new AlreadyExistsException("Role already exists");
-			}
-
 			var role = new Role
 			{
 				Id = Guid.NewGuid(),
@@ -60,6 +55,16 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		public Role Get(Guid roleId)
 		{
 			return Storage.Single(x => x.Id == roleId);
+		}
+
+		public bool Exists(Guid roleId)
+		{
+			return Storage.Any(x => x.Id == roleId);
+		}
+
+		public bool Exists(string name)
+		{
+			return Storage.Any(x => x.Name.Equals(name));
 		}
 	}
 }

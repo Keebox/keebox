@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
 
 
 namespace Keebox.Common.Managers
@@ -22,21 +23,41 @@ namespace Keebox.Common.Managers
 
 		public Guid CreateRole(string name)
 		{
+			if (_roleRepository.Exists(name))
+			{
+				throw new AlreadyExistsException("Role already exists");
+			}
+
 			return _roleRepository.Create(name);
 		}
 
 		public void UpdateRole(Role role)
 		{
+			if (!_roleRepository.Exists(role.Id))
+			{
+				throw new NotFoundException("Role not found");
+			}
+
 			_roleRepository.Update(role);
 		}
 
 		public void DeleteRole(Guid roleId)
 		{
+			if (!_roleRepository.Exists(roleId))
+			{
+				throw new NotFoundException("Role not found");
+			}
+
 			_roleRepository.Delete(roleId);
 		}
 
 		public Role GetRole(Guid roleId)
 		{
+			if (!_roleRepository.Exists(roleId))
+			{
+				throw new NotFoundException("Role not found");
+			}
+
 			return _roleRepository.Get(roleId);
 		}
 

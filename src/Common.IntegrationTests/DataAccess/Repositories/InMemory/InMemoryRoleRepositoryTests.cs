@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using AutoFixture;
@@ -87,8 +88,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			list.Count(x => x.Name == name).Should().Be(0);
 			list.Count(x => x.Name == newName).Should().Be(1);
 		}
-		
-		
+
 		[Test]
 		public void GetTest()
 		{
@@ -96,12 +96,64 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			var name = GenerateName();
 
 			var id = _target.Create(name);
-			
+
 			// act
 			var role = _target.Get(id);
-			
+
 			// assert
 			role.Name.Should().Be(name);
+		}
+
+		[Test]
+		public void ExistsTest()
+		{
+			// arrange
+			var name = GenerateName();
+
+			var id = _target.Create(name);
+
+			// act
+			var exists = _target.Exists(id);
+
+			// assert
+			exists.Should().Be(true);
+		}
+		
+		[Test]
+		public void Exists_ByNameTest()
+		{
+			// arrange
+			var name = GenerateName();
+
+			_target.Create(name);
+
+			// act
+			var nameExists = _target.Exists(name);
+
+			// assert
+			nameExists.Should().Be(true);
+		}
+
+		[Test]
+		public void Exists_NotFoundTest()
+		{
+			// act
+			var exists = _target.Exists(Guid.NewGuid());
+			var nameExists = _target.Exists(GenerateName());
+
+			// assert
+			exists.Should().Be(false);
+			nameExists.Should().Be(false);
+		}
+		
+		[Test]
+		public void ExistsTest_NotFoundByNameTest()
+		{
+			// act
+			var nameExists = _target.Exists(GenerateName());
+
+			// assert
+			nameExists.Should().Be(false);
 		}
 
 		private string GenerateName() => Creator.CreateStringWithMaxLength(_fixture.Create<int>() % 256);

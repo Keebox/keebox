@@ -17,5 +17,9 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 		void Delete(Guid roleId);
 
 		Role Get(Guid roleId);
+
+		bool Exists(Guid roleId);
+
+		bool Exists(string name);
 	}
 }
