@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net;
 
 using Keebox.Common.Exceptions;
 using Keebox.SecretsService.Exceptions;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Keebox.SecretsService.RequestFiltering
 {
+	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class ExceptionsFilter : IExceptionFilter
 	{
 		private readonly ILogger<ExceptionsFilter> _logger;
@@ -52,6 +54,13 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+
+				case SecretsNotProvidedException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
+
 				default:
 					_logger.LogError(context.Exception, message);
 

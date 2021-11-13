@@ -5,13 +5,14 @@ using Keebox.Common.Types;
 using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Services;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Route("system")]
+	[Route(RouteMap.System.Base)]
 	public class SystemController : ControllerBase
 	{
 		public SystemController(Configuration configuration)
@@ -19,37 +20,39 @@ namespace Keebox.SecretsService.Controllers
 			_configuration = configuration;
 		}
 
-		[HttpGet("status")]
-		public SystemInfo GetSystemInfo()
+		[HttpGet(RouteMap.System.Status)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public IActionResult GetSystemInfo()
 		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 			var version = fileVersionInfo.ProductVersion ?? throw new InvalidOperationException();
 			var uptime = (int)DateTime.Now.Subtract(Process.GetCurrentProcess().StartTime).TotalMilliseconds;
 
-			return new SystemInfo(version, _configuration.Engine.ToString()!, uptime);
+			return Ok(new SystemInfo(version, _configuration.Engine.ToString()!, uptime));
 		}
 
-		[HttpGet("config")]
-		public Config GetConfig()
+		[HttpGet(RouteMap.System.Config)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		public IActionResult GetConfig()
 		{
-			return new Config
+			return Ok(new Config
 			{
 				Engine = _configuration.Engine.ToString()!,
 				DefaultFormat = _configuration.DefaultFormat.ToString()!,
 				EnableWebUi = _configuration.EnableWebUi!.Value
-			};
+			});
 		}
 
-		[HttpGet("start")]
-		[ProducesResponseType(200)]
+		[HttpGet(RouteMap.System.Start)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Start()
 		{
 			// TODO: add start logic
 		}
 
-		[HttpGet("stop")]
-		[ProducesResponseType(200)]
+		[HttpGet(RouteMap.System.Stop)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Stop()
 		{
 			// TODO: add stop logic
