@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
@@ -9,6 +11,7 @@ using Keebox.SecretsService.Models;
 using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -17,7 +20,9 @@ namespace Keebox.SecretsService.Controllers
 {
 	[Authenticate]
 	[ApiController]
-	[Route("{*route}")]
+	[Route(RouteMap.Any)]
+	[SuppressMessage("ReSharper", "RouteTemplates.MethodMissingRouteParameters")]
+	[SuppressMessage("ReSharper", "RouteTemplates.ControllerRouteParameterIsNotPassedToMethods")]
 	public class SecretsController : ControllerBase
 	{
 		public SecretsController(
@@ -36,75 +41,74 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public void AddSecrets([FromRoute] RequestPayload payload)
 		{
-			_logger.LogDebug($"Adding secrets {payload.Route}");
-			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
-
-			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
-				throw new Exception("Secrets are not provided");
+			_logger.LogInformation($"Adding secrets {payload.Route}");
 
 			if (payload.Route is null)
-			{
 				throw new EmptyRouteException();
-			}
 
-			_secretsManager.AddSecrets(payload.Route,
-				payload.Data!,
-				_fileConverter.Convert(payload.Files),
-				secretNames);
+			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
+				throw new SecretsNotProvidedException();
+
+			_secretsManager.AddSecrets(payload.Route, payload.Data!, _fileConverter.Convert(payload.Files),
+				ExtractSecretsFromRequest(payload));
 		}
 
 		[HttpGet]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public IActionResult GetSecrets([FromRoute] RequestPayload payload)
 		{
-			_logger.LogDebug($"Getting secrets {payload.Route}");
-			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
+			_logger.LogInformation($"Getting secrets {payload.Route}");
 
 			if (payload.Route is null)
-			{
 				throw new EmptyRouteException();
-			}
 
-			var secrets = _secretsManager.GetSecrets(payload.Route, secretNames).ToArray();
+			var secrets = _secretsManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 
 			if (secrets.Length == 1)
 			{
 				var secret = secrets.Single();
+
 				if (!secret.IsFile)
-				{
 					return Ok(secret.Value);
-				}
 
-				var bytes = _fileConverter.Decode(secret.Value);
-				var stream = new MemoryStream(bytes);
+				var stream = new MemoryStream(_fileConverter.Decode(secret.Value));
 
-				return new FileStreamResult(stream, "application/octet-stream");
+				return File(stream, "application/octet-stream");
 			}
 
 			if (!payload.IncludeFiles)
 				secrets = secrets.Where(x => !x.IsFile).ToArray();
 
 			var format = payload.Format ?? _configuration.DefaultFormat;
-
 			var formatter = _formatterResolver.Resolve(format);
+
 			HttpContext.Response.ContentType = ResolveContentType(format);
 
 			return Ok(formatter.Format(secrets));
 		}
 
 		[HttpDelete]
+		[ProducesResponseType(StatusCodes.Status204NoContent)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public void DeleteSecrets([FromRoute] RequestPayload payload)
 		{
-			_logger.LogDebug($"Deleting secrets {payload.Route}");
-			var secretNames = payload.Secrets?.Split(',') ?? Array.Empty<string>();
+			_logger.LogInformation($"Deleting secrets {payload.Route}");
 
 			if (payload.Route is null)
-			{
 				throw new EmptyRouteException();
-			}
 
-			_secretsManager.DeleteSecrets(payload.Route ?? string.Empty, secretNames);
+			_secretsManager.DeleteSecrets(payload.Route, ExtractSecretsFromRequest(payload));
+		}
+
+		private static string[] ExtractSecretsFromRequest(RequestPayload payload)
+		{
+			return payload.Secrets?.Split(SecretsSeparator) ?? Array.Empty<string>();
 		}
 
 		private static string ResolveContentType(FormatType? format)
@@ -117,6 +121,8 @@ namespace Keebox.SecretsService.Controllers
 				_               => "text/plain"
 			};
 		}
+
+		private const char SecretsSeparator = ',';
 
 		private readonly Configuration _configuration;
 		private readonly IFileConverter _fileConverter;
