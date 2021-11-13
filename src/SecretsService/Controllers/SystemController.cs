@@ -22,7 +22,7 @@ namespace Keebox.SecretsService.Controllers
 
 		[HttpGet(RouteMap.System.Status)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult GetSystemInfo()
+		public ActionResult<SystemInfo> GetSystemInfo()
 		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
@@ -34,7 +34,7 @@ namespace Keebox.SecretsService.Controllers
 
 		[HttpGet(RouteMap.System.Config)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IActionResult GetConfig()
+		public ActionResult<Config> GetConfig()
 		{
 			return Ok(new Config
 			{
