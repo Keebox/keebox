@@ -17,13 +17,13 @@ namespace Keebox.Common.Managers
 		private readonly IGroupRepository _groupRepository;
 
 		private readonly IPathResolver _pathResolver;
-		private readonly ISecretsRepository _secretsRepository;
+		private readonly ISecretRepository _secretRepository;
 
 		public SecretManager(IPathResolver pathResolver, IRepositoryContext repositoryContext)
 		{
 			_pathResolver = pathResolver;
 
-			_secretsRepository = repositoryContext.GetSecretRepository();
+			_secretRepository = repositoryContext.GetSecretRepository();
 			_groupRepository = repositoryContext.GetGroupRepository();
 		}
 
@@ -48,7 +48,7 @@ namespace Keebox.Common.Managers
 					var (groupName, folderPath) = _pathResolver.DeconstructPath(groupPath);
 
 					var group = _groupRepository.Get(groupName, folderPath);
-					var groupSecrets = _secretsRepository.GetGroupSecrets(group.Id);
+					var groupSecrets = _secretRepository.GetGroupSecrets(group.Id);
 
 					var secret = groupSecrets.FirstOrDefault(x => x.Name == name);
 
@@ -62,7 +62,7 @@ namespace Keebox.Common.Managers
 					var (groupName, folderPath) = _pathResolver.DeconstructPath(path);
 					var group = _groupRepository.Get(groupName, folderPath);
 
-					return _secretsRepository.GetGroupSecrets(group.Id)
+					return _secretRepository.GetGroupSecrets(group.Id)
 						.Where(x => secrets.Length == 0 || secrets.Contains(x.Name));
 				}
 				case PathType.None:
@@ -84,7 +84,7 @@ namespace Keebox.Common.Managers
 
 					var groupId = _groupRepository.CreateGroup(groupName, folderPath);
 
-					_secretsRepository.SetGroupSecrets(groupId, FilterDictionaryKeys(input, secrets), FilterDictionaryKeys(files, secrets));
+					_secretRepository.SetGroupSecrets(groupId, FilterDictionaryKeys(input, secrets), FilterDictionaryKeys(files, secrets));
 
 					break;
 				}
@@ -94,10 +94,10 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, folderPath);
 
 					if (secrets.Length > 0)
-						_secretsRepository.UpdateGroupSecrets(@group.Id, FilterDictionaryKeys(input, secrets),
+						_secretRepository.UpdateGroupSecrets(@group.Id, FilterDictionaryKeys(input, secrets),
 							FilterDictionaryKeys(files, secrets));
 					else
-						_secretsRepository.SetGroupSecrets(@group.Id, input, files);
+						_secretRepository.SetGroupSecrets(@group.Id, input, files);
 
 					break;
 				}
@@ -112,10 +112,10 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, folderPath);
 
 					if (input.ContainsKey("value"))
-						_secretsRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string> { { name, input["value"] } },
+						_secretRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string> { { name, input["value"] } },
 							new Dictionary<string, string>());
 					else
-						_secretsRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string>(),
+						_secretRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string>(),
 							new Dictionary<string, string> { { name, files["value"] } });
 
 					break;
@@ -138,7 +138,7 @@ namespace Keebox.Common.Managers
 
 					var group = _groupRepository.Get(groupName, folderPath);
 
-					_secretsRepository.DeleteGroupSecrets(group.Id, new[] { secretName });
+					_secretRepository.DeleteGroupSecrets(group.Id, new[] { secretName });
 
 					break;
 				}
@@ -149,11 +149,11 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, groupPath);
 
 					if (secrets.Length > 0)
-						_secretsRepository.DeleteGroupSecrets(@group.Id, secrets);
+						_secretRepository.DeleteGroupSecrets(@group.Id, secrets);
 					else
 					{
 						_groupRepository.DeleteGroup(groupName, groupPath);
-						_secretsRepository.DeleteGroupSecrets(group.Id);
+						_secretRepository.DeleteGroupSecrets(group.Id);
 					}
 
 					break;

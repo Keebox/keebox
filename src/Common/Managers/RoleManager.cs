@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using Keebox.Common.DataAccess.Entities;
+using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 
@@ -9,9 +10,9 @@ namespace Keebox.Common.Managers
 {
 	public class RoleManager : IRoleManager
 	{
-		public RoleManager(IRoleRepository roleRepository)
+		public RoleManager(IRepositoryContext repositoryContext)
 		{
-			_roleRepository = roleRepository;
+			_roleRepository = repositoryContext.GetRoleRepository();
 		}
 
 		public IEnumerable<Role> GetRoles()

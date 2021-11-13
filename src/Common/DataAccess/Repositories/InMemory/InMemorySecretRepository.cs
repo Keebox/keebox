@@ -10,7 +10,7 @@ using Keebox.Common.DataAccess.Repositories.Abstractions;
 
 namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
-	public class InMemorySecretRepository : InMemoryRepositoryBase<Secret>, ISecretsRepository
+	public class InMemorySecretRepository : InMemoryRepositoryBase<Secret>, ISecretRepository
 	{
 		private void UpdateSecret(Secret secret)
 		{

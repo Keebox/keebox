@@ -28,7 +28,7 @@ namespace Keebox.Common.UnitTests.Managers
 			_pathResolver = new Mock<IPathResolver>();
 
 			_repositoryContext = new Mock<IRepositoryContext>();
-			_secretsRepository = new Mock<ISecretsRepository>();
+			_secretsRepository = new Mock<ISecretRepository>();
 			_groupRepository = new Mock<IGroupRepository>();
 
 			_repositoryContext.Setup(x => x.GetGroupRepository()).Returns(_groupRepository.Object);
@@ -41,7 +41,7 @@ namespace Keebox.Common.UnitTests.Managers
 
 		private ISecretManager _target;
 		private Mock<IPathResolver> _pathResolver;
-		private Mock<ISecretsRepository> _secretsRepository;
+		private Mock<ISecretRepository> _secretsRepository;
 		private Mock<IGroupRepository> _groupRepository;
 		private Mock<IRepositoryContext> _repositoryContext;
 
