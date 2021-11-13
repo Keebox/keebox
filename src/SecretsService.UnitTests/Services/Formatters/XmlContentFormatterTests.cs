@@ -21,18 +21,10 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 		[SetUp]
 		public void Setup()
 		{
-			_fixture = new Fixture();
-
 			_serializer = new Mock<ISerializer>(MockBehavior.Strict);
 
 			_target = new XmlSecretFormatter(_serializer.Object);
 		}
-
-		private IFixture _fixture;
-
-		private Mock<ISerializer> _serializer;
-
-		private XmlSecretFormatter _target;
 
 		[Test]
 		public void FormatTest()
@@ -58,5 +50,11 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 
 			_serializer.Verify(x => x.Serialize(projection), Times.Once);
 		}
+
+		private IFixture _fixture = new Fixture();
+
+		private Mock<ISerializer> _serializer;
+
+		private XmlSecretFormatter _target;
 	}
 }

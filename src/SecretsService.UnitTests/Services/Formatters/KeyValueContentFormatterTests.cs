@@ -19,14 +19,8 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 		[SetUp]
 		public void Setup()
 		{
-			_fixture = new Fixture();
-
 			_target = new KeyValueSecretFormatter();
 		}
-
-		private IFixture _fixture;
-
-		private KeyValueSecretFormatter _target;
 
 		[Test]
 		public void FormatTest()
@@ -41,5 +35,9 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 			// assert
 			result.Should().Be(expected);
 		}
+
+		private IFixture _fixture = new Fixture();
+
+		private KeyValueSecretFormatter _target;
 	}
 }
