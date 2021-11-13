@@ -70,9 +70,14 @@ namespace Keebox.SecretsService.Controllers
 
 			var secrets = _secretsManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 
-			if (secrets.Length == 1 && secrets.Single().IsFile)
+			if (secrets.Length == 1)
 			{
-				var stream = new MemoryStream(_fileConverter.Decode(secrets.Single().Value));
+				var secret = secrets.Single();
+
+				if (!secret.IsFile)
+					return Ok(secret.Value);
+
+				var stream = new MemoryStream(_fileConverter.Decode(secret.Value));
 
 				return File(stream, "application/octet-stream");
 			}
