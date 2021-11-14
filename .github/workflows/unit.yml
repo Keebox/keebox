@@ -19,6 +19,9 @@ jobs:
             src:
               - 'src/**'
 
+      - name: Debug
+        run: echo ${{ github.event_name }}
+
   backend:
     runs-on: ubuntu-latest
     name: 'Run unit tests'
