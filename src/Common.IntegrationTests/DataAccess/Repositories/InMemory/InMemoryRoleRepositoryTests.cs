@@ -113,9 +113,9 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			var exists = _target.Exists(id);
 
 			// assert
-			exists.Should().Be(true);
+			exists.Should().BeTrue();
 		}
-		
+
 		[Test]
 		public void Exists_ByNameTest()
 		{
@@ -128,7 +128,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			var nameExists = _target.Exists(name);
 
 			// assert
-			nameExists.Should().Be(true);
+			nameExists.Should().BeTrue();
 		}
 
 		[Test]
@@ -136,13 +136,11 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 		{
 			// act
 			var exists = _target.Exists(Guid.NewGuid());
-			var nameExists = _target.Exists(GenerateName());
 
 			// assert
-			exists.Should().Be(false);
-			nameExists.Should().Be(false);
+			exists.Should().BeFalse();
 		}
-		
+
 		[Test]
 		public void ExistsTest_NotFoundByNameTest()
 		{
@@ -150,7 +148,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			var nameExists = _target.Exists(GenerateName());
 
 			// assert
-			nameExists.Should().Be(false);
+			nameExists.Should().BeFalse();
 		}
 
 		private string GenerateName() => Creator.CreateStringWithMaxLength(_fixture.Create<int>() % 256);

@@ -33,32 +33,31 @@ namespace Keebox.Common.Managers
 
 		public void UpdateRole(Role role)
 		{
-			if (!_roleRepository.Exists(role.Id))
-			{
-				throw new NotFoundException("Role not found");
-			}
+			EnsureRole(role.Id);
 
 			_roleRepository.Update(role);
 		}
 
 		public void DeleteRole(Guid roleId)
 		{
-			if (!_roleRepository.Exists(roleId))
-			{
-				throw new NotFoundException("Role not found");
-			}
+			EnsureRole(roleId);
 
 			_roleRepository.Delete(roleId);
 		}
 
 		public Role GetRole(Guid roleId)
 		{
+			EnsureRole(roleId);
+
+			return _roleRepository.Get(roleId);
+		}
+
+		private void EnsureRole(Guid roleId)
+		{
 			if (!_roleRepository.Exists(roleId))
 			{
 				throw new NotFoundException("Role not found");
 			}
-
-			return _roleRepository.Get(roleId);
 		}
 
 		private readonly IRoleRepository _roleRepository;
