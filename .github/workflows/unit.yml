@@ -19,15 +19,12 @@ jobs:
             src:
               - 'src/**'
 
-      - name: Debug
-        run: echo ${{ github.event_name }}
-
   backend:
     runs-on: ubuntu-latest
     name: 'Run unit tests'
 
     needs: gate
-    if: ${{ needs.gate.outputs.changed == 'true' || github.event_name != 'pull_request' }}
+    if: ${{ needs.gate.outputs.changed == 'true' || github.event_name == 'workflow_call' }}
 
     steps:
       - name: Checkout project
