@@ -13,9 +13,9 @@ jobs:
       changed: ${{ steps.changed.outputs.src }}
 
     steps:
-      - name: Check source file
+      - id: changed
+        name: Check source files
         uses: dorny/paths-filter@v2
-        id: changed
         with:
           filters: |
             src:
