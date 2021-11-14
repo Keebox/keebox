@@ -13,5 +13,9 @@ namespace Keebox.Common.Managers
 		void DeleteAccount(Guid accountId);
 
 		IEnumerable<Account> GetAccounts();
+
+		Account GetAccount(Guid accountId);
+
+		void UpdateAccount(Account account);
 	}
 }
