@@ -1,4 +1,4 @@
-name: 'Gate for validation'
+name: 'Gate for validation pipelines'
 
 on: workflow_call
 
