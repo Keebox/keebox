@@ -5,9 +5,25 @@ on:
   - pull_request
 
 jobs:
+  gate:
+    runs-on: ubuntu-latest
+    name: 'Seek for changed source files'
+    steps:
+      - name: Check source file
+        uses: dorny/paths-filter@v2
+        id: changed
+        with:
+          filters: |
+            src:
+              - 'src/**'
+
   backend:
     runs-on: ubuntu-latest
     name: 'Run unit tests'
+    
+    needs: gate
+    if: ${{ needs.gate.outputs.changed == 'true' }}
+    
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
