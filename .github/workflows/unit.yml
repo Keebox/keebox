@@ -1,11 +1,8 @@
 name: Unit tests
 
 on:
-  workflow_call:
-
-  pull_request:
-    paths:
-      - 'src/*'
+  - workflow_call
+  - pull_request
 
 jobs:
   backend:
