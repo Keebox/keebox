@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 using Keebox.Common.Exceptions;
@@ -27,6 +28,11 @@ namespace Keebox.SecretsService.RequestFiltering
 
 			switch (context.Exception)
 			{
+				case ArgumentException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
 				case NotFoundException:
 					status = HttpStatusCode.NotFound;
 					message = context.Exception.Message;
@@ -60,7 +66,11 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+				case AlreadyExistsException:
+					status = HttpStatusCode.Conflict;
+					message = context.Exception.Message;
 
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 

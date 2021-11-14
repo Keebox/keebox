@@ -17,7 +17,7 @@ namespace Keebox.Common.DataAccess.Repositories
 			_serviceProvider = serviceProvider;
 		}
 
-		public ISecretsRepository GetSecretRepository()
+		public ISecretRepository GetSecretRepository()
 		{
 			return _serviceProvider.GetService<InMemorySecretRepository>()!;
 		}
@@ -32,7 +32,7 @@ namespace Keebox.Common.DataAccess.Repositories
 			return _serviceProvider.GetService<InMemoryGroupRepository>()!;
 		}
 
-		public IRolesRepository GetRoleRepository()
+		public IRoleRepository GetRoleRepository()
 		{
 			return _serviceProvider.GetService<InMemoryRoleRepository>()!;
 		}

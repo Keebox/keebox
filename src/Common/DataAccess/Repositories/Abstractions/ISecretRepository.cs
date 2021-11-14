@@ -6,7 +6,7 @@ using Keebox.Common.DataAccess.Entities;
 
 namespace Keebox.Common.DataAccess.Repositories.Abstractions
 {
-	public interface ISecretsRepository
+	public interface ISecretRepository
 	{
 		IEnumerable<Secret> GetGroupSecrets(Guid groupId);
 

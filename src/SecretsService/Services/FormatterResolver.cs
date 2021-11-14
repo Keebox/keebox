@@ -22,11 +22,11 @@ namespace Keebox.SecretsService.Services
 			return type switch
 			{
 				FormatType.Env  => new KeyValueSecretFormatter(),
-				FormatType.Json => new JsonSecretFormatter(serializer),
+				FormatType.Json => new JsonSecretFormatter(),
 				FormatType.Xml  => new XmlSecretFormatter(serializer),
 
 				_ => throw new UnsupportedFormatException(type.ToString()
-															 ?? throw new ArgumentOutOfRangeException(nameof(type), type, null))
+														  ?? throw new ArgumentOutOfRangeException(nameof(type), type, null))
 			};
 		}
 	}

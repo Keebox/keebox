@@ -11,6 +11,6 @@ namespace Keebox.Common.DataAccess.Entities
 
 		public string? CertificateThumbprint { get; init; }
 
-		public Guid[]? RoleIds { get; init; }
+		public Guid[] RoleIds { get; init; }
 	}
 }

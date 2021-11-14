@@ -13,7 +13,7 @@ using LinqToDB.Data;
 
 namespace Keebox.Common.DataAccess.Repositories.Postgres
 {
-	public class PostgresSecretRepository : ISecretsRepository
+	public class PostgresSecretRepository : ISecretRepository
 	{
 		public PostgresSecretRepository(IConnectionFactory connectionFactory)
 		{

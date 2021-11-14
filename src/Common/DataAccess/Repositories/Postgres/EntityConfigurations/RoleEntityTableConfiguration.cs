@@ -13,7 +13,8 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.EntityConfigurations
 			schema.GetFluentMappingBuilder().Entity<Role>()
 				.HasSchemaName("public")
 				.HasTableName("role")
-				.Property(x => x.Id).HasColumnName(nameof(Role.Id).ToLower()).IsPrimaryKey().HasDataType(DataType.Guid);
+				.Property(x => x.Id).HasColumnName(nameof(Role.Id).ToLower()).IsPrimaryKey().HasDataType(DataType.Guid)
+				.Property(x => x.Name).HasColumnName(nameof(Role.Name).ToLower());
 		}
 	}
 }

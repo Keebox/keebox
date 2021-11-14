@@ -5,7 +5,5 @@
 		public string Name { get; init; }
 
 		public string Path { get; init; }
-
-		// TODO: add secret ids
 	}
 }

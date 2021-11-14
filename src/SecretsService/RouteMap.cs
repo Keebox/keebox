@@ -6,6 +6,8 @@
 
 		public const string Account = "account";
 
+		public const string Role = "role";
+
 		public static class System
 		{
 			public const string Base = "system";

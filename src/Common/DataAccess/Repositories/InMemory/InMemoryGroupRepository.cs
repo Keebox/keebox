@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 
 using EnsureThat;
@@ -11,18 +10,13 @@ using Keebox.Common.Exceptions;
 
 namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
-	public class InMemoryGroupRepository : IGroupRepository
+	public class InMemoryGroupRepository : InMemoryRepositoryBase<Group>, IGroupRepository
 	{
-		public InMemoryGroupRepository()
-		{
-			_storage = new List<Group>();
-		}
-
 		public bool Exists(string name, string path)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(name);
 
-			return _storage.Any(x =>
+			return Storage.Any(x =>
 				x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && x.Path.Equals(path, StringComparison.OrdinalIgnoreCase));
 		}
 
@@ -32,7 +26,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 
 			try
 			{
-				return _storage.Single(x =>
+				return Storage.Single(x =>
 					x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && x.Path.Equals(path, StringComparison.OrdinalIgnoreCase));
 			}
 			catch (InvalidOperationException)
@@ -52,7 +46,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				Path = path
 			};
 
-			_storage.Add(group);
+			Storage.Add(group);
 
 			return group.Id;
 		}
@@ -61,13 +55,11 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(name);
 
-			var items = _storage.Where(x =>
+			var items = Storage.Where(x =>
 					x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && x.Path.Equals(path, StringComparison.OrdinalIgnoreCase))
 				.ToList();
 
-			items.ForEach(x => _storage.Remove(x));
+			items.ForEach(x => Storage.Remove(x));
 		}
-
-		private readonly List<Group> _storage;
 	}
 }

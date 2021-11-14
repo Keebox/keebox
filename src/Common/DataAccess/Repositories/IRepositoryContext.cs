@@ -5,12 +5,12 @@ namespace Keebox.Common.DataAccess.Repositories
 {
 	public interface IRepositoryContext
 	{
-		ISecretsRepository GetSecretRepository();
+		ISecretRepository GetSecretRepository();
 
 		IAccountRepository GetAccountRepository();
 
 		IGroupRepository GetGroupRepository();
 
-		IRolesRepository GetRoleRepository();
+		IRoleRepository GetRoleRepository();
 	}
 }

@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Net;
 
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
@@ -26,14 +25,14 @@ namespace Keebox.SecretsService.Controllers
 	public class SecretsController : ControllerBase
 	{
 		public SecretsController(
-			ISecretsManager            secretsManager,
+			ISecretManager             secretManager,
 			IFileConverter             fileConverter,
 			IFormatterResolver         formatterResolver,
 			Configuration              configuration,
 			ILogger<SecretsController> logger
 		)
 		{
-			_secretsManager = secretsManager;
+			_secretManager = secretManager;
 			_fileConverter = fileConverter;
 			_formatterResolver = formatterResolver;
 			_configuration = configuration;
@@ -54,7 +53,7 @@ namespace Keebox.SecretsService.Controllers
 			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
 				throw new SecretsNotProvidedException();
 
-			_secretsManager.AddSecrets(payload.Route, payload.Data!, _fileConverter.Convert(payload.Files),
+			_secretManager.AddSecrets(payload.Route, payload.Data!, _fileConverter.Convert(payload.Files),
 				ExtractSecretsFromRequest(payload));
 		}
 
@@ -68,7 +67,7 @@ namespace Keebox.SecretsService.Controllers
 			if (payload.Route is null)
 				throw new EmptyRouteException();
 
-			var secrets = _secretsManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
+			var secrets = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 
 			if (secrets.Length == 1)
 			{
@@ -103,7 +102,7 @@ namespace Keebox.SecretsService.Controllers
 			if (payload.Route is null)
 				throw new EmptyRouteException();
 
-			_secretsManager.DeleteSecrets(payload.Route, ExtractSecretsFromRequest(payload));
+			_secretManager.DeleteSecrets(payload.Route, ExtractSecretsFromRequest(payload));
 		}
 
 		private static string[] ExtractSecretsFromRequest(RequestPayload payload)
@@ -129,6 +128,6 @@ namespace Keebox.SecretsService.Controllers
 		private readonly IFormatterResolver _formatterResolver;
 		private readonly ILogger<SecretsController> _logger;
 
-		private readonly ISecretsManager _secretsManager;
+		private readonly ISecretManager _secretManager;
 	}
 }
