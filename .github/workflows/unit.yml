@@ -1,23 +1,13 @@
 name: Unit tests
 
 on:
-  - workflow_call
   - pull_request
+  - workflow_call
 
 jobs:
   gate:
-    runs-on: ubuntu-latest
-    name: 'Seek for changed source files'
-    outputs:
-      changed: ${{ steps.changed.outputs.src }}
-    steps:
-      - name: Check source file
-        uses: dorny/paths-filter@v2
-        id: changed
-        with:
-          filters: |
-            src:
-              - 'src/**'
+    name: Run unit tests
+    uses: keebox/keebox/.github/workflows/gate.yml@master
 
   backend:
     runs-on: ubuntu-latest

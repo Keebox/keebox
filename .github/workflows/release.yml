@@ -6,11 +6,14 @@ on:
       major:
         description: 'Whether to release major'
         default: 'false'
+        required: false
       minor:
         description: 'Whether to release minor'
         default: 'false'
+        required: false
       tag:
         description: 'Tag that will be added to release'
+        required: false
 
 env:
   REGISTRY: ghcr.io

@@ -5,9 +5,17 @@ on:
   - workflow_call
 
 jobs:
+  gate:
+    name: Run unit tests
+    uses: keebox/keebox/.github/workflows/gate.yml@master
+
   backend:
     runs-on: ubuntu-latest
     name: 'Run integration tests'
+
+    needs: gate
+    if: ${{ needs.gate.outputs.changed == 'true' || github.event_name == 'workflow_call' }}
+
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
