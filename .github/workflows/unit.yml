@@ -24,7 +24,7 @@ jobs:
     name: 'Run unit tests'
 
     needs: gate
-    if: ${{ needs.gate.outputs.changed == 'true' }} || ${{ github.event_name == 'workflow_call' }}
+    if: ${{ needs.gate.outputs.changed == 'true' }}
 
     steps:
       - name: Checkout project
