@@ -1,15 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 using AutoFixture;
 
 using FluentAssertions;
 
 using Keebox.Common.DataAccess.Entities;
-using Keebox.Common.Helpers.Serialization;
 using Keebox.SecretsService.Services.Formatters;
-
-using Moq;
 
 using NUnit.Framework;
 
@@ -24,9 +20,7 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 		{
 			_fixture = new Fixture();
 
-			_serializer = new Mock<ISerializer>(MockBehavior.Strict);
-
-			_target = new JsonSecretFormatter(_serializer.Object);
+			_target = new JsonSecretFormatter();
 		}
 
 		[Test]
@@ -44,8 +38,6 @@ namespace Keebox.SecretsService.UnitTests.Services.Formatters
 		}
 
 		private IFixture _fixture = new Fixture();
-
-		private Mock<ISerializer> _serializer;
 
 		private JsonSecretFormatter _target;
 	}

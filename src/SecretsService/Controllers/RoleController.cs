@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
@@ -9,8 +8,6 @@ using Keebox.SecretsService.RequestFiltering;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
-using MongoDB.Driver.Core.WireProtocol.Messages;
 
 
 namespace Keebox.SecretsService.Controllers

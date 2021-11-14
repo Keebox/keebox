@@ -3,7 +3,6 @@ using System.Diagnostics;
 
 using Keebox.Common.Types;
 using Keebox.SecretsService.Models;
-using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

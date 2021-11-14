@@ -6,7 +6,6 @@ using EnsureThat;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
-using Keebox.Common.Exceptions;
 
 using LinqToDB;
 

@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
-using System.Net;
 
 using Keebox.Common.Managers;
 using Keebox.Common.Types;

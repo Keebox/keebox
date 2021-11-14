@@ -1,7 +1,4 @@
-﻿using Keebox.Common.Types;
-
-
-namespace Keebox.SecretsService.Models
+﻿namespace Keebox.SecretsService.Models
 {
 	public record Config
 	{

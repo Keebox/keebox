@@ -8,10 +8,7 @@ using FluentAssertions;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories.InMemory;
-using Keebox.Common.DataAccess.Repositories.Postgres;
-using Keebox.Common.DataAccess.Repositories.Postgres.Transactions;
 using Keebox.Common.IntegrationTests.Helpers;
-using Keebox.Common.Types;
 
 using NUnit.Framework;
 
