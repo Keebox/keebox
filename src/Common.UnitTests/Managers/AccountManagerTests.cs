@@ -64,6 +64,7 @@ namespace Keebox.Common.UnitTests.Managers
 			// arrange
 			var id = _fixture.Create<Guid>();
 
+			_accountRepository.Setup(x => x.Exists(It.Is<Guid>(y => y == id))).Returns(true);
 			_accountRepository.Setup(x => x.Delete(It.Is<Guid>(y => y == id))).Verifiable();
 
 			// act

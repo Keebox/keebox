@@ -36,7 +36,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			_target.Delete(id);
 
 			// assert
-			_target.Exists(account.Name).Should().BeFalse();
+			_target.List().Should().HaveCount(0);
 		}
 
 		[Test]
@@ -53,7 +53,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 		}
 
 		[Test]
-		public void ExistsTest()
+		public void Exists_ByNameTest()
 		{
 			// arrange
 			var account = CreateAccount();
@@ -62,6 +62,22 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 
 			// act
 			var result = _target.Exists(account.Name!);
+
+			// assert
+			result.Should().BeTrue();
+			id.Should().NotBe(Guid.Empty);
+		}
+
+		[Test]
+		public void Exists_ByIdTest()
+		{
+			// arrange
+			var account = CreateAccount();
+
+			var id = _target.Create(account);
+
+			// act
+			var result = _target.Exists(id);
 
 			// assert
 			result.Should().BeTrue();
@@ -123,6 +139,21 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			updated.Should().NotBeNull();
 			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
 			id.Should().NotBe(Guid.Empty);
+		}
+
+		[Test]
+		public void GetTest()
+		{
+			// arrange
+			var account = CreateAccount();
+
+			var id = _target.Create(account);
+
+			// act
+			var savedAccount = _target.Get(id);
+
+			// assert
+			savedAccount.Should().BeEquivalentTo(account, options => options.Excluding(x => x.Id));
 		}
 
 		private Account CreateAccount()

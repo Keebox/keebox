@@ -20,6 +20,11 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			return Storage.Any(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 		}
 
+		public bool Exists(Guid accountId)
+		{
+			return Storage.Any(x => x.Id == accountId);
+		}
+
 		public bool ExistsWithToken(string tokenHash)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(tokenHash);
@@ -63,7 +68,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			return Storage.Single(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 		}
 
-		public Account? Update(Account account)
+		public void Update(Account account)
 		{
 			if (string.IsNullOrEmpty(account.Name))
 			{
@@ -74,17 +79,20 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 
 			if (index == -1)
 			{
-				return null;
+				return;
 			}
 
 			Storage[index] = account;
-
-			return account;
 		}
 
 		public IEnumerable<Account> List()
 		{
 			return Storage;
+		}
+
+		public Account Get(Guid accountId)
+		{
+			return Storage.Single(x => x.Id == accountId);
 		}
 	}
 }
