@@ -63,6 +63,7 @@ namespace Keebox.SecretsService
 			services.AddTransient<ISecretManager, SecretManager>();
 			services.AddTransient<IAccountManager, AccountManager>();
 			services.AddTransient<IRoleManager, RoleManager>();
+			services.AddTransient<IPermissionManager, PermissionManager>();
 
 			services.AddTransient<IFormatterResolver, FormatterResolver>();
 

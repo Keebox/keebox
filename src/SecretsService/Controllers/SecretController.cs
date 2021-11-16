@@ -43,7 +43,7 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public void AddSecrets([FromRoute] RequestPayload payload)
+		public ActionResult AddSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Adding secrets {payload.Route}");
 
@@ -55,6 +55,8 @@ namespace Keebox.SecretsService.Controllers
 
 			_secretManager.AddSecrets(payload.Route, payload.Data!, _fileConverter.Convert(payload.Files),
 				ExtractSecretsFromRequest(payload));
+
+			return NoContent();
 		}
 
 		[HttpGet]
@@ -95,14 +97,18 @@ namespace Keebox.SecretsService.Controllers
 		[HttpDelete]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public void DeleteSecrets([FromRoute] RequestPayload payload)
+		public ActionResult DeleteSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Deleting secrets {payload.Route}");
 
 			if (payload.Route is null)
+			{
 				throw new EmptyRouteException();
+			}
 
 			_secretManager.DeleteSecrets(payload.Route, ExtractSecretsFromRequest(payload));
+
+			return NoContent();
 		}
 
 		private static string[] ExtractSecretsFromRequest(RequestPayload payload)

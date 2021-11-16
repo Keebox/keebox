@@ -29,6 +29,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 				.SingleOrDefault(x => x.Name.Equals(name) && x.Path.Equals(path)) is not null;
 		}
 
+		public bool Exists(Guid groupId)
+		{
+			using var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Group>().Any(x => x.Id == groupId);
+		}
+
 		public Group Get(string name, string path)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(name);
