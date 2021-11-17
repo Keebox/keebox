@@ -48,11 +48,6 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
 		public ActionResult<Guid> CreatePermission([FromRoute] RequestPayload payload)
 		{
-			if (payload.Route is null)
-			{
-				throw new EmptyRouteException();
-			}
-
 			if (payload.Data is null || !payload.Data.Keys.Any())
 			{
 				throw new EmptyDataException("Data is not provided");
@@ -101,7 +96,7 @@ namespace Keebox.SecretsService.Controllers
 				throw new ArgumentException("Group id is not provided");
 			}
 
-			if (!data.TryGetValue("groupId", out var isReadOnly))
+			if (!data.TryGetValue("isReadOnly", out var isReadOnly))
 			{
 				throw new ArgumentException("Is read only is not provided");
 			}

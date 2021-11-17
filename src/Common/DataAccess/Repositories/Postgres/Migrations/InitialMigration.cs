@@ -38,6 +38,14 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.WithColumn(nameof(Secret.Value).ToLower()).AsString().NotNullable()
 				.WithColumn(nameof(Secret.GroupId).ToLower()).AsGuid().NotNullable()
 				.WithColumn(nameof(Secret.IsFile).ToLower()).AsBoolean().NotNullable().WithDefaultValue(false);
+
+			Create
+				.Table("permission")
+				.InSchema("public")
+				.WithColumn(nameof(Permission.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
+				.WithColumn(nameof(Permission.GroupId).ToLower()).AsGuid().NotNullable()
+				.WithColumn(nameof(Permission.RoleId).ToLower()).AsGuid().NotNullable()
+				.WithColumn(nameof(Permission.IsReadOnly).ToLower()).AsBoolean().NotNullable();
 		}
 	}
 }

@@ -36,6 +36,7 @@ namespace Keebox.Common.DependencyInjection
 					services.AddSingleton<InMemoryGroupRepository>();
 					services.AddSingleton<InMemorySecretRepository>();
 					services.AddSingleton<InMemoryRoleRepository>();
+					services.AddSingleton<InMemoryPermissionRepository>();
 
 					services.AddSingleton<IRepositoryContext, InMemoryRepositoryContext>();
 
@@ -50,6 +51,7 @@ namespace Keebox.Common.DependencyInjection
 					services.AddTransient<PostgresGroupRepository>();
 					services.AddTransient<PostgresSecretRepository>();
 					services.AddTransient<PostgresRoleRepository>();
+					services.AddTransient<PostgresPermissionRepository>();
 
 					services.AddSingleton<IRepositoryContext, PostgresRepositoryContext>();
 
