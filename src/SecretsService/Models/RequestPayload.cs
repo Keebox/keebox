@@ -13,7 +13,7 @@ namespace Keebox.SecretsService.Models
 	[Serializable]
 	public record RequestPayload(string? Route)
 	{
-		[FromBody] public Dictionary<string, string>? Body { get; init; }
+		[FromBody] public Dictionary<string, object>? Body { get; init; }
 
 		[FromForm] public IFormCollection? FormData { get; init; }
 
@@ -23,9 +23,9 @@ namespace Keebox.SecretsService.Models
 
 		[FromQuery] public bool IncludeFiles { get; set; }
 
-		public Dictionary<string, string>? Data
+		public Dictionary<string, object>? Data
 		{
-			get => Body ?? FormData?.ToDictionary(x => x.Key, x => x.Value.ToString());
+			get => Body ?? FormData?.ToDictionary(x => x.Key, x => (object)x.Value.ToString());
 		}
 
 		public Dictionary<string, IFormFile>? Files

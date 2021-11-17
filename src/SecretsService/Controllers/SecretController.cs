@@ -53,7 +53,8 @@ namespace Keebox.SecretsService.Controllers
 			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
 				throw new SecretsNotProvidedException();
 
-			_secretManager.AddSecrets(payload.Route, payload.Data!, _fileConverter.Convert(payload.Files),
+			_secretManager.AddSecrets(payload.Route, payload.Data!.ToDictionary(x => x.Key, x => x.Value.ToString()!),
+				_fileConverter.Convert(payload.Files),
 				ExtractSecretsFromRequest(payload));
 
 			return NoContent();

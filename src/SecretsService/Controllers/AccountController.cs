@@ -66,7 +66,7 @@ namespace Keebox.SecretsService.Controllers
 							throw new ArgumentException("Token is not provided");
 						}
 
-						token = payload.Data["token"];
+						token = (string)payload.Data["token"];
 					}
 
 					_accountManager.CreateTokenAccount(token);
@@ -103,14 +103,14 @@ namespace Keebox.SecretsService.Controllers
 			return NoContent();
 		}
 
-		private static AccountType GetAccountType(IDictionary<string, string>? body)
+		private static AccountType GetAccountType(IDictionary<string, object>? body)
 		{
 			if (body is null || !body.ContainsKey("type"))
 			{
 				throw new ArgumentException("Type is not provided.");
 			}
 
-			return body["type"].ToLower() switch
+			return ((string)body["type"]).ToLower() switch
 			{
 				"token" => AccountType.Token,
 				_       => throw new UnsupportedTypeException($"{body["type"]} type is not supported.")

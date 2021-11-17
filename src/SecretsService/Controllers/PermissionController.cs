@@ -84,7 +84,7 @@ namespace Keebox.SecretsService.Controllers
 			return NoContent();
 		}
 
-		private static (Guid roleId, Guid groupId, bool isReadOnly) ParsePermission(IReadOnlyDictionary<string, string> data)
+		private static (Guid roleId, Guid groupId, bool isReadOnly) ParsePermission(IReadOnlyDictionary<string, object> data)
 		{
 			if (!data.TryGetValue("roleId", out var roleId))
 			{
@@ -101,7 +101,7 @@ namespace Keebox.SecretsService.Controllers
 				throw new ArgumentException("Is read only is not provided");
 			}
 
-			return (Guid.Parse(roleId), Guid.Parse(groupId), bool.Parse(isReadOnly));
+			return (Guid.Parse((string)roleId), Guid.Parse((string)groupId), (bool)isReadOnly);
 		}
 
 		private readonly IPermissionManager _permissionManager;
