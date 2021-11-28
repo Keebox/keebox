@@ -50,11 +50,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			connection.GetTable<Role>().Update(_ => new Role
-			{
-				Id = role.Id,
-				Name = role.Name
-			});
+			connection.Update(role);
 		}
 
 		public void Delete(Guid roleId)

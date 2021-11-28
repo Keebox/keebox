@@ -8,6 +8,8 @@
 
 		public const string Role = "role";
 
+		public const string Permission = "permission";
+
 		public static class System
 		{
 			public const string Base = "system";

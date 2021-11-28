@@ -19,22 +19,27 @@ namespace Keebox.Common.DataAccess.Repositories
 
 		public ISecretRepository GetSecretRepository()
 		{
-			return _serviceProvider.GetService<PostgresSecretRepository>()!;
+			return _serviceProvider.GetRequiredService<PostgresSecretRepository>();
 		}
 
 		public IAccountRepository GetAccountRepository()
 		{
-			return _serviceProvider.GetService<PostgresAccountRepository>()!;
+			return _serviceProvider.GetRequiredService<PostgresAccountRepository>();
 		}
 
 		public IGroupRepository GetGroupRepository()
 		{
-			return _serviceProvider.GetService<PostgresGroupRepository>()!;
+			return _serviceProvider.GetRequiredService<PostgresGroupRepository>();
 		}
 
 		public IRoleRepository GetRoleRepository()
 		{
-			return _serviceProvider.GetService<PostgresRoleRepository>()!;
+			return _serviceProvider.GetRequiredService<PostgresRoleRepository>();
+		}
+
+		public IPermissionRepository GetPermissionRepository()
+		{
+			return _serviceProvider.GetRequiredService<PostgresPermissionRepository>();
 		}
 	}
 }

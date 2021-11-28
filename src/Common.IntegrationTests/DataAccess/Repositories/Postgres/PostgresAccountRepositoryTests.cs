@@ -9,6 +9,7 @@ using FluentAssertions;
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories.Postgres;
 using Keebox.Common.DataAccess.Repositories.Postgres.Transactions;
+using Keebox.Common.IntegrationTests.Helpers;
 using Keebox.Common.Types;
 
 using NUnit.Framework;
@@ -52,14 +53,14 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			_target.Delete(id);
 
 			// assert
-			_target.Exists(account.Name).Should().BeFalse();
+			_target.List().Should().HaveCount(0);
 		}
 
 		[Test]
 		public void Exists_ForNotExistingAccountTest()
 		{
 			// arrange
-			var accountName = CreateStringWithMaxLength(255);
+			var accountName = Creator.CreateStringWithMaxLength(255);
 
 			// act
 			var result = _target.Exists(accountName);
@@ -69,7 +70,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 		}
 
 		[Test]
-		public void ExistsTest()
+		public void Exists_ByNameTest()
 		{
 			// arrange
 			var account = CreateAccount();
@@ -78,6 +79,22 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 
 			// act
 			var result = _target.Exists(account.Name!);
+
+			// assert
+			result.Should().BeTrue();
+			id.Should().NotBe(Guid.Empty);
+		}
+
+		[Test]
+		public void Exists_ByIdTest()
+		{
+			// arrange
+			var account = CreateAccount();
+
+			var id = _target.Create(account);
+
+			// act
+			var result = _target.Exists(id);
 
 			// assert
 			result.Should().BeTrue();
@@ -130,7 +147,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 
 			var id = _target.Create(account);
 
-			account.TokenHash = CreateStringWithMaxLength(tokenHashLength);
+			account.TokenHash = Creator.CreateStringWithMaxLength(tokenHashLength);
 
 			// act
 			_target.Update(account);
@@ -142,10 +159,20 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
 			id.Should().NotBe(Guid.Empty);
 		}
-
-		private string CreateStringWithMaxLength(int length)
+		
+		[Test]
+		public void GetTest()
 		{
-			return string.Join(string.Empty, _fixture.CreateMany<char>(length));
+			// arrange
+			var account = CreateAccount();
+
+			var id = _target.Create(account);
+
+			// act
+			var savedAccount = _target.Get(id);
+
+			// assert
+			savedAccount.Should().BeEquivalentTo(account, options => options.Excluding(x => x.Id));
 		}
 
 		private Account CreateAccount()
@@ -155,9 +182,9 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			var certificateThumbprintLength = _fixture.Create<Generator<int>>().First(x => x < 40);
 
 			var account = _fixture.Build<Account>()
-				.With(x => x.Name, CreateStringWithMaxLength(nameLength))
-				.With(x => x.TokenHash, CreateStringWithMaxLength(tokenHashLength))
-				.With(x => x.CertificateThumbprint, CreateStringWithMaxLength(certificateThumbprintLength))
+				.With(x => x.Name, Creator.CreateStringWithMaxLength(nameLength))
+				.With(x => x.TokenHash, Creator.CreateStringWithMaxLength(tokenHashLength))
+				.With(x => x.CertificateThumbprint, Creator.CreateStringWithMaxLength(certificateThumbprintLength))
 				.Without(x => x.RoleIds)
 				.Create();
 

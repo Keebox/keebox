@@ -26,32 +26,32 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public Role GetRole([FromRoute] Guid roleId)
+		public ActionResult<Role> GetRole([FromRoute] Guid roleId)
 		{
-			return _roleManager.GetRole(roleId);
+			return Ok(_roleManager.GetRole(roleId));
 		}
 
 		[HttpGet]
 		[ProducesResponseType(StatusCodes.Status200OK)]
-		public IEnumerable<Role> ListRoles()
+		public ActionResult<IEnumerable<Role>> ListRoles()
 		{
-			return _roleManager.GetRoles();
+			return Ok(_roleManager.GetRoles());
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status201Created)]
+		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
 		public ActionResult<Guid> CreateRole([FromRoute] RequestPayload payload)
 		{
-			return _roleManager.CreateRole(payload.Body?["name"] ?? string.Empty);
+			return Ok(_roleManager.CreateRole((string)(payload.Body?["name"] ?? string.Empty)));
 		}
 
 		[HttpPut("{roleId:guid}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public void ReplaceRole([FromBody] Role role, [FromRoute] Guid roleId)
+		public ActionResult ReplaceRole([FromBody] Role role, [FromRoute] Guid roleId)
 		{
 			if (roleId != role.Id)
 			{
@@ -59,14 +59,18 @@ namespace Keebox.SecretsService.Controllers
 			}
 
 			_roleManager.UpdateRole(role);
+
+			return NoContent();
 		}
 
 		[HttpDelete("{roleId:guid}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public void DeleteRole([FromRoute] Guid roleId)
+		public ActionResult DeleteRole([FromRoute] Guid roleId)
 		{
 			_roleManager.DeleteRole(roleId);
+
+			return NoContent();
 		}
 
 		private readonly IRoleManager _roleManager;

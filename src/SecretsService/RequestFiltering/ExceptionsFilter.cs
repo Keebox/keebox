@@ -71,6 +71,16 @@ namespace Keebox.SecretsService.RequestFiltering
 					message = context.Exception.Message;
 
 					break;
+				case UnsupportedTypeException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
+				case EmptyDataException:
+					status = HttpStatusCode.BadRequest;
+					message = context.Exception.Message;
+
+					break;
 				default:
 					_logger.LogError(context.Exception, message);
 

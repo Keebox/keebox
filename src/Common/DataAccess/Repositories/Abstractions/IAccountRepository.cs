@@ -10,6 +10,8 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 	{
 		bool Exists(string accountName);
 
+		bool Exists(Guid accountId);
+
 		bool ExistsWithToken(string tokenHash);
 
 		Guid Create(Account account);
@@ -18,8 +20,10 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 
 		Account GetByName(string accountName);
 
-		Account? Update(Account account);
+		void Update(Account account);
 
 		IEnumerable<Account> List();
+
+		Account Get(Guid accountId);
 	}
 }

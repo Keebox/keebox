@@ -12,5 +12,7 @@ namespace Keebox.Common.DataAccess.Repositories
 		IGroupRepository GetGroupRepository();
 
 		IRoleRepository GetRoleRepository();
+		
+		IPermissionRepository GetPermissionRepository();
 	}
 }

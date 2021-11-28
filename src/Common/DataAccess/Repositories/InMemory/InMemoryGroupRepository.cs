@@ -20,6 +20,11 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				x.Name.Equals(name, StringComparison.OrdinalIgnoreCase) && x.Path.Equals(path, StringComparison.OrdinalIgnoreCase));
 		}
 
+		public bool Exists(Guid groupId)
+		{
+			return Storage.Any(x => x.Id == groupId);
+		}
+
 		public Group Get(string name, string path)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(name);

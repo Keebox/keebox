@@ -19,22 +19,27 @@ namespace Keebox.Common.DataAccess.Repositories
 
 		public ISecretRepository GetSecretRepository()
 		{
-			return _serviceProvider.GetService<InMemorySecretRepository>()!;
+			return _serviceProvider.GetRequiredService<InMemorySecretRepository>();
 		}
 
 		public IAccountRepository GetAccountRepository()
 		{
-			return _serviceProvider.GetService<InMemoryAccountRepository>()!;
+			return _serviceProvider.GetRequiredService<InMemoryAccountRepository>();
 		}
 
 		public IGroupRepository GetGroupRepository()
 		{
-			return _serviceProvider.GetService<InMemoryGroupRepository>()!;
+			return _serviceProvider.GetRequiredService<InMemoryGroupRepository>();
 		}
 
 		public IRoleRepository GetRoleRepository()
 		{
-			return _serviceProvider.GetService<InMemoryRoleRepository>()!;
+			return _serviceProvider.GetRequiredService<InMemoryRoleRepository>();
+		}
+
+		public IPermissionRepository GetPermissionRepository()
+		{
+			return _serviceProvider.GetRequiredService<InMemoryPermissionRepository>();
 		}
 	}
 }

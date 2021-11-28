@@ -29,6 +29,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 				.SingleOrDefault(x => x.Name != null && x.Name.Equals(accountName)) is not null;
 		}
 
+		public bool Exists(Guid accountId)
+		{
+			var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Account>().Any(x => x.Id == accountId);
+		}
+
 		public bool ExistsWithToken(string tokenHash)
 		{
 			EnsureArg.IsNotNullOrWhiteSpace(tokenHash);
@@ -76,7 +83,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			return connection.GetTable<Account>().Single(x => x.Name != null && x.Name.Equals(accountName));
 		}
 
-		public Account Update(Account account)
+		public void Update(Account account)
 		{
 			if (string.IsNullOrEmpty(account.Name))
 			{
@@ -86,8 +93,6 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			using var connection = _connectionFactory.Create();
 
 			connection.Update(account);
-
-			return account;
 		}
 
 		public IEnumerable<Account> List()
@@ -95,6 +100,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			using var connection = _connectionFactory.Create();
 
 			return connection.GetTable<Account>().ToArray();
+		}
+
+		public Account Get(Guid accountId)
+		{
+			using var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Account>().Single(x => x.Id == accountId);
 		}
 
 		private readonly IConnectionFactory _connectionFactory;

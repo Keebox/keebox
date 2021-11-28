@@ -10,5 +10,5 @@ namespace Keebox.Common.DataAccess.Entities
 		public Guid GroupId { get; set; }
 
 		public bool IsReadOnly { get; set; }
-	};
+	}
 }
