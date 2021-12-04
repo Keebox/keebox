@@ -55,7 +55,7 @@ namespace Keebox.SecretsService.Controllers
 				case AccountType.Token:
 					string token;
 
-					if (payload.Data!.ContainsKey("generate") && payload.Data!["generate"] == "true")
+					if (payload.Data!.ContainsKey("generate") && payload.Data!["generate"].ToString()!.Equals("true"))
 					{
 						token = _tokenService.GenerateToken();
 					}
@@ -110,7 +110,7 @@ namespace Keebox.SecretsService.Controllers
 				throw new ArgumentException("Type is not provided.");
 			}
 
-			return ((string)body["type"]).ToLower() switch
+			return body["type"].ToString() switch
 			{
 				"token" => AccountType.Token,
 				_       => throw new UnsupportedTypeException($"{body["type"]} type is not supported.")

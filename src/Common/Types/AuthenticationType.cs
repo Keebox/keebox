@@ -3,7 +3,7 @@
 	public enum AuthenticationType
 	{
 		None = 0,
-		Token = 1,
+		Header = 1,
 		Certificate = 2,
 		Cookie = 3
 	}

@@ -137,7 +137,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 			var updated = _target.GetByName(account.Name!);
 
 			updated.Should().NotBeNull();
-			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
+			updated.Should().BeEquivalentTo(account);
 			id.Should().NotBe(Guid.Empty);
 		}
 
@@ -162,7 +162,6 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.InMemory
 				.With(x => x.Name, _fixture.Create<string>())
 				.With(x => x.TokenHash, _fixture.Create<string>())
 				.With(x => x.CertificateThumbprint, _fixture.Create<string>())
-				.Without(x => x.RoleIds)
 				.Create();
 
 			return account;

@@ -3,11 +3,14 @@ using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
+using Keebox.SecretsService.Managing;
+using Keebox.SecretsService.Models;
 using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

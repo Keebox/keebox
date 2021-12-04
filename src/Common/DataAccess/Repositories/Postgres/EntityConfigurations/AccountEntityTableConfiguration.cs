@@ -17,8 +17,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.EntityConfigurations
 				.Property(x => x.Id).HasColumnName(nameof(Account.Id).ToLower()).IsPrimaryKey().HasDataType(DataType.Guid)
 				.Property(x => x.Name).HasColumnName(nameof(Account.Name).ToLower()).IsNullable()
 				.Property(x => x.TokenHash).HasColumnName(nameof(Account.TokenHash).ToLower()).IsNullable()
-				.Property(x => x.CertificateThumbprint).HasColumnName(nameof(Account.CertificateThumbprint).ToLower()).IsNullable()
-				.Property(x => x.RoleIds).IsNotColumn();
+				.Property(x => x.CertificateThumbprint).HasColumnName(nameof(Account.CertificateThumbprint).ToLower()).IsNullable();
 		}
 	}
 }

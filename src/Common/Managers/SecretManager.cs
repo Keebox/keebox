@@ -94,10 +94,10 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, folderPath);
 
 					if (secrets.Length > 0)
-						_secretRepository.UpdateGroupSecrets(@group.Id, FilterDictionaryKeys(input, secrets),
+						_secretRepository.UpdateGroupSecrets(group.Id, FilterDictionaryKeys(input, secrets),
 							FilterDictionaryKeys(files, secrets));
 					else
-						_secretRepository.SetGroupSecrets(@group.Id, input, files);
+						_secretRepository.SetGroupSecrets(group.Id, input, files);
 
 					break;
 				}
@@ -112,10 +112,10 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, folderPath);
 
 					if (input.ContainsKey("value"))
-						_secretRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string> { { name, input["value"] } },
+						_secretRepository.UpdateGroupSecrets(group.Id, new Dictionary<string, string> { { name, input["value"] } },
 							new Dictionary<string, string>());
 					else
-						_secretRepository.UpdateGroupSecrets(@group.Id, new Dictionary<string, string>(),
+						_secretRepository.UpdateGroupSecrets(group.Id, new Dictionary<string, string>(),
 							new Dictionary<string, string> { { name, files["value"] } });
 
 					break;
@@ -149,7 +149,7 @@ namespace Keebox.Common.Managers
 					var group = _groupRepository.Get(groupName, groupPath);
 
 					if (secrets.Length > 0)
-						_secretRepository.DeleteGroupSecrets(@group.Id, secrets);
+						_secretRepository.DeleteGroupSecrets(group.Id, secrets);
 					else
 					{
 						_groupRepository.DeleteGroup(groupName, groupPath);

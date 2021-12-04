@@ -101,7 +101,7 @@ namespace Keebox.SecretsService.Controllers
 				throw new ArgumentException("Is read only is not provided");
 			}
 
-			return (Guid.Parse((string)roleId), Guid.Parse((string)groupId), (bool)isReadOnly);
+			return (Guid.Parse(roleId.ToString()!), Guid.Parse(groupId.ToString()!), bool.Parse(isReadOnly.ToString()!));
 		}
 
 		private readonly IPermissionManager _permissionManager;

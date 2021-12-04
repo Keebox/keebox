@@ -14,9 +14,14 @@ namespace Keebox.Common.Helpers
 
 		public bool Validate(string token)
 		{
-			var hashedToken = _cryptoService.GetHash(token);
+			var tokenHash = _cryptoService.GetHash(token);
 
-			return _accountRepository.ExistsWithToken(hashedToken);
+			return _accountRepository.ExistsWithToken(tokenHash);
+		}
+
+		public bool ValidateHash(string tokenHash)
+		{
+			return _accountRepository.ExistsWithToken(tokenHash);
 		}
 
 		private readonly ICryptoService _cryptoService;

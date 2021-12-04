@@ -41,5 +41,10 @@ namespace Keebox.Common.DataAccess.Repositories
 		{
 			return _serviceProvider.GetRequiredService<InMemoryPermissionRepository>();
 		}
+
+		public IAssignmentRepository GetAssignmentRepository()
+		{
+			return _serviceProvider.GetRequiredService<InMemoryAssignmentRepository>();
+		}
 	}
 }

@@ -46,6 +46,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.WithColumn(nameof(Permission.GroupId).ToLower()).AsGuid().NotNullable()
 				.WithColumn(nameof(Permission.RoleId).ToLower()).AsGuid().NotNullable()
 				.WithColumn(nameof(Permission.IsReadOnly).ToLower()).AsBoolean().NotNullable();
+
+			Create
+				.Table("assignment")
+				.InSchema("public")
+				.WithColumn(nameof(Assignment.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
+				.WithColumn(nameof(Assignment.AccountId).ToLower()).AsGuid().NotNullable()
+				.WithColumn(nameof(Assignment.RoleId).ToLower()).AsGuid().NotNullable();
 		}
 	}
 }

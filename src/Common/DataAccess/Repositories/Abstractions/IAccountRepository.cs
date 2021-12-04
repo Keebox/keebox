@@ -18,12 +18,14 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 
 		void Delete(Guid accountId);
 
+		Account Get(Guid accountId);
+
 		Account GetByName(string accountName);
+
+		Account GetByTokenHash(string tokenHash);
 
 		void Update(Account account);
 
 		IEnumerable<Account> List();
-
-		Account Get(Guid accountId);
 	}
 }

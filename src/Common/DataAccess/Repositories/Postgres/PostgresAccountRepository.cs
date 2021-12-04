@@ -57,6 +57,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			// NOTE: InsertWithOutput is not yet supported for PostreSQL https://github.com/linq2db/linq2db/issues/2958
 			var accountId = account.Id == default ? Guid.NewGuid() : account.Id;
+
 			connection.GetTable<Account>().Insert(() => new Account
 			{
 				Id = accountId,
@@ -81,6 +82,15 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			using var connection = _connectionFactory.Create();
 
 			return connection.GetTable<Account>().Single(x => x.Name != null && x.Name.Equals(accountName));
+		}
+
+		public Account GetByTokenHash(string tokenHash)
+		{
+			EnsureArg.IsNotNullOrWhiteSpace(tokenHash);
+
+			using var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Account>().Single(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash));
 		}
 
 		public void Update(Account account)

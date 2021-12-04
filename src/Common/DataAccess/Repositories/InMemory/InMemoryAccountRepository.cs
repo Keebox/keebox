@@ -68,6 +68,13 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			return Storage.Single(x => x.Name != null && x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
 		}
 
+		public Account GetByTokenHash(string tokenHash)
+		{
+			EnsureArg.IsNotEmptyOrWhiteSpace(tokenHash);
+
+			return Storage.Single(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
+		}
+
 		public void Update(Account account)
 		{
 			if (string.IsNullOrEmpty(account.Name))

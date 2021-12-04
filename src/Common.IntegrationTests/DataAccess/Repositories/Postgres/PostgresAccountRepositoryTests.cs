@@ -156,10 +156,10 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			var updated = _target.GetByName(account.Name!);
 
 			updated.Should().NotBeNull();
-			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
+			updated.Should().BeEquivalentTo(account);
 			id.Should().NotBe(Guid.Empty);
 		}
-		
+
 		[Test]
 		public void GetTest()
 		{
@@ -185,7 +185,6 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 				.With(x => x.Name, Creator.CreateStringWithMaxLength(nameLength))
 				.With(x => x.TokenHash, Creator.CreateStringWithMaxLength(tokenHashLength))
 				.With(x => x.CertificateThumbprint, Creator.CreateStringWithMaxLength(certificateThumbprintLength))
-				.Without(x => x.RoleIds)
 				.Create();
 
 			return account;
