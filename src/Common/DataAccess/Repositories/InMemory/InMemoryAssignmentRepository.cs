@@ -10,7 +10,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 {
 	public class InMemoryAssignmentRepository : InMemoryRepositoryBase<Assignment>, IAssignmentRepository
 	{
-		public IEnumerable<Guid> GetByAccount(Guid accountId)
+		public IEnumerable<Guid> GetRolesByAccount(Guid accountId)
 		{
 			return Storage.Where(x => x.AccountId.Equals(accountId)).Select(x => x.RoleId);
 		}

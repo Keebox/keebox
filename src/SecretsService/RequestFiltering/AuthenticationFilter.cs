@@ -63,7 +63,7 @@ namespace Keebox.SecretsService.RequestFiltering
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var roleIds = assignmentRepository.GetByAccount(userId).ToArray();
+			var roleIds = assignmentRepository.GetRolesByAccount(userId).ToArray();
 			context.HttpContext.User = new UserPrincipal(userId, roleIds);
 		}
 

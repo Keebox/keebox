@@ -55,7 +55,7 @@ namespace Keebox.SecretsService.Controllers
 				case AccountType.Token:
 					string token;
 
-					if (payload.Data!.ContainsKey("generate") && payload.Data!["generate"].ToString()!.Equals("true"))
+					if (payload.Data!.ContainsKey("generate") && payload.Data!["generate"].ToString()!.ToLower().Equals("true"))
 					{
 						token = _tokenService.GenerateToken();
 					}

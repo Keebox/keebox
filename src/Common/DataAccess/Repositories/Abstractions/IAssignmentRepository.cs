@@ -6,8 +6,8 @@ namespace Keebox.Common.DataAccess.Repositories.Abstractions
 {
 	public interface IAssignmentRepository
 	{
-		public IEnumerable<Guid> GetByAccount(Guid accountId);
+		IEnumerable<Guid> GetRolesByAccount(Guid accountId);
 
-		public void Assign(Guid accountId, Guid roleId);
+		void Assign(Guid accountId, Guid roleId);
 	}
 }

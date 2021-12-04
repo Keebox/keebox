@@ -19,10 +19,8 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			_connectionFactory = connectionFactory;
 		}
 
-		public IEnumerable<Guid> GetByAccount(Guid accountId)
+		public IEnumerable<Guid> GetRolesByAccount(Guid accountId)
 		{
-			EnsureArg.IsNotDefault(accountId);
-
 			var connection = _connectionFactory.Create();
 
 			return connection.GetTable<Assignment>().Where(x => x.AccountId.Equals(accountId)).Select(x => x.RoleId);
@@ -30,9 +28,6 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 		public void Assign(Guid accountId, Guid roleId)
 		{
-			EnsureArg.IsNotDefault(accountId);
-			EnsureArg.IsNotDefault(roleId);
-
 			var connection = _connectionFactory.Create();
 
 			connection.GetTable<Assignment>().Insert(() => new Assignment
