@@ -38,6 +38,14 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			});
 		}
 
+		public bool IsAccountAlreadyAssigned(Guid accountId, Guid roleId)
+		{
+			var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Assignment>()
+				.SingleOrDefault(x => x.AccountId.Equals(accountId) && x.RoleId.Equals(roleId)) is not null;
+		}
+
 		private readonly IConnectionFactory _connectionFactory;
 	}
 }

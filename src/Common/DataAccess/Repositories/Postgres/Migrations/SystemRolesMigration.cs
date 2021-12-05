@@ -20,7 +20,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.Row(new Dictionary<string, object>
 				{
 					{ nameof(Role.Id).ToLower(), Guid.NewGuid().ToString() },
-					{ nameof(Role.Name).ToLower(), Enum.GetName(typeof(SystemRole), SystemRole.Admin)! },
+					{ nameof(Role.Name).ToLower(), Enum.GetName(typeof(SystemRole), SystemRole.Admin)!.ToLower() },
 					{ nameof(Role.IsSystem).ToLower(), true }
 				});
 		}

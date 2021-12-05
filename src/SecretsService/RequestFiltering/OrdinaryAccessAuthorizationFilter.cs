@@ -24,7 +24,7 @@ namespace Keebox.SecretsService.RequestFiltering
 
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
-			var user = (UserPrincipal) context.HttpContext.User;
+			var user = (UserPrincipal)context.HttpContext.User;
 
 			if (user.IsRootUser) return;
 			if (user.HasSystemRole()) return;
@@ -73,6 +73,8 @@ namespace Keebox.SecretsService.RequestFiltering
 
 			var groupPermissions = permissionRepository.GetByGroupId(groupId).ToArray();
 			var isReadonlyRequest = IsReadonlyRequest(context.HttpContext.Request.Method);
+
+			if (!groupPermissions.Any()) return;
 
 			var isAuthorized = _roleAccessStrategy switch
 			{

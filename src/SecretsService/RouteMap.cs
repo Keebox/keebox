@@ -10,6 +10,8 @@
 
 		public const string Permission = "permission";
 
+		public const string RoleAssigning = "assign";
+
 		public static class System
 		{
 			public const string Base = "system";

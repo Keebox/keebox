@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace Keebox.SecretsService.Managing
 {
-	public class UserPrincipal : ClaimsPrincipal
+	public sealed class UserPrincipal : ClaimsPrincipal
 	{
 		public UserPrincipal(UserRole[] roles, bool isRootUser)
 		{

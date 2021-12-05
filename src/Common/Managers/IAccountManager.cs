@@ -18,6 +18,6 @@ namespace Keebox.Common.Managers
 
 		void UpdateAccount(Account account);
 
-		void AssignRoleToAccount(Role role);
+		void AssignRoleToAccount(Guid roleId, Guid accountId);
 	}
 }

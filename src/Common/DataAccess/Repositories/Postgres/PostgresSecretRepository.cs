@@ -29,15 +29,29 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			return connection.GetTable<Secret>().Where(x => x.GroupId == groupId).ToArray();
 		}
 
-		public void UpdateGroupSecrets(Guid                       groupId, Dictionary<string, string> secrets,
-									   Dictionary<string, string> files)
+		public void UpdateGroupSecrets(Guid groupId, Dictionary<string, string> secrets, Dictionary<string, string> files)
 		{
 			EnsureArg.IsNotDefault(groupId);
 			EnsureArg.IsNotNull(secrets);
 			EnsureArg.IsNotNull(files);
 
-			void UpdateSecret(DataConnection connection, string key, string value)
+			void CreateOrUpdateSecret(DataConnection connection, string key, string value, bool isFile)
 			{
+				var table = connection.GetTable<Secret>();
+
+				if (table.SingleOrDefault(x => x.Name.Equals(key)) is null)
+				{
+					table.Insert(() => new Secret
+					{
+						Name = key,
+						Value = value,
+						GroupId = groupId,
+						IsFile = isFile
+					});
+
+					return;
+				}
+
 				connection.GetTable<Secret>().Where(x => x.Name.Equals(key) && x.GroupId == groupId)
 					.Update(secret => new Secret
 					{
@@ -45,17 +59,17 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 						Name = secret.Name,
 						Value = value,
 						GroupId = secret.GroupId,
-						IsFile = secret.IsFile
+						IsFile = isFile
 					});
 			}
 
 			using var connection = _connectionFactory.Create();
 
 			foreach (var (key, value) in secrets)
-				UpdateSecret(connection, key, value);
+				CreateOrUpdateSecret(connection, key, value, false);
 
 			foreach (var (key, value) in files)
-				UpdateSecret(connection, key, value);
+				CreateOrUpdateSecret(connection, key, value, true);
 		}
 
 		public void SetGroupSecrets(Guid groupId, Dictionary<string, string> secrets, Dictionary<string, string> files)

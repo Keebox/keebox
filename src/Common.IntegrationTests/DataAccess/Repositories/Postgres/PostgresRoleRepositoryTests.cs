@@ -71,7 +71,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			}
 
 			// act
-			var result = _target.List().ToArray();
+			var result = _target.List().Where(x => names.Contains(x.Name)).ToArray();
 
 			// assert
 			result.Length.Should().Be(count);

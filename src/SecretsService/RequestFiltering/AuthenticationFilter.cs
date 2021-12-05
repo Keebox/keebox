@@ -61,7 +61,6 @@ namespace Keebox.SecretsService.RequestFiltering
 				case AuthenticationType.None:
 					throw new UnauthorizedException("Authentication was not successful.");
 
-				case AuthenticationType.Certificate:
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

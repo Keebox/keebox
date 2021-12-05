@@ -10,7 +10,6 @@ using Keebox.SecretsService.Models;
 using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
 
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,8 +18,8 @@ using Microsoft.Extensions.Logging;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate]
 	[Route(RouteMap.Any)]
+	[Authenticate] [AuthorizeForGroup]
 	[SuppressMessage("ReSharper", "RouteTemplates.MethodMissingRouteParameters")]
 	[SuppressMessage("ReSharper", "RouteTemplates.ControllerRouteParameterIsNotPassedToMethods")]
 	public class SecretsController : ControllerBase
@@ -41,7 +40,6 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut]
-		[AuthorizeForGroup]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,15 +61,13 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[AuthorizeForGroup(RoleAccessStrategy.All)]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public IActionResult GetSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Getting secrets {payload.Route}");
 
-			if (payload.Route is null)
-				throw new EmptyRouteException();
+			if (payload.Route is null) throw new EmptyRouteException();
 
 			var secrets = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 
@@ -99,7 +95,6 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete]
-		[AuthorizeForGroup]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult DeleteSecrets([FromRoute] RequestPayload payload)

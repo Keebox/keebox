@@ -17,6 +17,7 @@ namespace Keebox.Common.Managers
 			_cryptoService = cryptoService;
 
 			_accountRepository = repositoryContext.GetAccountRepository();
+			_assignmentRepository = repositoryContext.GetAssignmentRepository();
 			_roleRepository = repositoryContext.GetRoleRepository();
 		}
 
@@ -35,39 +36,53 @@ namespace Keebox.Common.Managers
 
 		public void UpdateAccount(Account account)
 		{
-			EnsureAccount(account.Id);
+			EnsureAccountExists(account.Id);
 
 			_accountRepository.Update(account);
 		}
 
 		public void DeleteAccount(Guid accountId)
 		{
-			EnsureAccount(accountId);
+			EnsureAccountExists(accountId);
 
 			_accountRepository.Delete(accountId);
 		}
 
 		public Account GetAccount(Guid accountId)
 		{
-			EnsureAccount(accountId);
+			EnsureAccountExists(accountId);
 
 			return _accountRepository.Get(accountId);
 		}
 
-		public void AssignRoleToAccount(Role role)
+		public void AssignRoleToAccount(Guid roleId, Guid accountId)
 		{
+			EnsureAccountExists(accountId);
+			EnsureRoleExists(roleId);
 
+			if (_assignmentRepository.IsAccountAlreadyAssigned(accountId, roleId)) return;
+
+			_assignmentRepository.Assign(accountId, roleId);
 		}
 
-		private void EnsureAccount(Guid accountId)
+		private void EnsureAccountExists(Guid accountId)
 		{
 			if (!_accountRepository.Exists(accountId))
 			{
-				throw new NotFoundException("Account not found");
+				throw new NotFoundException("Account not found.");
+			}
+		}
+
+		private void EnsureRoleExists(Guid roleId)
+		{
+			if (!_roleRepository.Exists(roleId))
+			{
+				throw new NotFoundException("Role not found.");
 			}
 		}
 
 		private readonly IAccountRepository _accountRepository;
+		private readonly IAssignmentRepository _assignmentRepository;
 		private readonly IRoleRepository _roleRepository;
 
 		private readonly ICryptoService _cryptoService;

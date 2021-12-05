@@ -24,5 +24,10 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				RoleId = roleId
 			});
 		}
+
+		public bool IsAccountAlreadyAssigned(Guid accountId, Guid roleId)
+		{
+			return Storage.Any(x => x.AccountId.Equals(accountId) && x.RoleId.Equals(roleId));
+		}
 	}
 }

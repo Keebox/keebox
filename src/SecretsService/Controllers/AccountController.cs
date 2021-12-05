@@ -5,7 +5,6 @@ using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
-using Keebox.SecretsService.Exceptions;
 using Keebox.SecretsService.Models.EntityCreation;
 using Keebox.SecretsService.RequestFiltering;
 
@@ -16,9 +15,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate]
-	[AuthorizePrivileged]
 	[Route(RouteMap.Account)]
+	[Authenticate] [AuthorizePrivileged]
 	public class AccountController : ControllerBase
 	{
 		public AccountController(IAccountManager accountManager, ITokenService tokenService)
@@ -48,7 +46,6 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		public ActionResult<string> CreateAccount([FromBody] AccountCreationPayload creationPayload)
 		{
-			if (creationPayload == null) throw new EmptyDataException("Account creation payload is not provided.");
 			if (creationPayload.Type == null) throw new ArgumentException("Type is not provided.");
 
 			switch (creationPayload.Type)
@@ -56,7 +53,7 @@ namespace Keebox.SecretsService.Controllers
 				case AccountType.Token:
 					string token;
 
-					if (creationPayload.Generate != null && (bool) creationPayload.Generate)
+					if (creationPayload.Generate != null && (bool)creationPayload.Generate)
 					{
 						token = _tokenService.GenerateToken();
 					}
@@ -79,10 +76,7 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult ReplaceAccount([FromBody] Account account, [FromRoute] Guid accountId)
 		{
-			if (accountId != account.Id)
-			{
-				throw new ArgumentException("Ids do not match");
-			}
+			if (accountId != account.Id) throw new ArgumentException("Ids do not match");
 
 			_accountManager.UpdateAccount(account);
 
@@ -97,6 +91,19 @@ namespace Keebox.SecretsService.Controllers
 			_accountManager.DeleteAccount(accountId);
 
 			return NoContent();
+		}
+
+		[HttpPost("assign")]
+		[ProducesResponseType(StatusCodes.Status200OK)]
+		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		public ActionResult AssignRoleToAccount([FromBody] AssignCreationPayload payload)
+		{
+			if (payload.RoleId == null) throw new ArgumentException("Role id is not provided.");
+			if (payload.AccountId == null) throw new ArgumentException("Account id is not provided.");
+
+			_accountManager.AssignRoleToAccount((Guid)payload.RoleId, (Guid)payload.AccountId);
+
+			return Ok();
 		}
 
 		private readonly IAccountManager _accountManager;

@@ -39,24 +39,23 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
+		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreateRole([FromRoute] RoleCreationPayload payload)
+		public ActionResult<Guid> CreateRole([FromBody] RoleCreationPayload payload)
 		{
 			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty));
 		}
 
 		[HttpPut("{roleId:guid}")]
+		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult ReplaceRole([FromBody] Role role, [FromRoute] Guid roleId)
 		{
-			if (roleId != role.Id)
-			{
-				throw new ArgumentException("Ids do not match");
-			}
+			if (roleId != role.Id) throw new ArgumentException("Ids do not match");
 
 			_roleManager.UpdateRole(role);
 
@@ -64,6 +63,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{roleId:guid}")]
+		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult DeleteRole([FromRoute] Guid roleId)
