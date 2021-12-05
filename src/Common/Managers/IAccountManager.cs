@@ -17,5 +17,7 @@ namespace Keebox.Common.Managers
 		Account GetAccount(Guid accountId);
 
 		void UpdateAccount(Account account);
+
+		void AssignRoleToAccount(Role role);
 	}
 }

@@ -25,7 +25,7 @@ namespace Keebox.SecretsService.Models
 
 		public Dictionary<string, object>? Data
 		{
-			get => Body ?? FormData?.ToDictionary(x => x.Key, x => (object)x.Value.ToString());
+			get => Body ?? FormData?.ToDictionary(x => x.Key, x => (object) x.Value.ToString());
 		}
 
 		public Dictionary<string, IFormFile>? Files

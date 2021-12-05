@@ -37,7 +37,8 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 			connection.GetTable<Role>().Insert(() => new Role
 			{
 				Id = roleId,
-				Name = name
+				Name = name,
+				IsSystem = false
 			});
 
 
@@ -50,7 +51,12 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			connection.Update(role);
+			connection.Update(new Role
+			{
+				Id = role.Id,
+				Name = role.Name,
+				IsSystem = false
+			});
 		}
 
 		public void Delete(Guid roleId)

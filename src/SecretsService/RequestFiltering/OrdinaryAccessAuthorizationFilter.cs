@@ -15,16 +15,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Keebox.SecretsService.RequestFiltering
 {
-	public class AuthorizationFilter : IActionFilter
+	public class OrdinaryAccessAuthorizationFilter : IActionFilter
 	{
-		public AuthorizationFilter(RoleAccessStrategy roleAccessStrategy)
+		public OrdinaryAccessAuthorizationFilter(RoleAccessStrategy roleAccessStrategy)
 		{
 			_roleAccessStrategy = roleAccessStrategy;
 		}
 
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
-			var user = (UserPrincipal)context.HttpContext.User;
+			var user = (UserPrincipal) context.HttpContext.User;
+
+			if (user.IsRootUser) return;
+			if (user.HasSystemRole()) return;
+
+			var userRoleIds = user.Roles.Select(r => r.RoleId).ToArray();
 			var serviceProvider = context.HttpContext.RequestServices;
 
 			var pathResolver = serviceProvider.GetRequiredService<IPathResolver>();
@@ -71,8 +76,8 @@ namespace Keebox.SecretsService.RequestFiltering
 
 			var isAuthorized = _roleAccessStrategy switch
 			{
-				RoleAccessStrategy.All => ValidateStrictAccessPermissions(groupPermissions, user.RoleIds, isReadonlyRequest),
-				RoleAccessStrategy.Any => ValidateLenientAccessPermissions(groupPermissions, user.RoleIds, isReadonlyRequest),
+				RoleAccessStrategy.All => ValidateStrictAccessPermissions(groupPermissions, userRoleIds, isReadonlyRequest),
+				RoleAccessStrategy.Any => ValidateLenientAccessPermissions(groupPermissions, userRoleIds, isReadonlyRequest),
 
 				_ => throw new ArgumentOutOfRangeException()
 			};

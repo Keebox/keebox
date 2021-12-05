@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Exceptions;
-using Keebox.SecretsService.Models;
+using Keebox.SecretsService.Models.EntityCreation;
 using Keebox.SecretsService.RequestFiltering;
 
 using Microsoft.AspNetCore.Http;
@@ -16,8 +15,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Keebox.SecretsService.Controllers
 {
-	[Authenticate]
 	[ApiController]
+	[Authenticate]
+	[AuthorizePrivileged]
 	[Route(RouteMap.Account)]
 	public class AccountController : ControllerBase
 	{
@@ -46,27 +46,23 @@ namespace Keebox.SecretsService.Controllers
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		public ActionResult<string> CreateAccount([FromRoute] RequestPayload payload)
+		public ActionResult<string> CreateAccount([FromBody] AccountCreationPayload creationPayload)
 		{
-			var accountType = GetAccountType(payload.Data);
+			if (creationPayload == null) throw new EmptyDataException("Account creation payload is not provided.");
+			if (creationPayload.Type == null) throw new ArgumentException("Type is not provided.");
 
-			switch (accountType)
+			switch (creationPayload.Type)
 			{
 				case AccountType.Token:
 					string token;
 
-					if (payload.Data!.ContainsKey("generate") && payload.Data!["generate"].ToString()!.ToLower().Equals("true"))
+					if (creationPayload.Generate != null && (bool) creationPayload.Generate)
 					{
 						token = _tokenService.GenerateToken();
 					}
 					else
 					{
-						if (!payload.Data.ContainsKey("token"))
-						{
-							throw new ArgumentException("Token is not provided");
-						}
-
-						token = (string)payload.Data["token"];
+						token = creationPayload.Token ?? throw new ArgumentException("Token is not provided");
 					}
 
 					_accountManager.CreateTokenAccount(token);
@@ -101,20 +97,6 @@ namespace Keebox.SecretsService.Controllers
 			_accountManager.DeleteAccount(accountId);
 
 			return NoContent();
-		}
-
-		private static AccountType GetAccountType(IDictionary<string, object>? body)
-		{
-			if (body is null || !body.ContainsKey("type"))
-			{
-				throw new ArgumentException("Type is not provided.");
-			}
-
-			return body["type"].ToString() switch
-			{
-				"token" => AccountType.Token,
-				_       => throw new UnsupportedTypeException($"{body["type"]} type is not supported.")
-			};
 		}
 
 		private readonly IAccountManager _accountManager;

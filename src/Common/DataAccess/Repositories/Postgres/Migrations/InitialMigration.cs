@@ -6,7 +6,7 @@ using Keebox.Common.DataAccess.Entities;
 namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 {
 	[Migration(1)]
-	public class InitialMigration : AutoReversingMigration
+	public sealed class InitialMigration : AutoReversingMigration
 	{
 		public override void Up()
 		{
@@ -28,7 +28,8 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.Table("role")
 				.InSchema("public")
 				.WithColumn(nameof(Role.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-				.WithColumn(nameof(Role.Name).ToLower()).AsString(256).NotNullable().Unique();
+				.WithColumn(nameof(Role.Name).ToLower()).AsString(256).NotNullable().Unique()
+				.WithColumn(nameof(Role.IsSystem).ToLower()).AsBoolean().NotNullable();
 
 			Create
 				.Table("secret")

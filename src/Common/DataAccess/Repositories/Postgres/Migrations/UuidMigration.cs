@@ -4,7 +4,7 @@
 namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 {
 	[Migration(0)]
-	public class UuidMigration : ForwardOnlyMigration
+	public sealed class UuidMigration : ForwardOnlyMigration
 	{
 		public override void Up()
 		{

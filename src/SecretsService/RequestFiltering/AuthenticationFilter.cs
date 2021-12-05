@@ -26,11 +26,14 @@ namespace Keebox.SecretsService.RequestFiltering
 			var repositoryContext = serviceProvider.GetRequiredService<IRepositoryContext>();
 			var accountRepository = repositoryContext.GetAccountRepository();
 			var assignmentRepository = repositoryContext.GetAssignmentRepository();
+			var roleRepository = repositoryContext.GetRoleRepository();
 
 			var configuration = serviceProvider.GetRequiredService<Configuration>();
 
 			var authenticationType = ResolveAuthenticationType(context.HttpContext);
+
 			Guid userId;
+			var hasPrivileges = false;
 
 			switch (authenticationType)
 			{
@@ -38,20 +41,20 @@ namespace Keebox.SecretsService.RequestFiltering
 				case AuthenticationType.Cookie:
 				{
 					var token = ResolveTokenFrom(context.HttpContext, authenticationType);
-
-					if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
-						return;
-
 					var tokenHash = cryptoService.GetHash(token);
 
-					// move to authorization
-					if (context.HttpContext.Request.Path.ToString().StartsWith("/account"))
-						throw new RestrictedAccessException("Account management only for admins.");
+					if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
+					{
+						hasPrivileges = true;
+						userId = Guid.Empty;
+					}
+					else
+					{
+						if (!tokenService.ValidateHash(tokenHash))
+							throw new UnauthorizedException("Token is not valid.");
 
-					if (!tokenService.ValidateHash(tokenHash))
-						throw new UnauthorizedException("Token is not valid.");
-
-					userId = accountRepository.GetByTokenHash(tokenHash).Id;
+						userId = accountRepository.GetByTokenHash(tokenHash).Id;
+					}
 
 					break;
 				}
@@ -64,7 +67,14 @@ namespace Keebox.SecretsService.RequestFiltering
 			}
 
 			var roleIds = assignmentRepository.GetRolesByAccount(userId).ToArray();
-			context.HttpContext.User = new UserPrincipal(userId, roleIds);
+
+			var roles = roleRepository.List().Where(r => roleIds.Contains(r.Id)).Select(x => new UserRole
+			{
+				RoleId = x.Id,
+				IsSystemRole = x.IsSystem
+			}).ToArray();
+
+			context.HttpContext.User = new UserPrincipal(roles, hasPrivileges);
 		}
 
 		public void OnActionExecuted(ActionExecutedContext context) { }

@@ -24,7 +24,7 @@ namespace Keebox.SecretsService.RequestFiltering
 		public void OnException(ExceptionContext context)
 		{
 			var status = HttpStatusCode.InternalServerError;
-			var message = "Internal sever error.";
+			var message = "Internal server error.";
 
 			switch (context.Exception)
 			{
@@ -88,10 +88,10 @@ namespace Keebox.SecretsService.RequestFiltering
 			}
 
 			context.ExceptionHandled = true;
-			context.HttpContext.Response.StatusCode = (int)status;
+			context.HttpContext.Response.StatusCode = (int) status;
 			context.HttpContext.Response.ContentType = "application/json";
 
-			context.Result = new ObjectResult(new Error((int)status, message));
+			context.Result = new ObjectResult(new Error((int) status, message));
 		}
 	}
 }

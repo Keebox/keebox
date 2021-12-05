@@ -1,20 +1,24 @@
-﻿using System;
+﻿using System.Linq;
 using System.Security.Claims;
-using System.Security.Principal;
 
 
 namespace Keebox.SecretsService.Managing
 {
 	public class UserPrincipal : ClaimsPrincipal
 	{
-		public UserPrincipal(Guid userId, Guid[] roleIds)
+		public UserPrincipal(UserRole[] roles, bool isRootUser)
 		{
-			Name = userId.ToString();
-			RoleIds = roleIds;
+			Roles = roles;
+			IsRootUser = isRootUser;
 		}
 
-		public string Name { get; }
+		public UserRole[] Roles { get; }
 
-		public Guid[] RoleIds { get; }
+		public bool IsRootUser { get; }
+
+		public bool HasSystemRole()
+		{
+			return Roles.Any(r => r.IsSystemRole);
+		}
 	}
 }

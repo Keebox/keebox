@@ -15,7 +15,9 @@ namespace Keebox.Common.Managers
 		public AccountManager(IRepositoryContext repositoryContext, ICryptoService cryptoService)
 		{
 			_cryptoService = cryptoService;
+
 			_accountRepository = repositoryContext.GetAccountRepository();
+			_roleRepository = repositoryContext.GetRoleRepository();
 		}
 
 		public IEnumerable<Account> GetAccounts()
@@ -52,6 +54,11 @@ namespace Keebox.Common.Managers
 			return _accountRepository.Get(accountId);
 		}
 
+		public void AssignRoleToAccount(Role role)
+		{
+
+		}
+
 		private void EnsureAccount(Guid accountId)
 		{
 			if (!_accountRepository.Exists(accountId))
@@ -61,6 +68,8 @@ namespace Keebox.Common.Managers
 		}
 
 		private readonly IAccountRepository _accountRepository;
+		private readonly IRoleRepository _roleRepository;
+
 		private readonly ICryptoService _cryptoService;
 	}
 }

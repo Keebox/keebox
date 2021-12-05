@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
-using Keebox.SecretsService.Models;
+using Keebox.SecretsService.Models.EntityCreation;
 using Keebox.SecretsService.RequestFiltering;
 
 using Microsoft.AspNetCore.Http;
@@ -42,9 +42,9 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreateRole([FromRoute] RequestPayload payload)
+		public ActionResult<Guid> CreateRole([FromRoute] RoleCreationPayload payload)
 		{
-			return Ok(_roleManager.CreateRole(payload.Body?["name"].ToString() ?? string.Empty));
+			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty));
 		}
 
 		[HttpPut("{roleId:guid}")]
