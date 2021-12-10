@@ -7,7 +7,7 @@ namespace Keebox.Common.Managers
 {
 	public class ConfigurationManager : IConfigurationManager
 	{
-		public ConfigurationManager(YamlSerializer serializer, IContentManager contentManager)
+		public ConfigurationManager(ISerializer serializer, IContentManager contentManager)
 		{
 			_serializer = serializer;
 			_contentManager = contentManager;
@@ -50,6 +50,6 @@ namespace Keebox.Common.Managers
 		}
 
 		private readonly IContentManager _contentManager;
-		private readonly YamlSerializer _serializer;
+		private readonly ISerializer _serializer;
 	}
 }

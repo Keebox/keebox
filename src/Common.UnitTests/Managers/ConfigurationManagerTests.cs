@@ -24,7 +24,7 @@ namespace Keebox.Common.UnitTests.Managers
 			_contentProvider = new Mock<IContentManager>(MockBehavior.Strict);
 			_tokenService = new Mock<ITokenService>();
 
-			_target = new ConfigurationManager(_serializer.Object, _contentProvider.Object, _tokenService.Object);
+			_target = new ConfigurationManager(_serializer.Object, _contentProvider.Object);
 		}
 
 		private readonly IFixture _fixture = new Fixture();
@@ -69,7 +69,7 @@ namespace Keebox.Common.UnitTests.Managers
 
 			var expected = secondConfiguration with
 			{
-				RootToken = firstConfiguration.RootToken,
+				RootToken = secondConfiguration.RootToken,
 				ConnectionString = firstConfiguration.ConnectionString,
 				Engine = firstConfiguration.Engine
 			};

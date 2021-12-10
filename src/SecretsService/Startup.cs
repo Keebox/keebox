@@ -75,7 +75,8 @@ namespace Keebox.SecretsService
 			services.AddTransient<IFormatterResolver, FormatterResolver>();
 			services.AddTransient<IContentManager, ContentManager>();
 
-			services.AddTransient<IConfigurationManager, ConfigurationManager>();
+			services.AddTransient<IConfigurationManager, ConfigurationManager>(s =>
+				new ConfigurationManager(s.GetRequiredService<YamlSerializer>(), s.GetRequiredService<IContentManager>()));
 
 			services.RegisterTokenSigningKeys(_configuration!);
 
