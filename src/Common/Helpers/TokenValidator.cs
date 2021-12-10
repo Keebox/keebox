@@ -1,5 +1,6 @@
 ﻿using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Security;
 
 
 namespace Keebox.Common.Helpers

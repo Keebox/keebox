@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
+using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models.EntityCreation;
-using Keebox.SecretsService.RequestFiltering;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

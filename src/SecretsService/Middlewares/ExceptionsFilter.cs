@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
 
-namespace Keebox.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.Middlewares
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class ExceptionsFilter : IExceptionFilter
@@ -88,10 +88,10 @@ namespace Keebox.SecretsService.RequestFiltering
 			}
 
 			context.ExceptionHandled = true;
-			context.HttpContext.Response.StatusCode = (int) status;
+			context.HttpContext.Response.StatusCode = (int)status;
 			context.HttpContext.Response.ContentType = "application/json";
 
-			context.Result = new ObjectResult(new Error((int) status, message));
+			context.Result = new ObjectResult(new Error((int)status, message));
 		}
 	}
 }

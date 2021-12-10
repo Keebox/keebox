@@ -1,16 +1,17 @@
+using System;
+using System.IO;
+
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Managers;
+using Keebox.Common.Security;
 using Keebox.Common.Types;
-using Keebox.SecretsService.Managing;
-using Keebox.SecretsService.Models;
-using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Middlewares;
 using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -61,7 +62,8 @@ namespace Keebox.SecretsService
 
 			services.AddTransient<ICryptoService, CryptoService>();
 			services.AddTransient<ISecretManager, SecretManager>();
-			services.AddTransient<ITokenService, TokenService>();
+
+			services.AddTransient<ITokenService, TokenService>(serviceProvider => new TokenService());
 
 			services.AddTransient<ISecretManager, SecretManager>();
 			services.AddTransient<IAccountManager, AccountManager>();
@@ -69,13 +71,14 @@ namespace Keebox.SecretsService
 			services.AddTransient<IPermissionManager, PermissionManager>();
 
 			services.AddTransient<IFormatterResolver, FormatterResolver>();
-
 			services.AddTransient<IContentManager, ContentManager>();
 
 			services.AddTransient<IConfigurationManager, ConfigurationManager>(serviceProvider =>
 				new ConfigurationManager(serviceProvider.GetRequiredService<YamlSerializer>(),
 					serviceProvider.GetRequiredService<IContentManager>(),
 					serviceProvider.GetRequiredService<ITokenService>()));
+
+			RegisterTokenSigningKeys(services);
 
 			var configuration = RegisterApplicationConfiguration(services);
 
@@ -135,6 +138,24 @@ namespace Keebox.SecretsService
 			Log.Information("Loading application configuration.");
 
 			return appConfiguration;
+		}
+
+		private static void RegisterTokenSigningKeys(IServiceCollection services)
+		{
+			var signingKeyPath = _configuration!["SigningKeyPath"];
+			var signingKeyLength = _configuration.GetValue<int>("SigningKeyLength");
+
+			if (File.Exists(signingKeyPath)) return;
+
+			var serviceProvider = services.BuildServiceProvider();
+			var contentManager = serviceProvider.GetRequiredService<IContentManager>();
+
+			Log.Information("Generating signing keys.");
+
+			var secretKeyRawBuffer = new byte[signingKeyLength];
+			new Random().NextBytes(secretKeyRawBuffer);
+
+			contentManager.Save(signingKeyPath, secretKeyRawBuffer);
 		}
 
 		private static IConfiguration? _configuration;

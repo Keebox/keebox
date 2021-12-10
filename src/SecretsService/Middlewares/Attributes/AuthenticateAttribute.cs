@@ -3,7 +3,7 @@
 using Microsoft.AspNetCore.Mvc;
 
 
-namespace Keebox.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.Middlewares.Attributes
 {
 	[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 	public class AuthenticateAttribute : TypeFilterAttribute

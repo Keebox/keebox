@@ -11,22 +11,18 @@ namespace Keebox.Common.Helpers
 {
 	public class PathResolver : IPathResolver
 	{
-		private readonly IGroupRepository _groupRepository;
-
-		public PathResolver(IRepositoryContext repositoryContext) =>
+		public PathResolver(IRepositoryContext repositoryContext)
+		{
 			_groupRepository = repositoryContext.GetGroupRepository();
-
-		#region Implementation of IPathResolver
+		}
 
 		public PathType Resolve(string path)
 		{
-			if (!ValidatePath(path))
-				throw new ArgumentException("Path is not valid");
+			if (!ValidatePath(path)) throw new ArgumentException("Path is not valid");
 
 			var (name, path2) = DeconstructPath(path);
 
-			if (_groupRepository.Exists(name, path2))
-				return PathType.Group;
+			if (_groupRepository.Exists(name, path2)) return PathType.Group;
 
 			var (name2, path3) = DeconstructPath(path2);
 
@@ -55,6 +51,6 @@ namespace Keebox.Common.Helpers
 			return pattern.IsMatch(path);
 		}
 
-		#endregion
+		private readonly IGroupRepository _groupRepository;
 	}
 }

@@ -6,8 +6,8 @@ using System.Linq;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Exceptions;
+using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models;
-using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Http;

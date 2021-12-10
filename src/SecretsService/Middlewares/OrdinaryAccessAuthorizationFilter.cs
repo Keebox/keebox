@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace Keebox.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.Middlewares
 {
 	public class OrdinaryAccessAuthorizationFilter : IActionFilter
 	{

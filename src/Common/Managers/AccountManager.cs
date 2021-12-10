@@ -5,7 +5,7 @@ using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 using Keebox.Common.Exceptions;
-using Keebox.Common.Helpers;
+using Keebox.Common.Security;
 
 
 namespace Keebox.Common.Managers
@@ -14,8 +14,6 @@ namespace Keebox.Common.Managers
 	{
 		public AccountManager(IRepositoryContext repositoryContext, ICryptoService cryptoService)
 		{
-			_cryptoService = cryptoService;
-
 			_accountRepository = repositoryContext.GetAccountRepository();
 			_assignmentRepository = repositoryContext.GetAssignmentRepository();
 			_roleRepository = repositoryContext.GetRoleRepository();
@@ -26,11 +24,11 @@ namespace Keebox.Common.Managers
 			return _accountRepository.List();
 		}
 
-		public void CreateTokenAccount(string token)
+		public void CreateTokenAccount(Guid id, string token)
 		{
 			_accountRepository.Create(new Account
 			{
-				TokenHash = _cryptoService.GetHash(token)
+				Id = id,
 			});
 		}
 
@@ -84,7 +82,5 @@ namespace Keebox.Common.Managers
 		private readonly IAccountRepository _accountRepository;
 		private readonly IAssignmentRepository _assignmentRepository;
 		private readonly IRoleRepository _roleRepository;
-
-		private readonly ICryptoService _cryptoService;
 	}
 }

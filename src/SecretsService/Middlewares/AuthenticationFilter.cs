@@ -4,6 +4,7 @@ using System.Linq;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
+using Keebox.Common.Security;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Managing;
 
@@ -12,7 +13,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.DependencyInjection;
 
 
-namespace Keebox.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.Middlewares
 {
 	public class AuthenticationFilter : IActionFilter
 	{

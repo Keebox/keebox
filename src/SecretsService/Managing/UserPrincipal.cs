@@ -6,7 +6,7 @@ namespace Keebox.SecretsService.Managing
 {
 	public sealed class UserPrincipal : ClaimsPrincipal
 	{
-		public UserPrincipal(UserRole[] roles, bool isRootUser)
+		public UserPrincipal(UserRole[] roles, bool isRootUser): base()
 		{
 			Roles = roles;
 			IsRootUser = isRootUser;

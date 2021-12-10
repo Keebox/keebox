@@ -1,4 +1,6 @@
-﻿using Keebox.Common.Helpers;
+﻿using System;
+
+using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Types;
 

@@ -1,4 +1,4 @@
-﻿namespace Keebox.SecretsService.RequestFiltering
+﻿namespace Keebox.SecretsService.Middlewares
 {
 	public enum RoleAccessStrategy
 	{

@@ -5,8 +5,8 @@ using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
+using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models.EntityCreation;
-using Keebox.SecretsService.RequestFiltering;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +62,7 @@ namespace Keebox.SecretsService.Controllers
 						token = creationPayload.Token ?? throw new ArgumentException("Token is not provided");
 					}
 
-					_accountManager.CreateTokenAccount(token);
+					_accountManager.CreateTokenAccount(Guid.NewGuid(), token);
 
 					return Ok(token);
 				default:
