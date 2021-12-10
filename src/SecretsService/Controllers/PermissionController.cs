@@ -44,11 +44,11 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreatePermission([FromBody] PermissionCreationPayload payload)
+		public ActionResult<string> CreatePermission([FromBody] PermissionCreationPayload payload)
 		{
 			var (roleId, groupId, isReadOnly) = ParsePermission(payload);
 
-			return Ok(_permissionManager.CreatePermission(roleId, groupId, isReadOnly));
+			return Ok(_permissionManager.CreatePermission(roleId, groupId, isReadOnly).ToString());
 		}
 
 		[HttpPut("{permissionId:guid}")]

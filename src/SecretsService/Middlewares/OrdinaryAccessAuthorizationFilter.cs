@@ -6,7 +6,7 @@ using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
 using Keebox.Common.Types;
-using Keebox.SecretsService.Managing;
+using Keebox.SecretsService.Extensions;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -24,12 +24,11 @@ namespace Keebox.SecretsService.Middlewares
 
 		public void OnActionExecuting(ActionExecutingContext context)
 		{
-			var user = (UserPrincipal)context.HttpContext.User;
+			var user = context.HttpContext.User;
 
-			if (user.IsRootUser) return;
-			if (user.HasSystemRole()) return;
+			if (user.IsInRole(FormattedSystemRole.Admin)) return;
 
-			var userRoleIds = user.Roles.Select(r => r.RoleId).ToArray();
+			var userRoleIds = user.GetNonSystemRoles().ToArray();
 			var serviceProvider = context.HttpContext.RequestServices;
 
 			var pathResolver = serviceProvider.GetRequiredService<IPathResolver>();

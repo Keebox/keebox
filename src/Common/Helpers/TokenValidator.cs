@@ -1,15 +1,21 @@
-﻿using Keebox.Common.DataAccess.Repositories;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+
+using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 using Keebox.Common.Security;
+
+using Microsoft.IdentityModel.Tokens;
 
 
 namespace Keebox.Common.Helpers
 {
 	public class TokenValidator : ITokenValidator
 	{
-		public TokenValidator(ICryptoService cryptoService, IRepositoryContext repositoryContext)
+		public TokenValidator(ICryptoService cryptoService, IRepositoryContext repositoryContext, IKeyProvider keyProvider)
 		{
 			_cryptoService = cryptoService;
+			_keyProvider = keyProvider;
 			_accountRepository = repositoryContext.GetAccountRepository();
 		}
 
@@ -25,6 +31,33 @@ namespace Keebox.Common.Helpers
 			return _accountRepository.ExistsWithToken(tokenHash);
 		}
 
+		public bool ValidateJwtToken(string jwtToken, out ClaimsPrincipal? identity)
+		{
+			identity = null;
+
+			var signingKey = _keyProvider.GetTokenSigningKey();
+			var tokenHandler = new JwtSecurityTokenHandler();
+
+			try
+			{
+				identity = tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
+				{
+					ValidateIssuerSigningKey = true,
+					ValidateAudience = false,
+					ValidateIssuer = false,
+					ValidateLifetime = false,
+					IssuerSigningKey = new SymmetricSecurityKey(signingKey)
+				}, out _);
+
+				return true;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		private readonly IKeyProvider _keyProvider;
 		private readonly ICryptoService _cryptoService;
 		private readonly IAccountRepository _accountRepository;
 	}

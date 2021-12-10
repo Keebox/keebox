@@ -14,6 +14,7 @@ namespace Keebox.Common.Managers
 	{
 		public AccountManager(IRepositoryContext repositoryContext, ICryptoService cryptoService)
 		{
+			_cryptoService = cryptoService;
 			_accountRepository = repositoryContext.GetAccountRepository();
 			_assignmentRepository = repositoryContext.GetAssignmentRepository();
 			_roleRepository = repositoryContext.GetRoleRepository();
@@ -29,6 +30,7 @@ namespace Keebox.Common.Managers
 			_accountRepository.Create(new Account
 			{
 				Id = id,
+				TokenHash = _cryptoService.GetHash(token)
 			});
 		}
 
@@ -79,8 +81,10 @@ namespace Keebox.Common.Managers
 			}
 		}
 
+		private readonly IRoleRepository _roleRepository;
 		private readonly IAccountRepository _accountRepository;
 		private readonly IAssignmentRepository _assignmentRepository;
-		private readonly IRoleRepository _roleRepository;
+
+		private readonly ICryptoService _cryptoService;
 	}
 }

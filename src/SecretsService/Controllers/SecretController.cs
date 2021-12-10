@@ -25,10 +25,7 @@ namespace Keebox.SecretsService.Controllers
 	public class SecretsController : ControllerBase
 	{
 		public SecretsController(
-			ISecretManager             secretManager,
-			IFileConverter             fileConverter,
-			IFormatterResolver         formatterResolver,
-			Configuration              configuration,
+			ISecretManager secretManager, IFileConverter fileConverter, IFormatterResolver formatterResolver, Configuration configuration,
 			ILogger<SecretsController> logger
 		)
 		{

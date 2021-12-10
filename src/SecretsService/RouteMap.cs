@@ -6,6 +6,8 @@
 
 		public const string Account = "account";
 
+		public const string Login = "login";
+
 		public const string Role = "role";
 
 		public const string Permission = "permission";

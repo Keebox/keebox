@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 
+using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
@@ -60,10 +61,11 @@ namespace Keebox.SecretsService
 			services.AddTransient<IPathResolver, PathResolver>();
 			services.AddTransient<IFileConverter, FileConverter>();
 
+			services.AddTransient<IKeyProvider, KeyProvider>();
 			services.AddTransient<ICryptoService, CryptoService>();
 			services.AddTransient<ISecretManager, SecretManager>();
 
-			services.AddTransient<ITokenService, TokenService>(serviceProvider => new TokenService());
+			services.AddTransient<ITokenService, TokenService>();
 
 			services.AddTransient<ISecretManager, SecretManager>();
 			services.AddTransient<IAccountManager, AccountManager>();
@@ -73,17 +75,16 @@ namespace Keebox.SecretsService
 			services.AddTransient<IFormatterResolver, FormatterResolver>();
 			services.AddTransient<IContentManager, ContentManager>();
 
-			services.AddTransient<IConfigurationManager, ConfigurationManager>(serviceProvider =>
-				new ConfigurationManager(serviceProvider.GetRequiredService<YamlSerializer>(),
-					serviceProvider.GetRequiredService<IContentManager>(),
-					serviceProvider.GetRequiredService<ITokenService>()));
+			services.AddTransient<IConfigurationManager, ConfigurationManager>();
 
-			RegisterTokenSigningKeys(services);
+			services.RegisterTokenSigningKeys(_configuration!);
 
-			var configuration = RegisterApplicationConfiguration(services);
+			var appConfiguration = services.RegisterApplicationConfiguration(_configuration!);
+			services.ConfigureRepositoryContext(appConfiguration);
 
-			services.ConfigureRepositoryContext(configuration);
+			appConfiguration = services.SetAdminAccessTokenIfNotPersist(appConfiguration, _configuration!);
 
+			services.AddSingleton(appConfiguration);
 			services.AddTransient<ITokenValidator, TokenValidator>();
 
 			services.AddControllers(options =>
@@ -106,56 +107,6 @@ namespace Keebox.SecretsService
 			applicationLifetime.ApplicationStopped.Register(() => { Log.Information("Application stopped."); });
 
 			Log.Information("Application started.");
-		}
-
-		private static Configuration RegisterApplicationConfiguration(IServiceCollection services)
-		{
-			// TODO: add config validation
-
-			var serviceProvider = services.BuildServiceProvider();
-			var configurationManager = serviceProvider.GetRequiredService<IConfigurationManager>();
-
-			var appConfigurationDefaults = configurationManager.Get(_configuration!["DefaultSettingsPath"]);
-			var appConfigurationOverrides = configurationManager.Get(_configuration["OverridesSettingsPath"]);
-
-			if (appConfigurationDefaults is null)
-			{
-				Log.Information("Application configuration is not initialized");
-
-				appConfigurationDefaults = configurationManager.GetDefaultConfiguration();
-				configurationManager.Save(_configuration["DefaultSettingsPath"], appConfigurationDefaults);
-
-				Log.Information($"Here is your root token: {appConfigurationDefaults.RootToken}");
-			}
-
-			var appConfiguration = appConfigurationDefaults;
-
-			if (appConfigurationOverrides is not null)
-				appConfiguration = configurationManager.Merge(appConfigurationDefaults, appConfigurationOverrides);
-
-			services.AddSingleton(appConfiguration);
-
-			Log.Information("Loading application configuration.");
-
-			return appConfiguration;
-		}
-
-		private static void RegisterTokenSigningKeys(IServiceCollection services)
-		{
-			var signingKeyPath = _configuration!["SigningKeyPath"];
-			var signingKeyLength = _configuration.GetValue<int>("SigningKeyLength");
-
-			if (File.Exists(signingKeyPath)) return;
-
-			var serviceProvider = services.BuildServiceProvider();
-			var contentManager = serviceProvider.GetRequiredService<IContentManager>();
-
-			Log.Information("Generating signing keys.");
-
-			var secretKeyRawBuffer = new byte[signingKeyLength];
-			new Random().NextBytes(secretKeyRawBuffer);
-
-			contentManager.Save(signingKeyPath, secretKeyRawBuffer);
 		}
 
 		private static IConfiguration? _configuration;

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Claims;
 
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
-using Keebox.Common.Security;
 using Keebox.Common.Types;
-using Keebox.SecretsService.Managing;
+using Keebox.SecretsService.Extensions;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -21,41 +21,34 @@ namespace Keebox.SecretsService.Middlewares
 		{
 			var serviceProvider = context.HttpContext.RequestServices;
 
-			var tokenService = serviceProvider.GetRequiredService<ITokenValidator>();
-			var cryptoService = serviceProvider.GetRequiredService<ICryptoService>();
-
-			var repositoryContext = serviceProvider.GetRequiredService<IRepositoryContext>();
-			var accountRepository = repositoryContext.GetAccountRepository();
-			var assignmentRepository = repositoryContext.GetAssignmentRepository();
-			var roleRepository = repositoryContext.GetRoleRepository();
-
-			var configuration = serviceProvider.GetRequiredService<Configuration>();
+			var tokenValidator = serviceProvider.GetRequiredService<ITokenValidator>();
+			var accountRepository = serviceProvider.GetRequiredService<IRepositoryContext>().GetAccountRepository();
 
 			var authenticationType = ResolveAuthenticationType(context.HttpContext);
 
-			Guid userId;
-			var hasPrivileges = false;
+			ClaimsPrincipal? userPrincipal;
 
 			switch (authenticationType)
 			{
-				case AuthenticationType.Header:
 				case AuthenticationType.Cookie:
+				case AuthenticationType.Bearer:
+				case AuthenticationType.CustomHeader:
 				{
 					var token = ResolveTokenFrom(context.HttpContext, authenticationType);
-					var tokenHash = cryptoService.GetHash(token);
+					var isValid = tokenValidator.ValidateJwtToken(token, out userPrincipal);
 
-					if (configuration.RootToken!.Equals(token, StringComparison.OrdinalIgnoreCase))
-					{
-						hasPrivileges = true;
-						userId = Guid.Empty;
-					}
-					else
-					{
-						if (!tokenService.ValidateHash(tokenHash))
-							throw new UnauthorizedException("Token is not valid.");
+					if (!isValid) throw new UnauthorizedException("Token is not valid.");
 
-						userId = accountRepository.GetByTokenHash(tokenHash).Id;
+					if (userPrincipal!.IsInRole(FormattedSystemRole.Admin))
+					{
+						context.HttpContext.User = userPrincipal;
+
+						return;
 					}
+
+					var isAccountExists = accountRepository.Exists(userPrincipal.GetUserIdentifier());
+
+					if (!isAccountExists) throw new UnauthorizedException("Account does not exists.");
 
 					break;
 				}
@@ -66,15 +59,7 @@ namespace Keebox.SecretsService.Middlewares
 					throw new ArgumentOutOfRangeException();
 			}
 
-			var roleIds = assignmentRepository.GetRolesByAccount(userId).ToArray();
-
-			var roles = roleRepository.List().Where(r => roleIds.Contains(r.Id)).Select(x => new UserRole
-			{
-				RoleId = x.Id,
-				IsSystemRole = x.IsSystem
-			}).ToArray();
-
-			context.HttpContext.User = new UserPrincipal(roles, hasPrivileges);
+			context.HttpContext.User = userPrincipal;
 		}
 
 		public void OnActionExecuted(ActionExecutedContext context) { }
@@ -85,12 +70,14 @@ namespace Keebox.SecretsService.Middlewares
 				return AuthenticationType.Certificate;
 
 			if (context.Request.Headers.ContainsKey(TokenHeader))
-				return AuthenticationType.Header;
+				return AuthenticationType.CustomHeader;
 
 			if (context.Request.Cookies.ContainsKey(TokenHeader))
-			{
 				return AuthenticationType.Cookie;
-			}
+
+			if (context.Request.Headers.ContainsKey(AuthorizationHeader)
+				&& context.Request.Headers[AuthorizationHeader].ToString().StartsWith(BearerToken))
+				return AuthenticationType.Bearer;
 
 			return AuthenticationType.None;
 		}
@@ -99,12 +86,16 @@ namespace Keebox.SecretsService.Middlewares
 		{
 			return type switch
 			{
-				AuthenticationType.Header => context.Request.Headers[TokenHeader],
-				AuthenticationType.Cookie => context.Request.Cookies[TokenHeader]!,
-				_                         => throw new ArgumentOutOfRangeException()
+				AuthenticationType.CustomHeader => context.Request.Headers[TokenHeader],
+				AuthenticationType.Cookie       => context.Request.Cookies[TokenHeader]!,
+				AuthenticationType.Bearer       => context.Request.Headers[AuthorizationHeader].ToString().Split(BearerToken).Last(),
+				_                               => throw new ArgumentOutOfRangeException()
 			};
 		}
 
 		private const string TokenHeader = "X-Token";
+
+		private const string BearerToken = "Bearer ";
+		private const string AuthorizationHeader = "Authorization";
 	}
 }

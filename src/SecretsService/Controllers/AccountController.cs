@@ -55,7 +55,7 @@ namespace Keebox.SecretsService.Controllers
 
 					if (creationPayload.Generate != null && (bool)creationPayload.Generate)
 					{
-						token = _tokenService.GenerateToken();
+						token = _tokenService.GenerateStatelessToken();
 					}
 					else
 					{

@@ -1,7 +1,14 @@
-﻿namespace Keebox.Common.Helpers
+﻿using System;
+
+using Keebox.Common.DataAccess.Entities;
+
+
+namespace Keebox.Common.Helpers
 {
 	public interface ITokenService
 	{
-		string GenerateToken();
+		string GenerateStatelessToken();
+
+		string GenerateJwtToken(Guid userId, Role[] roles);
 	}
 }

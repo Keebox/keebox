@@ -33,4 +33,10 @@
         <PackageReference Include="YamlDotNet" Version="11.2.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Reference Include="Serilog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=24c2f752a8e58a10">
+        <HintPath>..\..\..\..\..\CSharp\Packages\serilog\2.10.0\lib\netstandard2.1\Serilog.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
 </Project>

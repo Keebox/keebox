@@ -43,9 +43,9 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreateRole([FromBody] RoleCreationPayload payload)
+		public ActionResult<string> CreateRole([FromBody] RoleCreationPayload payload)
 		{
-			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty));
+			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty).ToString());
 		}
 
 		[HttpPut("{roleId:guid}")]
