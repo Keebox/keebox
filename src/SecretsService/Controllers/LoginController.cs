@@ -3,6 +3,7 @@ using System.Linq;
 
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
+using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
 using Keebox.Common.Security;
 using Keebox.SecretsService.Models.EntityCreation;
@@ -17,23 +18,30 @@ namespace Keebox.SecretsService.Controllers
 	[Route(RouteMap.Login)]
 	public class LoginController : ControllerBase
 	{
-		public LoginController(IRepositoryContext repositoryContext, ICryptoService cryptoService, ITokenService tokenService)
+		public LoginController(
+			IRepositoryContext repositoryContext, ICryptoService cryptoService, ITokenService tokenService, ITokenValidator tokenValidator)
 		{
 			_tokenService = tokenService;
+			_tokenValidator = tokenValidator;
 			_cryptoService = cryptoService;
+
+			_roleRepository = repositoryContext.GetRoleRepository();
 			_accountRepository = repositoryContext.GetAccountRepository();
 			_assignmentRepository = repositoryContext.GetAssignmentRepository();
-			_roleRepository = repositoryContext.GetRoleRepository();
 		}
 
 		[HttpPost]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult<string> Login([FromBody] LoginPayload loginPayload)
 		{
 			if (loginPayload.Token == null) throw new ArgumentException("Account token is not provided");
 
 			var tokenHash = _cryptoService.GetHash(loginPayload.Token);
+
+			if (!_tokenValidator.ValidateHash(tokenHash)) throw new NotFoundException("Account with this token does not exists.");
+
 			var account = _accountRepository.GetByTokenHash(tokenHash);
 
 			var assignments = _assignmentRepository.GetRolesByAccount(account.Id);
@@ -44,10 +52,11 @@ namespace Keebox.SecretsService.Controllers
 			return Ok(jwtToken);
 		}
 
+		private readonly ICryptoService _cryptoService;
+		private readonly IRoleRepository _roleRepository;
 		private readonly IAccountRepository _accountRepository;
 		private readonly IAssignmentRepository _assignmentRepository;
-		private readonly IRoleRepository _roleRepository;
-		private readonly ICryptoService _cryptoService;
+		private readonly ITokenValidator _tokenValidator;
 		private readonly ITokenService _tokenService;
 	}
 }
