@@ -3,6 +3,7 @@
 
 namespace Keebox.SecretsService.Models
 {
+	[Serializable]
 	public record Error
 	{
 		public Error(int statusCode, string message)
@@ -12,10 +13,10 @@ namespace Keebox.SecretsService.Models
 			Timestamp = DateTime.Now;
 		}
 
-		public int StatusCode { init; get; }
+		public int StatusCode { get; init; }
 
-		public string Message { init; get; }
+		public string Message { get; init; }
 
-		public DateTime Timestamp { init; get; }
+		public DateTime Timestamp { get; init; }
 	}
 }

@@ -24,7 +24,8 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			var role = new Role
 			{
 				Id = Guid.NewGuid(),
-				Name = name
+				Name = name,
+				IsSystem = false
 			};
 
 			Storage.Add(role);
@@ -43,7 +44,12 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 				return;
 			}
 
-			Storage[index] = role;
+			Storage[index] = new Role
+			{
+				Id = role.Id,
+				Name = role.Name,
+				IsSystem = false
+			};
 		}
 
 		public void Delete(Guid roleId)

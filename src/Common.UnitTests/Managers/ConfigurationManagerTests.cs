@@ -22,18 +22,9 @@ namespace Keebox.Common.UnitTests.Managers
 		{
 			_serializer = new Mock<ISerializer>(MockBehavior.Strict);
 			_contentProvider = new Mock<IContentManager>(MockBehavior.Strict);
-			_tokenService = new Mock<ITokenService>();
 
-			_target = new ConfigurationManager(_serializer.Object, _contentProvider.Object, _tokenService.Object);
+			_target = new ConfigurationManager(_serializer.Object, _contentProvider.Object);
 		}
-
-		private readonly IFixture _fixture = new Fixture();
-
-		private Mock<ISerializer> _serializer;
-		private Mock<IContentManager> _contentProvider;
-		private Mock<ITokenService> _tokenService;
-
-		private ConfigurationManager _target;
 
 		[Test]
 		public void GetTest()
@@ -69,7 +60,7 @@ namespace Keebox.Common.UnitTests.Managers
 
 			var expected = secondConfiguration with
 			{
-				RootToken = firstConfiguration.RootToken,
+				RootToken = secondConfiguration.RootToken,
 				ConnectionString = firstConfiguration.ConnectionString,
 				Engine = firstConfiguration.Engine
 			};
@@ -81,5 +72,12 @@ namespace Keebox.Common.UnitTests.Managers
 			result.Should().NotBeNull();
 			result.Should().Be(expected);
 		}
+
+		private readonly IFixture _fixture = new Fixture();
+
+		private Mock<ISerializer> _serializer;
+		private Mock<IContentManager> _contentProvider;
+
+		private ConfigurationManager _target;
 	}
 }

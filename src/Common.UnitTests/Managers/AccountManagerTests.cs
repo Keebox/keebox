@@ -8,8 +8,8 @@ using FluentAssertions;
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
-using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
+using Keebox.Common.Security;
 
 using Moq;
 
@@ -33,29 +33,23 @@ namespace Keebox.Common.UnitTests.Managers
 			_target = new AccountManager(_repositoryContext.Object, _cryptoService.Object);
 		}
 
-		private readonly Fixture _fixture = new();
-
-		private IAccountManager _target;
-		private Mock<IRepositoryContext> _repositoryContext;
-		private Mock<ICryptoService> _cryptoService;
-		private Mock<IAccountRepository> _accountRepository;
-
 		[Test]
 		public void CreateTokenAccountTest()
 		{
 			// arrange
 			var token = _fixture.Create<string>();
+			var name = _fixture.Create<string>();
 			var tokenHash = _fixture.Create<string>();
 
 			_cryptoService.Setup(x => x.GetHash(It.Is<string>(y => y.Equals(token)))).Returns(tokenHash).Verifiable();
 			_accountRepository.Setup(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash))));
 
 			// act
-			_target.CreateTokenAccount(token);
+			_target.CreateTokenAccount(name, token);
 
 			// assert
 			_cryptoService.Verify(x => x.GetHash(It.Is<string>(y => y.Equals(token))), Times.Once);
-			_accountRepository.Verify(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash))), Times.Once);
+			_accountRepository.Verify(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash) && y.Name.Equals(name))), Times.Once);
 		}
 
 		[Test]
@@ -89,5 +83,13 @@ namespace Keebox.Common.UnitTests.Managers
 			_accountRepository.Verify(x => x.List(), Times.Once);
 			gotAccounts.Should().Equal(accounts);
 		}
+
+		private readonly Fixture _fixture = new();
+
+		private Mock<ICryptoService> _cryptoService;
+		private Mock<IRepositoryContext> _repositoryContext;
+		private Mock<IAccountRepository> _accountRepository;
+
+		private IAccountManager _target;
 	}
 }

@@ -1,11 +1,15 @@
-﻿namespace Keebox.SecretsService.Models
+﻿using System;
+
+
+namespace Keebox.SecretsService.Models
 {
+	[Serializable]
 	public record Config
 	{
-		public bool EnableWebUi { init; get; }
+		public bool EnableWebUi { get; init; }
 
-		public string DefaultFormat { init; get; }
+		public string DefaultFormat { get; init; } = default!;
 
-		public string Engine { init; get; }
+		public string Engine { get; init; } = default!;
 	}
 }

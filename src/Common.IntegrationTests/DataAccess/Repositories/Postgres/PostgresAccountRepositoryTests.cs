@@ -53,7 +53,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			_target.Delete(id);
 
 			// assert
-			_target.List().Should().HaveCount(0);
+			_target.Exists(id).Should().BeFalse();
 		}
 
 		[Test]
@@ -122,7 +122,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 		{
 			// arrange
 			var ids = new List<Guid>();
-			var accountsCount = _fixture.Create<Generator<int>>().First(x => x > 0 && x < 10);
+			var accountsCount = _fixture.Create<int>() % 9 + 1;
 
 			for (var i = 0; i < accountsCount; i++)
 			{
@@ -131,7 +131,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			}
 
 			// act
-			var accounts = _target.List().ToArray();
+			var accounts = _target.List().Where(a => ids.Contains(a.Id)).ToArray();
 
 			// assert
 			accounts.Should().HaveCount(accountsCount);
@@ -156,10 +156,10 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 			var updated = _target.GetByName(account.Name!);
 
 			updated.Should().NotBeNull();
-			updated.Should().BeEquivalentTo(account, e => e.Excluding(x => x.RoleIds));
+			updated.Should().BeEquivalentTo(account);
 			id.Should().NotBe(Guid.Empty);
 		}
-		
+
 		[Test]
 		public void GetTest()
 		{
@@ -185,7 +185,6 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 				.With(x => x.Name, Creator.CreateStringWithMaxLength(nameLength))
 				.With(x => x.TokenHash, Creator.CreateStringWithMaxLength(tokenHashLength))
 				.With(x => x.CertificateThumbprint, Creator.CreateStringWithMaxLength(certificateThumbprintLength))
-				.Without(x => x.RoleIds)
 				.Create();
 
 			return account;

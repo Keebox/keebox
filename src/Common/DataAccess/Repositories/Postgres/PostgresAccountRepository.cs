@@ -25,8 +25,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			return connection.GetTable<Account>()
-				.SingleOrDefault(x => x.Name != null && x.Name.Equals(accountName)) is not null;
+			return connection.GetTable<Account>().SingleOrDefault(x => x.Name.Equals(accountName)) is not null;
 		}
 
 		public bool Exists(Guid accountId)
@@ -48,21 +47,19 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 		public Guid Create(Account account)
 		{
-			if (string.IsNullOrEmpty(account.Name))
-			{
-				EnsureArg.IsNotNullOrWhiteSpace(account.TokenHash);
-			}
+			EnsureArg.IsNotEmptyOrWhiteSpace(account.Name);
 
 			using var connection = _connectionFactory.Create();
 
 			// NOTE: InsertWithOutput is not yet supported for PostreSQL https://github.com/linq2db/linq2db/issues/2958
 			var accountId = account.Id == default ? Guid.NewGuid() : account.Id;
+
 			connection.GetTable<Account>().Insert(() => new Account
 			{
 				Id = accountId,
 				Name = account.Name,
+				TokenHash = account.TokenHash,
 				CertificateThumbprint = account.CertificateThumbprint,
-				TokenHash = account.TokenHash
 			});
 
 			return accountId;
@@ -80,15 +77,21 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			return connection.GetTable<Account>().Single(x => x.Name != null && x.Name.Equals(accountName));
+			return connection.GetTable<Account>().Single(x => x.Name.Equals(accountName));
+		}
+
+		public Account GetByTokenHash(string tokenHash)
+		{
+			EnsureArg.IsNotNullOrWhiteSpace(tokenHash);
+
+			using var connection = _connectionFactory.Create();
+
+			return connection.GetTable<Account>().Single(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash));
 		}
 
 		public void Update(Account account)
 		{
-			if (string.IsNullOrEmpty(account.Name))
-			{
-				EnsureArg.IsNotNullOrWhiteSpace(account.TokenHash);
-			}
+			EnsureArg.IsNotEmptyOrWhiteSpace(account.Name);
 
 			using var connection = _connectionFactory.Create();
 

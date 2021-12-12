@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
-using Keebox.SecretsService.Models;
-using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models.EntityCreation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate]
+	[Authenticate] [AuthorizePrivileged]
 	[Route(RouteMap.Role)]
 	public class RoleController : ControllerBase
 	{
@@ -42,9 +42,9 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreateRole([FromRoute] RequestPayload payload)
+		public ActionResult<string> CreateRole([FromBody] RoleCreationPayload payload)
 		{
-			return Ok(_roleManager.CreateRole((string)(payload.Body?["name"] ?? string.Empty)));
+			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty).ToString());
 		}
 
 		[HttpPut("{roleId:guid}")]
@@ -53,10 +53,7 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult ReplaceRole([FromBody] Role role, [FromRoute] Guid roleId)
 		{
-			if (roleId != role.Id)
-			{
-				throw new ArgumentException("Ids do not match");
-			}
+			if (roleId != role.Id) throw new ArgumentException("Ids do not match");
 
 			_roleManager.UpdateRole(role);
 

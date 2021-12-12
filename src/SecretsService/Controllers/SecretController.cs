@@ -6,8 +6,8 @@ using System.Linq;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Exceptions;
+using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models;
-using Keebox.SecretsService.RequestFiltering;
 using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Http;
@@ -17,18 +17,15 @@ using Microsoft.Extensions.Logging;
 
 namespace Keebox.SecretsService.Controllers
 {
-	[Authenticate]
 	[ApiController]
 	[Route(RouteMap.Any)]
+	[Authenticate] [AuthorizeForGroup]
 	[SuppressMessage("ReSharper", "RouteTemplates.MethodMissingRouteParameters")]
 	[SuppressMessage("ReSharper", "RouteTemplates.ControllerRouteParameterIsNotPassedToMethods")]
 	public class SecretsController : ControllerBase
 	{
 		public SecretsController(
-			ISecretManager             secretManager,
-			IFileConverter             fileConverter,
-			IFormatterResolver         formatterResolver,
-			Configuration              configuration,
+			ISecretManager secretManager, IFileConverter fileConverter, IFormatterResolver formatterResolver, Configuration configuration,
 			ILogger<SecretsController> logger
 		)
 		{
@@ -67,8 +64,7 @@ namespace Keebox.SecretsService.Controllers
 		{
 			_logger.LogInformation($"Getting secrets {payload.Route}");
 
-			if (payload.Route is null)
-				throw new EmptyRouteException();
+			if (payload.Route is null) throw new EmptyRouteException();
 
 			var secrets = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
 

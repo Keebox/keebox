@@ -4,11 +4,20 @@
 	{
 		public const string Any = "{*route}";
 
-		public const string Account = "account";
+		public const string Login = "login";
 
 		public const string Role = "role";
 
 		public const string Permission = "permission";
+
+		public const string RoleAssigning = "assign";
+
+		public static class Account
+		{
+			public const string Base = "account";
+
+			public const string Assign = Base + "/assign";
+		}
 
 		public static class System
 		{

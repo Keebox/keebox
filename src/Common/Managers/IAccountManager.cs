@@ -8,7 +8,7 @@ namespace Keebox.Common.Managers
 {
 	public interface IAccountManager
 	{
-		void CreateTokenAccount(string token);
+		void CreateTokenAccount(string name, string token);
 
 		void DeleteAccount(Guid accountId);
 
@@ -17,5 +17,7 @@ namespace Keebox.Common.Managers
 		Account GetAccount(Guid accountId);
 
 		void UpdateAccount(Account account);
+
+		void AssignRoleToAccount(Guid roleId, Guid accountId);
 	}
 }

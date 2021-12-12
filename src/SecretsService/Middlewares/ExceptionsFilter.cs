@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 
 
-namespace Keebox.SecretsService.RequestFiltering
+namespace Keebox.SecretsService.Middlewares
 {
 	[SuppressMessage("ReSharper", "ClassNeverInstantiated.Global")]
 	public class ExceptionsFilter : IExceptionFilter
@@ -24,7 +24,7 @@ namespace Keebox.SecretsService.RequestFiltering
 		public void OnException(ExceptionContext context)
 		{
 			var status = HttpStatusCode.InternalServerError;
-			var message = "Internal sever error.";
+			var message = "Internal server error.";
 
 			switch (context.Exception)
 			{

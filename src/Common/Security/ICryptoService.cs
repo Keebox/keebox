@@ -1,4 +1,4 @@
-﻿namespace Keebox.Common.Helpers
+﻿namespace Keebox.Common.Security
 {
 	public interface ICryptoService
 	{

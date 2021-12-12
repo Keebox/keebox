@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
-using Keebox.SecretsService.Exceptions;
-using Keebox.SecretsService.Models;
-using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models.EntityCreation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate]
+	[Authenticate] [AuthorizePrivileged]
 	[Route(RouteMap.Permission)]
 	public class PermissionController : ControllerBase
 	{
@@ -46,19 +44,14 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
-		public ActionResult<Guid> CreatePermission([FromRoute] RequestPayload payload)
+		public ActionResult<string> CreatePermission([FromBody] PermissionCreationPayload payload)
 		{
-			if (payload.Data is null || !payload.Data.Keys.Any())
-			{
-				throw new EmptyDataException("Data is not provided");
-			}
+			var (roleId, groupId, isReadOnly) = ParsePermission(payload);
 
-			var (roleId, groupId, isReadOnly) = ParsePermission(payload.Body!);
-
-			return Ok(_permissionManager.CreatePermission(roleId, groupId, isReadOnly));
+			return Ok(_permissionManager.CreatePermission(roleId, groupId, isReadOnly).ToString());
 		}
 
-		[HttpPut("permissionId:guid")]
+		[HttpPut("{permissionId:guid}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -66,7 +59,7 @@ namespace Keebox.SecretsService.Controllers
 		{
 			if (permissionId != permission.Id)
 			{
-				throw new ArgumentException("Ids do not match");
+				throw new ArgumentException("Ids do not match.");
 			}
 
 			_permissionManager.UpdatePermission(permission);
@@ -74,7 +67,7 @@ namespace Keebox.SecretsService.Controllers
 			return NoContent();
 		}
 
-		[HttpDelete("permissionId:guid")]
+		[HttpDelete("{permissionId:guid}")]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult DeletePermission([FromRoute] Guid permissionId)
@@ -84,24 +77,24 @@ namespace Keebox.SecretsService.Controllers
 			return NoContent();
 		}
 
-		private static (Guid roleId, Guid groupId, bool isReadOnly) ParsePermission(IReadOnlyDictionary<string, object> data)
+		private static (Guid roleId, Guid groupId, bool isReadOnly) ParsePermission(PermissionCreationPayload payload)
 		{
-			if (!data.TryGetValue("roleId", out var roleId))
+			if (payload.RoleId == null)
 			{
-				throw new ArgumentException("Role id is not provided");
+				throw new ArgumentException("Role id is not provided.");
 			}
 
-			if (!data.TryGetValue("groupId", out var groupId))
+			if (payload.GroupId == null)
 			{
-				throw new ArgumentException("Group id is not provided");
+				throw new ArgumentException("Group id is not provided.");
 			}
 
-			if (!data.TryGetValue("isReadOnly", out var isReadOnly))
+			if (payload.IsReadonly == null)
 			{
-				throw new ArgumentException("Is read only is not provided");
+				throw new ArgumentException("Is read only is not provided.");
 			}
 
-			return (Guid.Parse((string)roleId), Guid.Parse((string)groupId), (bool)isReadOnly);
+			return ((Guid roleId, Guid groupId, bool isReadOnly))(payload.RoleId, payload.GroupId, payload.IsReadonly);
 		}
 
 		private readonly IPermissionManager _permissionManager;

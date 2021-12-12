@@ -1,9 +1,14 @@
+using System;
+using System.IO;
+
+using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Managers;
+using Keebox.Common.Security;
 using Keebox.Common.Types;
-using Keebox.SecretsService.RequestFiltering;
+using Keebox.SecretsService.Middlewares;
 using Keebox.SecretsService.Services;
 
 using Microsoft.AspNetCore.Builder;
@@ -56,8 +61,11 @@ namespace Keebox.SecretsService
 			services.AddTransient<IPathResolver, PathResolver>();
 			services.AddTransient<IFileConverter, FileConverter>();
 
+			services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+			services.AddTransient<IKeyProvider, KeyProvider>();
 			services.AddTransient<ICryptoService, CryptoService>();
 			services.AddTransient<ISecretManager, SecretManager>();
+
 			services.AddTransient<ITokenService, TokenService>();
 
 			services.AddTransient<ISecretManager, SecretManager>();
@@ -66,18 +74,19 @@ namespace Keebox.SecretsService
 			services.AddTransient<IPermissionManager, PermissionManager>();
 
 			services.AddTransient<IFormatterResolver, FormatterResolver>();
-
 			services.AddTransient<IContentManager, ContentManager>();
 
-			services.AddTransient<IConfigurationManager, ConfigurationManager>(serviceProvider =>
-				new ConfigurationManager(serviceProvider.GetRequiredService<YamlSerializer>(),
-					serviceProvider.GetRequiredService<IContentManager>(),
-					serviceProvider.GetRequiredService<ITokenService>()));
+			services.AddTransient<IConfigurationManager, ConfigurationManager>(s =>
+				new ConfigurationManager(s.GetRequiredService<YamlSerializer>(), s.GetRequiredService<IContentManager>()));
 
-			var configuration = RegisterApplicationConfiguration(services);
+			services.RegisterTokenSigningKeys(_configuration!);
 
-			services.ConfigureRepositoryContext(configuration);
+			var appConfiguration = services.RegisterApplicationConfiguration(_configuration!);
+			services.ConfigureRepositoryContext(appConfiguration);
 
+			appConfiguration = services.SetAdminAccessTokenIfNotPersist(appConfiguration, _configuration!);
+
+			services.AddSingleton(appConfiguration);
 			services.AddTransient<ITokenValidator, TokenValidator>();
 
 			services.AddControllers(options =>
@@ -100,38 +109,6 @@ namespace Keebox.SecretsService
 			applicationLifetime.ApplicationStopped.Register(() => { Log.Information("Application stopped."); });
 
 			Log.Information("Application started.");
-		}
-
-		private static Configuration RegisterApplicationConfiguration(IServiceCollection services)
-		{
-			// TODO: add config validation
-
-			var serviceProvider = services.BuildServiceProvider();
-			var configurationManager = serviceProvider.GetRequiredService<IConfigurationManager>();
-
-			var appConfigurationDefaults = configurationManager.Get(_configuration!["DefaultSettingsPath"]);
-			var appConfigurationOverrides = configurationManager.Get(_configuration["OverridesSettingsPath"]);
-
-			if (appConfigurationDefaults is null)
-			{
-				Log.Information("Application configuration is not initialized");
-
-				appConfigurationDefaults = configurationManager.GetDefaultConfiguration();
-				configurationManager.Save(_configuration["DefaultSettingsPath"], appConfigurationDefaults);
-
-				Log.Information($"Here is your root token: {appConfigurationDefaults.RootToken}");
-			}
-
-			var appConfiguration = appConfigurationDefaults;
-
-			if (appConfigurationOverrides is not null)
-				appConfiguration = configurationManager.Merge(appConfigurationDefaults, appConfigurationOverrides);
-
-			services.AddSingleton(appConfiguration);
-
-			Log.Information("Loading application configuration.");
-
-			return appConfiguration;
 		}
 
 		private static IConfiguration? _configuration;

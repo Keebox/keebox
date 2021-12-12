@@ -1,7 +1,9 @@
 ﻿namespace Keebox.Common.DataAccess.Entities
 {
-	public record Role : Entity
+	public sealed record Role : Entity
 	{
-		public string Name { get; init; }
+		public string Name { get; init; } = default!;
+
+		public bool IsSystem { get; init; }
 	}
 }

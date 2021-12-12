@@ -1,5 +1,9 @@
-﻿namespace Keebox.SecretsService.Models
+﻿using System;
+
+
+namespace Keebox.SecretsService.Models
 {
+	[Serializable]
 	public record Secret
 	{
 		public string Name { get; init; } = default!;

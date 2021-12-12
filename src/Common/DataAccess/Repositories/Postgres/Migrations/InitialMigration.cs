@@ -6,14 +6,14 @@ using Keebox.Common.DataAccess.Entities;
 namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 {
 	[Migration(1)]
-	public class InitialMigration : AutoReversingMigration
+	public sealed class InitialMigration : AutoReversingMigration
 	{
 		public override void Up()
 		{
 			Create.Table("account")
 				.InSchema("public")
 				.WithColumn(nameof(Account.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-				.WithColumn(nameof(Account.Name).ToLower()).AsString(256).Nullable().Unique()
+				.WithColumn(nameof(Account.Name).ToLower()).AsString(256).NotNullable().Unique()
 				.WithColumn(nameof(Account.TokenHash).ToLower()).AsFixedLengthString(128).Nullable()
 				.WithColumn(nameof(Account.CertificateThumbprint).ToLower()).AsFixedLengthString(40).Nullable();
 
@@ -28,7 +28,8 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.Table("role")
 				.InSchema("public")
 				.WithColumn(nameof(Role.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-				.WithColumn(nameof(Role.Name).ToLower()).AsString(256).NotNullable().Unique();
+				.WithColumn(nameof(Role.Name).ToLower()).AsString(256).NotNullable().Unique()
+				.WithColumn(nameof(Role.IsSystem).ToLower()).AsBoolean().NotNullable();
 
 			Create
 				.Table("secret")
@@ -46,6 +47,13 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 				.WithColumn(nameof(Permission.GroupId).ToLower()).AsGuid().NotNullable()
 				.WithColumn(nameof(Permission.RoleId).ToLower()).AsGuid().NotNullable()
 				.WithColumn(nameof(Permission.IsReadOnly).ToLower()).AsBoolean().NotNullable();
+
+			Create
+				.Table("assignment")
+				.InSchema("public")
+				.WithColumn(nameof(Assignment.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
+				.WithColumn(nameof(Assignment.AccountId).ToLower()).AsGuid().NotNullable()
+				.WithColumn(nameof(Assignment.RoleId).ToLower()).AsGuid().NotNullable();
 		}
 	}
 }
