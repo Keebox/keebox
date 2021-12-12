@@ -1,2 +1,2 @@
-﻿engine: Postgres
+﻿engine: InMemory
 connectionString: Server=127.0.0.1;Port=5432;Database=keebox_db;User Id=postgres;Password=postgres

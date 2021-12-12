@@ -1,7 +1,3 @@
-using System;
-using System.IO;
-
-using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
@@ -18,7 +14,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using NSwag;
+
 using Serilog;
+
+using ConfigurationManager = Keebox.Common.Managers.ConfigurationManager;
 
 
 namespace Keebox.SecretsService
@@ -94,6 +94,22 @@ namespace Keebox.SecretsService
 				options.Filters.Add<ExceptionsFilter>();
 				options.InputFormatters.Add(new BypassFormDataInputFormatter());
 			});
+
+			services.AddOpenApiDocument(settings =>
+			{
+				settings.PostProcess = document =>
+				{
+					document.Info.Version = "v0";
+					document.Info.Title = "Keebox API";
+					document.Info.Description = "API for secrets management service called Keebox";
+					// WARN: Does not work because of a bug
+					document.Servers.Add(new OpenApiServer
+					{
+						Url = "http://localhost:9000",
+						Description = "Development server"
+					});
+				};
+			});
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
@@ -103,8 +119,12 @@ namespace Keebox.SecretsService
 				app.UseDeveloperExceptionPage();
 			}
 
+			app.UseOpenApi();
+			app.UseReDoc();
+
 			app.UseRouting();
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
+
 
 			applicationLifetime.ApplicationStopped.Register(() => { Log.Information("Application stopped."); });
 
