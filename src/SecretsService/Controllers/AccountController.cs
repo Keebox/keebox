@@ -1,16 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Models.EntityCreation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
@@ -28,9 +32,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[OpenApiOperation("Get account by id")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(Account))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
 		public ActionResult<Account> GetAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Getting information about account {accountId}.");
@@ -39,7 +44,8 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[OpenApiOperation("Get all accounts")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<Account>))]
 		public ActionResult<IEnumerable<Account>> ListAccounts()
 		{
 			_logger.LogInformation("Getting list of all accounts.");
@@ -48,8 +54,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[OpenApiOperation("Create account")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		public ActionResult<string> CreateAccount([FromBody] AccountCreationPayload creationPayload)
 		{
 			if (creationPayload.Type == null) throw new ArgumentException("Type is not provided.");
@@ -80,9 +87,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[OpenApiOperation("Update account by id", "Provided account replaces existing account")]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
 		public ActionResult ReplaceAccount([FromBody] Account account, [FromRoute] Guid accountId)
 		{
 			if (accountId != account.Id) throw new ArgumentException("Ids do not match");
@@ -95,8 +103,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[OpenApiOperation("Delete account by id")]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
 		public ActionResult DeleteAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Deleting account with id {accountId}.");
@@ -107,8 +116,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost(RouteMap.Account.Assign)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[OpenApiOperation("Assign role to account")]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		public ActionResult AssignRoleToAccount([FromBody] AssignCreationPayload payload)
 		{
 			if (payload.RoleId == null) throw new ArgumentException("Role id is not provided.");
@@ -118,7 +128,7 @@ namespace Keebox.SecretsService.Controllers
 
 			_accountManager.AssignRoleToAccount(payload.RoleId.Value, payload.AccountId.Value);
 
-			return Ok();
+			return NoContent();
 		}
 
 		private readonly IAccountManager _accountManager;

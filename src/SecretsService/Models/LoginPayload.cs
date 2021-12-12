@@ -1,7 +1,7 @@
 ﻿using System;
 
 
-namespace Keebox.SecretsService.Models.EntityCreation
+namespace Keebox.SecretsService.Models
 {
 	[Serializable]
 	public record LoginPayload
