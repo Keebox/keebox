@@ -78,9 +78,9 @@ namespace Keebox.SecretsService.Controllers
 						token = creationPayload.Token ?? throw new ArgumentException("Token is not provided.");
 					}
 
-					_accountManager.CreateTokenAccount(creationPayload.Name, token);
+					var accountId = _accountManager.CreateTokenAccount(creationPayload.Name, token);
 
-					return Ok(token);
+					return Created($"account/{accountId}", token);
 				default:
 					throw new ArgumentOutOfRangeException();
 			}

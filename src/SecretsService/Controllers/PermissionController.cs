@@ -47,19 +47,16 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status409Conflict)]
 		[OpenApiOperation("Create permission")]
 		[SwaggerResponse(HttpStatusCode.Created, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.Conflict, typeof(Error))]
-		public ActionResult CreatePermission([FromBody] PermissionCreationPayload payload)
+		public ActionResult<string> CreatePermission([FromBody] PermissionCreationPayload payload)
 		{
 			var (roleId, groupId, isReadOnly) = ParsePermission(payload);
 			var permissionId = _permissionManager.CreatePermission(roleId, groupId, isReadOnly);
 
-			return Created($"/permission/{permissionId}", null);
+			return Created($"/permission/{permissionId}", permissionId.ToString());
 		}
 
 		[HttpPut("{permissionId:guid}")]
