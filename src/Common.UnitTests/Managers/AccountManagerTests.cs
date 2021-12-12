@@ -41,17 +41,15 @@ namespace Keebox.Common.UnitTests.Managers
 			var name = _fixture.Create<string>();
 			var tokenHash = _fixture.Create<string>();
 
-			var guid = _fixture.Create<Guid>();
-
 			_cryptoService.Setup(x => x.GetHash(It.Is<string>(y => y.Equals(token)))).Returns(tokenHash).Verifiable();
 			_accountRepository.Setup(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash))));
 
 			// act
-			_target.CreateTokenAccount(guid, name, token);
+			_target.CreateTokenAccount(name, token);
 
 			// assert
 			_cryptoService.Verify(x => x.GetHash(It.Is<string>(y => y.Equals(token))), Times.Once);
-			_accountRepository.Verify(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash))), Times.Once);
+			_accountRepository.Verify(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash) && y.Name.Equals(name))), Times.Once);
 		}
 
 		[Test]
@@ -88,9 +86,10 @@ namespace Keebox.Common.UnitTests.Managers
 
 		private readonly Fixture _fixture = new();
 
-		private IAccountManager _target;
-		private Mock<IRepositoryContext> _repositoryContext;
 		private Mock<ICryptoService> _cryptoService;
+		private Mock<IRepositoryContext> _repositoryContext;
 		private Mock<IAccountRepository> _accountRepository;
+
+		private IAccountManager _target;
 	}
 }
