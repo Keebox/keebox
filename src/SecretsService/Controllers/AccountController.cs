@@ -87,7 +87,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut("{accountId:guid}")]
-		[OpenApiOperation("Update account by id", "Provided account replaces existing account")]
+		[OpenApiOperation("Update account by id", "Provided account replaces existing account with given id")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
