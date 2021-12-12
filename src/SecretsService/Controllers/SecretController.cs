@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
+using System.Net;
 
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
@@ -13,6 +14,8 @@ using Keebox.SecretsService.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
@@ -37,9 +40,13 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[OpenApiOperation("Save secrets",
+			"If route leads to non-existent group it is created and secrets are saved."
+			+ "If route leads to group secrets are created/replaced."
+			+ "If route leads to secret it is updated.")]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
 		public ActionResult AddSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Adding secrets {payload.Route}");
@@ -58,9 +65,14 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
-		public IActionResult GetSecrets([FromRoute] RequestPayload payload)
+		[OpenApiOperation("Get secrets",
+			"If route leads to group secrets are returned."
+			+ "If route leads to secret it is returned."
+			+ "If route leads to file it is returned as stream.")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(File))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		public ActionResult GetSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Getting secrets {payload.Route}");
 
@@ -92,8 +104,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[OpenApiOperation("Delete secrets", "If route leads to group it is deleted." + "If route leads to secret if is deleted.")]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
 		public ActionResult DeleteSecrets([FromRoute] RequestPayload payload)
 		{
 			_logger.LogInformation($"Deleting secrets {payload.Route}");
