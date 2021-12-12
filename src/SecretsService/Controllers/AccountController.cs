@@ -62,7 +62,7 @@ namespace Keebox.SecretsService.Controllers
 				case AccountType.Token:
 					string token;
 
-					if (creationPayload.GenerateToken != null && (bool)creationPayload.GenerateToken)
+					if (creationPayload.GenerateToken.HasValue && creationPayload.GenerateToken.Value)
 					{
 						token = _tokenService.GenerateStatelessToken();
 					}
