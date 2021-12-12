@@ -17,7 +17,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(accountName);
 
-			return Storage.Any(x => x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+			return Storage.Any(x => x.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		public bool Exists(Guid accountId)
@@ -29,7 +29,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(tokenHash);
 
-			return Storage.Any(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
+			return Storage.Any(x => x.TokenHash is not null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public Guid Create(Account account)
@@ -62,14 +62,14 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(accountName);
 
-			return Storage.Single(x => x.Name.Equals(accountName, StringComparison.OrdinalIgnoreCase));
+			return Storage.Single(x => x.Name.Equals(accountName, StringComparison.InvariantCultureIgnoreCase));
 		}
 
 		public Account GetByTokenHash(string tokenHash)
 		{
 			EnsureArg.IsNotEmptyOrWhiteSpace(tokenHash);
 
-			return Storage.Single(x => x.TokenHash != null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
+			return Storage.Single(x => x.TokenHash is not null && x.TokenHash.Equals(tokenHash, StringComparison.OrdinalIgnoreCase));
 		}
 
 		public void Update(Account account)

@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using EnsureThat;
-
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 
@@ -21,14 +19,14 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 		public IEnumerable<Guid> GetRolesByAccount(Guid accountId)
 		{
-			var connection = _connectionFactory.Create();
+			using var connection = _connectionFactory.Create();
 
-			return connection.GetTable<Assignment>().Where(x => x.AccountId.Equals(accountId)).Select(x => x.RoleId);
+			return connection.GetTable<Assignment>().Where(x => x.AccountId.Equals(accountId)).Select(x => x.RoleId).ToArray();
 		}
 
 		public void Assign(Guid accountId, Guid roleId)
 		{
-			var connection = _connectionFactory.Create();
+			using var connection = _connectionFactory.Create();
 
 			connection.GetTable<Assignment>().Insert(() => new Assignment
 			{
@@ -40,7 +38,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 		public bool IsAccountAlreadyAssigned(Guid accountId, Guid roleId)
 		{
-			var connection = _connectionFactory.Create();
+			using var connection = _connectionFactory.Create();
 
 			return connection.GetTable<Assignment>()
 				.SingleOrDefault(x => x.AccountId.Equals(accountId) && x.RoleId.Equals(roleId)) is not null;

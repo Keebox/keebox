@@ -53,7 +53,7 @@ namespace Keebox.SecretsService.Controllers
 			var assignments = _assignmentRepository.GetRolesByAccount(account.Id);
 			var roles = _roleRepository.List().Where(r => assignments.Contains(r.Id));
 
-			var jwtToken = _tokenService.GenerateJwtToken(account.Id, roles.ToArray());
+			var jwtToken = _tokenService.GenerateJwtToken(account.Id, roles.ToArray(), TimeSpan.FromDays(1));
 
 			Response.Cookies.Append(Constants.JwtCookieName, jwtToken);
 

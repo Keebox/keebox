@@ -13,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate]
+	[Authenticate] [AuthorizePrivileged]
 	[Route(RouteMap.Role)]
 	public class RoleController : ControllerBase
 	{
@@ -39,7 +39,6 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status409Conflict)]
@@ -49,7 +48,6 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut("{roleId:guid}")]
-		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status400BadRequest)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -63,7 +61,6 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{roleId:guid}")]
-		[AuthorizePrivileged]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult DeleteRole([FromRoute] Guid roleId)

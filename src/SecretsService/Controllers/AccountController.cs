@@ -61,7 +61,6 @@ namespace Keebox.SecretsService.Controllers
 			{
 				case AccountType.Token:
 					string token;
-					var accountId = Guid.NewGuid();
 
 					if (creationPayload.GenerateToken != null && (bool)creationPayload.GenerateToken)
 					{
@@ -72,9 +71,7 @@ namespace Keebox.SecretsService.Controllers
 						token = creationPayload.Token ?? throw new ArgumentException("Token is not provided.");
 					}
 
-					_accountManager.CreateTokenAccount(accountId, creationPayload.Name, token);
-
-					_logger.LogInformation($"Created account with id {accountId}.");
+					_accountManager.CreateTokenAccount(creationPayload.Name, token);
 
 					return Ok(token);
 				default:
@@ -119,7 +116,7 @@ namespace Keebox.SecretsService.Controllers
 
 			_logger.LogInformation($"Assigning {payload.RoleId} role to account {payload.AccountId}.");
 
-			_accountManager.AssignRoleToAccount((Guid)payload.RoleId, (Guid)payload.AccountId);
+			_accountManager.AssignRoleToAccount(payload.RoleId.Value, payload.AccountId.Value);
 
 			return Ok();
 		}

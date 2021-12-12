@@ -25,8 +25,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 			using var connection = _connectionFactory.Create();
 
-			return connection.GetTable<Account>()
-				.SingleOrDefault(x => x.Name.Equals(accountName)) is not null;
+			return connection.GetTable<Account>().SingleOrDefault(x => x.Name.Equals(accountName)) is not null;
 		}
 
 		public bool Exists(Guid accountId)

@@ -28,6 +28,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		public Guid Create(Permission permission)
 		{
 			var permissionId = permission.Id == default ? Guid.NewGuid() : permission.Id;
+
 			Storage.Add(new Permission
 			{
 				Id = permissionId,
@@ -48,7 +49,7 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 		{
 			var index = Storage.FindIndex(x => x.Id == permission.Id);
 
-			if (index != -1)
+			if (index == -1)
 			{
 				return;
 			}

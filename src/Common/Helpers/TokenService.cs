@@ -23,17 +23,17 @@ namespace Keebox.Common.Helpers
 			return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
 		}
 
-		public string GenerateJwtToken(Guid userId, Role[] roles)
+		public string GenerateJwtToken(Guid userId, Role[] roles, TimeSpan lifetime)
 		{
-			return GenerateJwtTokenInternal(userId, roles, true);
+			return GenerateJwtTokenInternal(userId, roles, true, lifetime);
 		}
 
 		public string GenerateNonExpiresJwtToken(Guid userId, Role[] roles)
 		{
-			return GenerateJwtTokenInternal(userId, roles, false);
+			return GenerateJwtTokenInternal(userId, roles, false, default);
 		}
 
-		private string GenerateJwtTokenInternal(Guid userId, Role[] roles, bool expires)
+		private string GenerateJwtTokenInternal(Guid userId, Role[] roles, bool expires, TimeSpan lifetime)
 		{
 			var signingKey = _keyProvider.GetTokenSigningKey();
 
@@ -47,7 +47,7 @@ namespace Keebox.Common.Helpers
 				{
 					new(ClaimTypes.NameIdentifier, userId.ToString())
 				}.Concat(roleClaims)),
-				Expires = expires ? _dateTimeProvider.UtcNow().AddDays(1) : null,
+				Expires = expires ? _dateTimeProvider.UtcNow().Add(lifetime) : null,
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature)
 			};
 
