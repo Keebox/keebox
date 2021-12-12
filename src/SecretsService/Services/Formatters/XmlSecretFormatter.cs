@@ -9,8 +9,6 @@ namespace Keebox.SecretsService.Services.Formatters
 {
 	public class XmlSecretFormatter : ISecretFormatter
 	{
-		private readonly ISerializer _serializer;
-
 		public XmlSecretFormatter(ISerializer serializer)
 		{
 			_serializer = serializer;
@@ -26,5 +24,7 @@ namespace Keebox.SecretsService.Services.Formatters
 
 			return _serializer.Serialize(outputData.ToList());
 		}
+
+		private readonly ISerializer _serializer;
 	}
 }

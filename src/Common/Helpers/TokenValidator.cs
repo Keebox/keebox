@@ -42,10 +42,11 @@ namespace Keebox.Common.Helpers
 			{
 				identity = tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
 				{
-					ValidateIssuerSigningKey = true,
 					ValidateAudience = false,
-					ValidateIssuer = false,
-					ValidateLifetime = false,
+					ValidateIssuer = true,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true,
+					ValidIssuer = Constants.JwtTokenIssuer,
 					IssuerSigningKey = new SymmetricSecurityKey(signingKey)
 				}, out _);
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 
+using Keebox.Common;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 using Keebox.Common.Exceptions;
@@ -10,6 +11,7 @@ using Keebox.SecretsService.Models.EntityCreation;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 
 namespace Keebox.SecretsService.Controllers
@@ -19,10 +21,12 @@ namespace Keebox.SecretsService.Controllers
 	public class LoginController : ControllerBase
 	{
 		public LoginController(
-			IRepositoryContext repositoryContext, ICryptoService cryptoService, ITokenService tokenService, ITokenValidator tokenValidator)
+			IRepositoryContext repositoryContext, ICryptoService cryptoService, ITokenService tokenService, ITokenValidator tokenValidator,
+			ILogger<LoginController> logger)
 		{
 			_tokenService = tokenService;
 			_tokenValidator = tokenValidator;
+			_logger = logger;
 			_cryptoService = cryptoService;
 
 			_roleRepository = repositoryContext.GetRoleRepository();
@@ -36,6 +40,8 @@ namespace Keebox.SecretsService.Controllers
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		public ActionResult<string> Login([FromBody] LoginPayload loginPayload)
 		{
+			_logger.LogInformation("Login attempt.");
+
 			if (loginPayload.Token == null) throw new ArgumentException("Account token is not provided");
 
 			var tokenHash = _cryptoService.GetHash(loginPayload.Token);
@@ -49,14 +55,20 @@ namespace Keebox.SecretsService.Controllers
 
 			var jwtToken = _tokenService.GenerateJwtToken(account.Id, roles.ToArray());
 
+			Response.Cookies.Append(Constants.JwtCookieName, jwtToken);
+
 			return Ok(jwtToken);
 		}
 
 		private readonly ICryptoService _cryptoService;
+
 		private readonly IRoleRepository _roleRepository;
 		private readonly IAccountRepository _accountRepository;
 		private readonly IAssignmentRepository _assignmentRepository;
+
 		private readonly ITokenValidator _tokenValidator;
 		private readonly ITokenService _tokenService;
+
+		private readonly ILogger<LoginController> _logger;
 	}
 }

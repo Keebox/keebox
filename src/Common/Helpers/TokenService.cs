@@ -12,9 +12,10 @@ namespace Keebox.Common.Helpers
 {
 	public class TokenService : ITokenService
 	{
-		public TokenService(IKeyProvider keyProvider)
+		public TokenService(IKeyProvider keyProvider, IDateTimeProvider dateTimeProvider)
 		{
 			_keyProvider = keyProvider;
+			_dateTimeProvider = dateTimeProvider;
 		}
 
 		public string GenerateStatelessToken()
@@ -24,6 +25,16 @@ namespace Keebox.Common.Helpers
 
 		public string GenerateJwtToken(Guid userId, Role[] roles)
 		{
+			return GenerateJwtTokenInternal(userId, roles, true);
+		}
+
+		public string GenerateNonExpiresJwtToken(Guid userId, Role[] roles)
+		{
+			return GenerateJwtTokenInternal(userId, roles, false);
+		}
+
+		private string GenerateJwtTokenInternal(Guid userId, Role[] roles, bool expires)
+		{
 			var signingKey = _keyProvider.GetTokenSigningKey();
 
 			var tokenHandler = new JwtSecurityTokenHandler();
@@ -31,10 +42,12 @@ namespace Keebox.Common.Helpers
 
 			var tokenDescriptor = new SecurityTokenDescriptor
 			{
+				Issuer = Constants.JwtTokenIssuer,
 				Subject = new ClaimsIdentity(new Claim[]
 				{
 					new(ClaimTypes.NameIdentifier, userId.ToString())
 				}.Concat(roleClaims)),
+				Expires = expires ? _dateTimeProvider.UtcNow().AddDays(1) : null,
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature)
 			};
 
@@ -44,5 +57,6 @@ namespace Keebox.Common.Helpers
 		}
 
 		private readonly IKeyProvider _keyProvider;
+		private readonly IDateTimeProvider _dateTimeProvider;
 	}
 }

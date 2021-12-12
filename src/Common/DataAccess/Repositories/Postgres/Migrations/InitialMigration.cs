@@ -13,7 +13,7 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres.Migrations
 			Create.Table("account")
 				.InSchema("public")
 				.WithColumn(nameof(Account.Id).ToLower()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-				.WithColumn(nameof(Account.Name).ToLower()).AsString(256).Nullable().Unique()
+				.WithColumn(nameof(Account.Name).ToLower()).AsString(256).NotNullable().Unique()
 				.WithColumn(nameof(Account.TokenHash).ToLower()).AsFixedLengthString(128).Nullable()
 				.WithColumn(nameof(Account.CertificateThumbprint).ToLower()).AsFixedLengthString(40).Nullable();
 

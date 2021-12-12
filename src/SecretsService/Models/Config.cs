@@ -8,8 +8,8 @@ namespace Keebox.SecretsService.Models
 	{
 		public bool EnableWebUi { get; init; }
 
-		public string DefaultFormat { get; init; }
+		public string DefaultFormat { get; init; } = default!;
 
-		public string Engine { get; init; }
+		public string Engine { get; init; } = default!;
 	}
 }

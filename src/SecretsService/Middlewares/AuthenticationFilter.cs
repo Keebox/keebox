@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Security.Claims;
 
+using Keebox.Common;
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
@@ -32,7 +33,6 @@ namespace Keebox.SecretsService.Middlewares
 			{
 				case AuthenticationType.Cookie:
 				case AuthenticationType.Bearer:
-				case AuthenticationType.CustomHeader:
 				{
 					var token = ResolveTokenFrom(context.HttpContext, authenticationType);
 					var isValid = tokenValidator.ValidateJwtToken(token, out userPrincipal);
@@ -42,7 +42,6 @@ namespace Keebox.SecretsService.Middlewares
 					if (userPrincipal!.IsInRole(FormattedSystemRole.Admin))
 					{
 						context.HttpContext.User = userPrincipal;
-
 						return;
 					}
 
@@ -69,10 +68,7 @@ namespace Keebox.SecretsService.Middlewares
 			if (context.Connection.ClientCertificate != null)
 				return AuthenticationType.Certificate;
 
-			if (context.Request.Headers.ContainsKey(TokenHeader))
-				return AuthenticationType.CustomHeader;
-
-			if (context.Request.Cookies.ContainsKey(TokenHeader))
+			if (context.Request.Cookies.ContainsKey(Constants.JwtCookieName))
 				return AuthenticationType.Cookie;
 
 			if (context.Request.Headers.ContainsKey(AuthorizationHeader)
@@ -86,14 +82,11 @@ namespace Keebox.SecretsService.Middlewares
 		{
 			return type switch
 			{
-				AuthenticationType.CustomHeader => context.Request.Headers[TokenHeader],
-				AuthenticationType.Cookie       => context.Request.Cookies[TokenHeader]!,
-				AuthenticationType.Bearer       => context.Request.Headers[AuthorizationHeader].ToString().Split(BearerToken).Last(),
-				_                               => throw new ArgumentOutOfRangeException()
+				AuthenticationType.Cookie => context.Request.Cookies[Constants.JwtCookieName]!,
+				AuthenticationType.Bearer => context.Request.Headers[AuthorizationHeader].ToString().Split(BearerToken).Last(),
+				_                         => throw new ArgumentOutOfRangeException()
 			};
 		}
-
-		private const string TokenHeader = "X-Token";
 
 		private const string BearerToken = "Bearer ";
 		private const string AuthorizationHeader = "Authorization";

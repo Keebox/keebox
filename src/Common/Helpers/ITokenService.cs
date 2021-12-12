@@ -10,5 +10,7 @@ namespace Keebox.Common.Helpers
 		string GenerateStatelessToken();
 
 		string GenerateJwtToken(Guid userId, Role[] roles);
+
+		string GenerateNonExpiresJwtToken(Guid userId, Role[] roles);
 	}
 }

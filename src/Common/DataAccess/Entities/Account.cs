@@ -1,14 +1,16 @@
-﻿using System;
-
-
-namespace Keebox.Common.DataAccess.Entities
+﻿namespace Keebox.Common.DataAccess.Entities
 {
-	public record Account : Entity
+	public sealed record Account : Entity
 	{
-		public string? Name { get; init; }
+		public string Name { get; init; } = default!;
 
 		public string? TokenHash { get; set; }
 
 		public string? CertificateThumbprint { get; init; }
+
+		/*
+		 *
+		 * TODO: Add Creation and Modification Timestamps for auditing.
+		 */
 	}
 }

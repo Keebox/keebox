@@ -1,9 +1,9 @@
 ﻿namespace Keebox.Common.DataAccess.Entities
 {
-	public record Group : Entity
+	public sealed record Group : Entity
 	{
-		public string Name { get; init; }
+		public string Name { get; init; } = default!;
 
-		public string Path { get; init; }
+		public string Path { get; init; } = default!;
 	}
 }

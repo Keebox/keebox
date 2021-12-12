@@ -38,6 +38,7 @@ namespace Keebox.Common.UnitTests.Managers
 		{
 			// arrange
 			var token = _fixture.Create<string>();
+			var name = _fixture.Create<string>();
 			var tokenHash = _fixture.Create<string>();
 
 			var guid = _fixture.Create<Guid>();
@@ -46,7 +47,7 @@ namespace Keebox.Common.UnitTests.Managers
 			_accountRepository.Setup(x => x.Create(It.Is<Account>(y => y.TokenHash.Equals(tokenHash))));
 
 			// act
-			_target.CreateTokenAccount(guid, token);
+			_target.CreateTokenAccount(guid, name, token);
 
 			// assert
 			_cryptoService.Verify(x => x.GetHash(It.Is<string>(y => y.Equals(token))), Times.Once);

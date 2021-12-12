@@ -61,6 +61,7 @@ namespace Keebox.SecretsService
 			services.AddTransient<IPathResolver, PathResolver>();
 			services.AddTransient<IFileConverter, FileConverter>();
 
+			services.AddTransient<IDateTimeProvider, DateTimeProvider>();
 			services.AddTransient<IKeyProvider, KeyProvider>();
 			services.AddTransient<ICryptoService, CryptoService>();
 			services.AddTransient<ISecretManager, SecretManager>();

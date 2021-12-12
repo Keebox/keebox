@@ -10,7 +10,9 @@ namespace Keebox.SecretsService.Models.EntityCreation
 	{
 		public AccountType? Type { get; init; }
 
-		public bool? Generate { get; init; }
+		public bool? GenerateToken { get; init; }
+
+		public string? Name { get; init; }
 
 		public string? Token { get; init; }
 	}

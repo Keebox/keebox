@@ -25,11 +25,12 @@ namespace Keebox.Common.Managers
 			return _accountRepository.List();
 		}
 
-		public void CreateTokenAccount(Guid id, string token)
+		public void CreateTokenAccount(Guid id, string name, string token)
 		{
 			_accountRepository.Create(new Account
 			{
 				Id = id,
+				Name = name,
 				TokenHash = _cryptoService.GetHash(token)
 			});
 		}

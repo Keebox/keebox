@@ -3,7 +3,7 @@
 
 namespace Keebox.Common.DataAccess.Entities
 {
-	public record Assignment : Entity
+	public sealed record Assignment : Entity
 	{
 		public Guid AccountId { get; init; }
 

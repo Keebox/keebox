@@ -79,7 +79,7 @@ namespace Keebox.Common.DependencyInjection
 			var adminRole = roleRepository.List()
 				.Single(r => r.IsSystem && r.Name.Equals(adminRoleName, StringComparison.OrdinalIgnoreCase));
 
-			var adminToken = tokenService.GenerateJwtToken(Guid.Empty, new[] { adminRole });
+			var adminToken = tokenService.GenerateNonExpiresJwtToken(Guid.Empty, new[] { adminRole });
 			var newAppConfiguration = configurationManager.Merge(appConfiguration, new Configuration { RootToken = adminToken });
 
 			configurationManager.Save(serviceProviderConfiguration["DefaultSettingsPath"], newAppConfiguration);

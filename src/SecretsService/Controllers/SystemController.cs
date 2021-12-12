@@ -26,7 +26,7 @@ namespace Keebox.SecretsService.Controllers
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
 			var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 			var version = fileVersionInfo.ProductVersion ?? throw new InvalidOperationException();
-			var uptime = (int)DateTime.Now.Subtract(Process.GetCurrentProcess().StartTime).TotalMilliseconds;
+			var uptime = (int)DateTime.UtcNow.Subtract(Process.GetCurrentProcess().StartTime).TotalMilliseconds;
 
 			return Ok(new SystemInfo(version, _configuration.Engine.ToString()!, uptime));
 		}

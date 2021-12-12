@@ -10,10 +10,10 @@ namespace Keebox.SecretsService.Services
 {
 	public class FormatterResolver : IFormatterResolver
 	{
-		private readonly StorageResolvingExtensions.SerializerResolver _serializerResolver;
-
-		public FormatterResolver(StorageResolvingExtensions.SerializerResolver serializerResolver) =>
+		public FormatterResolver(StorageResolvingExtensions.SerializerResolver serializerResolver)
+		{
 			_serializerResolver = serializerResolver;
+		}
 
 		public ISecretFormatter Resolve(FormatType? type)
 		{
@@ -23,11 +23,13 @@ namespace Keebox.SecretsService.Services
 			{
 				FormatType.Env  => new KeyValueSecretFormatter(),
 				FormatType.Json => new JsonSecretFormatter(),
-				FormatType.Xml  => new XmlSecretFormatter(serializer),
+				FormatType.Xml  => new XmlSecretFormatter(serializer!),
 
 				_ => throw new UnsupportedFormatException(type.ToString()
 														  ?? throw new ArgumentOutOfRangeException(nameof(type), type, null))
 			};
 		}
+
+		private readonly StorageResolvingExtensions.SerializerResolver _serializerResolver;
 	}
 }
