@@ -122,7 +122,7 @@ namespace Keebox.Common.IntegrationTests.DataAccess.Repositories.Postgres
 		{
 			// arrange
 			var ids = new List<Guid>();
-			var accountsCount = _fixture.Create<Generator<int>>().First(x => x is > 0 and < 10);
+			var accountsCount = _fixture.Create<int>() % 9 + 1;
 
 			for (var i = 0; i < accountsCount; i++)
 			{
