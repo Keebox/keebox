@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Net;
 
 using Keebox.Common.Types;
 using Keebox.SecretsService.Models;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
@@ -20,7 +23,8 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Status)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[OpenApiOperation("Get info about running application")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(SystemInfo))]
 		public ActionResult<SystemInfo> GetSystemInfo()
 		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
@@ -32,7 +36,8 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Config)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[OpenApiOperation("Get current application config")]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(Config))]
 		public ActionResult<Config> GetConfig()
 		{
 			return Ok(new Config
@@ -44,6 +49,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Start)]
+		[OpenApiOperation("Start accepting secrets request")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Start()
 		{
@@ -51,6 +57,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Stop)]
+		[OpenApiOperation("Stop accepting secrets request")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Stop()
 		{
