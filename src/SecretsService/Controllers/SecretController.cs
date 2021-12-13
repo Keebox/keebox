@@ -22,7 +22,7 @@ namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
 	[Route(RouteMap.Any)]
-	[Authenticate] [AuthorizeForGroup]
+	[Authenticate, AuthorizeForGroup]
 	[SuppressMessage("ReSharper", "RouteTemplates.MethodMissingRouteParameters")]
 	[SuppressMessage("ReSharper", "RouteTemplates.ControllerRouteParameterIsNotPassedToMethods")]
 	public class SecretsController : ControllerBase
@@ -41,13 +41,13 @@ namespace Keebox.SecretsService.Controllers
 
 		[HttpPut]
 		[OpenApiOperation("Save secrets",
-			"If route leads to non-existent group it is created and secrets are saved."
-			+ "If route leads to group secrets are created/replaced."
+			"If route leads to non-existent group it is created and secrets are saved. "
+			+ "If route leads to group secrets are created/replaced. "
 			+ "If route leads to secret it is updated.")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
-		public ActionResult AddSecrets([FromRoute] RequestPayload payload)
+		public ActionResult AddSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Adding secrets {payload.Route}");
 
@@ -66,13 +66,13 @@ namespace Keebox.SecretsService.Controllers
 
 		[HttpGet]
 		[OpenApiOperation("Get secrets",
-			"If route leads to group secrets are returned."
-			+ "If route leads to secret it is returned."
+			"If route leads to group secrets are returned. "
+			+ "If route leads to secret it is returned. "
 			+ "If route leads to file it is returned as stream.")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(File))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
-		public ActionResult GetSecrets([FromRoute] RequestPayload payload)
+		public ActionResult GetSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Getting secrets {payload.Route}");
 
@@ -104,10 +104,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete]
-		[OpenApiOperation("Delete secrets", "If route leads to group it is deleted." + "If route leads to secret if is deleted.")]
+		[OpenApiOperation("Delete secrets", "If route leads to group it is deleted. " + "If route leads to secret if is deleted.")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
-		public ActionResult DeleteSecrets([FromRoute] RequestPayload payload)
+		public ActionResult DeleteSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Deleting secrets {payload.Route}");
 
@@ -121,7 +121,7 @@ namespace Keebox.SecretsService.Controllers
 			return NoContent();
 		}
 
-		private static string[] ExtractSecretsFromRequest(RequestPayload payload)
+		private static string[] ExtractSecretsFromRequest(SecretsPayload payload)
 		{
 			return payload.Secrets?.Split(SecretsSeparator) ?? Array.Empty<string>();
 		}
