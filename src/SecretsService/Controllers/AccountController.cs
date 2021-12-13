@@ -20,8 +20,8 @@ using NSwag.Annotations;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
+	[Authenticate, AuthorizePrivileged]
 	[Route(RouteMap.Account.Base)]
-	[Authenticate] [AuthorizePrivileged]
 	public class AccountController : ControllerBase
 	{
 		public AccountController(IAccountManager accountManager, ITokenService tokenService, ILogger<AccountController> logger)

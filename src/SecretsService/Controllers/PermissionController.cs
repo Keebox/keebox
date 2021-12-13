@@ -17,7 +17,7 @@ using NSwag.Annotations;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate] [AuthorizePrivileged]
+	[Authenticate, AuthorizePrivileged]
 	[Route(RouteMap.Permission)]
 	public class PermissionController : ControllerBase
 	{
