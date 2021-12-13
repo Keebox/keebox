@@ -11,7 +11,6 @@ using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Services;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -40,19 +39,19 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut]
-		[OpenApiOperation("Save secrets",
-			"If route leads to non-existent group it is created and secrets are saved. "
-			+ "If route leads to group secrets are created/replaced. "
-			+ "If route leads to secret it is updated.")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Save secrets", @"
+				Save secrets to specific path.
+				If route leads to non-existent group it is created and secrets are saved.
+				If route leads to non-existent group it is created and secrets are saved."
+		)]
 		public ActionResult AddSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Adding secrets {payload.Route}");
 
-			if (payload.Route is null)
-				throw new EmptyRouteException();
+			if (payload.Route is null) throw new EmptyRouteException();
 
 			if ((payload.Data is null || !payload.Data.Keys.Any()) && (payload.Files is null || !payload.Files.Keys.Any()))
 				throw new SecretsNotProvidedException();
@@ -65,13 +64,14 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[OpenApiOperation("Get secrets",
-			"If route leads to group secrets are returned. "
-			+ "If route leads to secret it is returned. "
-			+ "If route leads to file it is returned as stream.")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(File))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get secrets", @"
+				If route leads to group secrets are returned.
+				If route leads to secret it is returned.
+				If route leads to file it is returned as stream."
+		)]
 		public ActionResult GetSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Getting secrets {payload.Route}");
@@ -84,16 +84,15 @@ namespace Keebox.SecretsService.Controllers
 			{
 				var secret = secrets.Single();
 
-				if (!secret.IsFile)
-					return Ok(secret.Value);
+				if (!secret.IsFile) return Ok(secret.Value);
 
-				var stream = new MemoryStream(_fileConverter.Decode(secret.Value));
-
-				return File(stream, "application/octet-stream");
+				return File(new MemoryStream(_fileConverter.Decode(secret.Value)), "application/octet-stream");
 			}
 
 			if (!payload.IncludeFiles)
+			{
 				secrets = secrets.Where(x => !x.IsFile).ToArray();
+			}
 
 			var format = payload.Format ?? _configuration.DefaultFormat;
 			var formatter = _formatterResolver.Resolve(format);
@@ -104,17 +103,17 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete]
-		[OpenApiOperation("Delete secrets", "If route leads to group it is deleted. " + "If route leads to secret if is deleted.")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Delete secrets", @"
+				If route leads to group it is deleted.
+				If route leads to secret if is deleted."
+		)]
 		public ActionResult DeleteSecrets([FromRoute] SecretsPayload payload)
 		{
 			_logger.LogInformation($"Deleting secrets {payload.Route}");
 
-			if (payload.Route is null)
-			{
-				throw new EmptyRouteException();
-			}
+			if (payload.Route is null) throw new EmptyRouteException();
 
 			_secretManager.DeleteSecrets(payload.Route, ExtractSecretsFromRequest(payload));
 

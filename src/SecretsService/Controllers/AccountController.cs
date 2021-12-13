@@ -10,7 +10,6 @@ using Keebox.SecretsService.Middlewares.Attributes;
 using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Models.EntityCreation;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +20,7 @@ namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
 	[Authenticate, AuthorizePrivileged]
+	[OpenApiTags("Privileged", "Account")]
 	[Route(RouteMap.Account.Base)]
 	public class AccountController : ControllerBase
 	{
@@ -32,10 +32,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet("{accountId:guid}")]
-		[OpenApiOperation("Get account by id")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(Account))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get account by id", "Gets account by id")]
 		public ActionResult<Account> GetAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Getting information about account {accountId}.");
@@ -44,8 +44,8 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[OpenApiOperation("Get all accounts")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<Account>))]
+		[OpenApiOperation("Get accounts", "Gets accounts")]
 		public ActionResult<IEnumerable<Account>> ListAccounts()
 		{
 			_logger.LogInformation("Getting list of all accounts.");
@@ -54,9 +54,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[OpenApiOperation("Create account")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[OpenApiOperation("Create account", "Creates account")]
 		public ActionResult<string> CreateAccount([FromBody] AccountCreationPayload creationPayload)
 		{
 			if (creationPayload.Type == null) throw new ArgumentException("Type is not provided.");
@@ -87,10 +87,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPut("{accountId:guid}")]
-		[OpenApiOperation("Update account by id", "Provided account replaces existing account with given id")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Update account by id", "Provided account replaces existing account with given id")]
 		public ActionResult ReplaceAccount([FromBody] Account account, [FromRoute] Guid accountId)
 		{
 			if (accountId != account.Id) throw new ArgumentException("Ids do not match");
@@ -103,9 +103,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{accountId:guid}")]
-		[OpenApiOperation("Delete account by id")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Delete account by id", "Deletes account by id")]
 		public ActionResult DeleteAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Deleting account with id {accountId}.");
@@ -116,9 +116,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost(RouteMap.Account.Assign)]
-		[OpenApiOperation("Assign role to account")]
 		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[OpenApiOperation("Assign role to account", "Assignes role to account")]
 		public ActionResult AssignRoleToAccount([FromBody] AssignCreationPayload payload)
 		{
 			if (payload.RoleId == null) throw new ArgumentException("Role id is not provided.");

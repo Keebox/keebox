@@ -9,9 +9,7 @@ using Keebox.Common.Exceptions;
 using Keebox.Common.Helpers;
 using Keebox.Common.Security;
 using Keebox.SecretsService.Models;
-using Keebox.SecretsService.Models.EntityCreation;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -39,10 +37,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[OpenApiOperation("Login", "Log in to Keebox and receive access token")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(string), IsNullable = false)]
 		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error), IsNullable = false)]
 		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error), IsNullable = false)]
+		[OpenApiOperation("Login", "Log in to Keebox and receive access token")]
 		public ActionResult<string> Login([FromBody] LoginPayload loginPayload)
 		{
 			_logger.LogInformation("Login attempt.");

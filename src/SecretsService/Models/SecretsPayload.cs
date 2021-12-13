@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 using Keebox.Common.Types;
 
@@ -16,8 +17,10 @@ namespace Keebox.SecretsService.Models
 {
 	[Serializable]
 	[Description("Route can lead to secret or secrets group")]
-	public record SecretsPayload(string? Route)
+	public record SecretsPayload
 	{
+		[JsonPropertyName("route")] public string Route { get; init; } = default!;
+
 		[Description("Secrets can be provided via body")]
 		[FromBody] public Dictionary<string, object>? Body { get; init; }
 

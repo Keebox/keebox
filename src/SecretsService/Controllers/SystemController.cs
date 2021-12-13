@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Net;
+using System.Reflection;
 
 using Keebox.Common.Types;
 using Keebox.SecretsService.Models;
@@ -23,11 +24,11 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Status)]
-		[OpenApiOperation("Get info about running application")]
+		[OpenApiOperation("Get system info", "Gets info about running application")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(SystemInfo))]
 		public ActionResult<SystemInfo> GetSystemInfo()
 		{
-			var assembly = System.Reflection.Assembly.GetExecutingAssembly();
+			var assembly = Assembly.GetExecutingAssembly();
 			var fileVersionInfo = FileVersionInfo.GetVersionInfo(assembly.Location);
 			var version = fileVersionInfo.ProductVersion ?? throw new InvalidOperationException();
 			var uptime = (int)DateTime.UtcNow.Subtract(Process.GetCurrentProcess().StartTime).TotalMilliseconds;
@@ -36,7 +37,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Config)]
-		[OpenApiOperation("Get current application config")]
+		[OpenApiOperation("Get config", "Gets current application config")]
 		[SwaggerResponse(HttpStatusCode.OK, typeof(Config))]
 		public ActionResult<Config> GetConfig()
 		{
@@ -49,7 +50,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Start)]
-		[OpenApiOperation("Start accepting secrets request")]
+		[OpenApiOperation("Start", "Start accepting secrets request")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Start()
 		{
@@ -57,7 +58,7 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet(RouteMap.System.Stop)]
-		[OpenApiOperation("Stop accepting secrets request")]
+		[OpenApiOperation("Stop", "Stop accepting secrets request")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		public void Stop()
 		{

@@ -16,7 +16,7 @@
 		{
 			public const string Base = "account";
 
-			public const string Assign = Base + "/assign";
+			public const string Assign = "assign";
 		}
 
 		public static class System
