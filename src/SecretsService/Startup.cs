@@ -109,6 +109,8 @@ namespace Keebox.SecretsService
 					Scheme = "Bearer",
 					BearerFormat = "JWT"
 				});
+
+				settings.DocumentName = "v1";
 			});
 		}
 
@@ -137,7 +139,6 @@ namespace Keebox.SecretsService
 				};
 			});
 
-			app.UseReDoc();
 
 			app.UseRouting();
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
