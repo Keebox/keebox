@@ -17,19 +17,18 @@ public class InMemoryMigrationRunner
 			.Where(type => type.IsClass && !type.IsAbstract && type.IsSubclassOf(typeof(InMemoryMigration)))
 			.ToArray();
 
-		var migrations = migrationTypes?.Select(type => Activator.CreateInstance(type) as InMemoryMigration).ToArray();
+		var migrations = migrationTypes?.Select(type => (InMemoryMigration)Activator.CreateInstance(type)!).ToArray();
 
 		if (migrations == null) return;
 
 		foreach (var migration in migrations)
 		{
-			if (migration == null) continue;
-
 			migration.ServiceProvider = serviceProvider;
 
 			var migrationType = migration.GetType();
 
-			var migrateUpMethod = migrationType.GetMethod("Up", BindingFlags.Instance | BindingFlags.NonPublic, Type.DefaultBinder,
+			var migrateUpMethod = migrationType.GetMethod(
+				"Up", BindingFlags.Instance | BindingFlags.NonPublic, Type.DefaultBinder,
 				Array.Empty<Type>(), null);
 
 			Log.Information($"Applying migration {migration.GetType().Name}");
