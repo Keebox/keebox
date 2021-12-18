@@ -12,6 +12,6 @@ namespace Keebox.Common.DataAccess.Repositories.InMemory
 			Storage = new List<T>();
 		}
 
-		protected readonly List<T> Storage;
+		public readonly List<T> Storage;
 	}
 }

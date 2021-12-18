@@ -64,11 +64,9 @@ namespace Keebox.Common.DependencyInjection
 		}
 
 		public static Configuration SetAdminAccessTokenIfNotPersist(
-			this IServiceCollection services, Configuration appConfiguration, IConfiguration serviceProviderConfiguration)
+			this IServiceProvider serviceProvider, Configuration appConfiguration, IConfiguration serviceProviderConfiguration)
 		{
 			if (appConfiguration.RootToken is not null) return appConfiguration;
-
-			var serviceProvider = services.BuildServiceProvider();
 
 			var tokenService = serviceProvider.GetRequiredService<ITokenService>();
 			var configurationManager = serviceProvider.GetRequiredService<IConfigurationManager>();

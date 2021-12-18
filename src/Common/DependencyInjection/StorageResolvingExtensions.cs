@@ -5,6 +5,7 @@ using FluentMigrator.Runner;
 
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.InMemory;
+using Keebox.Common.DataAccess.Repositories.InMemory.Migrations.Runner;
 using Keebox.Common.DataAccess.Repositories.Postgres;
 using Keebox.Common.Helpers.Serialization;
 using Keebox.Common.Types;
@@ -18,7 +19,7 @@ namespace Keebox.Common.DependencyInjection
 	{
 		public delegate ISerializer? SerializerResolver(FormatType? format);
 
-		public static void ConfigureRepositoryContext(this IServiceCollection services, Configuration configuration)
+		public static IServiceProvider ConfigureRepositoryContext(this IServiceCollection services, Configuration configuration)
 		{
 			var storageEngine = configuration.Engine!.Value;
 
@@ -27,6 +28,8 @@ namespace Keebox.Common.DependencyInjection
 				{
 					ConnectionString = configuration.ConnectionString!
 				});
+
+			IServiceProvider serviceProvider;
 
 			switch (storageEngine)
 			{
@@ -40,6 +43,12 @@ namespace Keebox.Common.DependencyInjection
 					services.AddSingleton<InMemoryAssignmentRepository>();
 
 					services.AddSingleton<IRepositoryContext, InMemoryRepositoryContext>();
+
+					services.AddInMemoryMigrations();
+
+					serviceProvider = services.BuildServiceProvider();
+
+					serviceProvider.GetRequiredService<InMemoryMigrationRunner>().MigrateUp(serviceProvider);
 
 					break;
 				}
@@ -72,11 +81,15 @@ namespace Keebox.Common.DependencyInjection
 						scope.ServiceProvider.GetRequiredService<IMigrationRunner>().MigrateUp();
 					}
 
+					serviceProvider = services.BuildServiceProvider();
+
 					break;
 				}
 
 				default: throw new ArgumentOutOfRangeException();
 			}
+
+			return serviceProvider;
 		}
 	}
 }
