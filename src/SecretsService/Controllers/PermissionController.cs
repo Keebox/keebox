@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
 using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Models.EntityCreation;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate] [AuthorizePrivileged]
+	[Authenticate, AuthorizePrivileged]
+	[OpenApiTags("Privileged", "Permission")]
 	[Route(RouteMap.Permission)]
 	public class PermissionController : ControllerBase
 	{
@@ -23,38 +27,43 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet("group/{groupId:guid}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<Permission>))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get group permissions by id", "Gets group permissions by provided id")]
 		public ActionResult<IEnumerable<Permission>> GetGroupPermissions([FromRoute] Guid groupId)
 		{
 			return Ok(_permissionManager.GetGroupPermissions(groupId));
 		}
 
 		[HttpGet("{permissionId:guid}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(Permission))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get permission by id", "Gets permission by provided id")]
 		public ActionResult<Permission> GetPermission([FromRoute] Guid permissionId)
 		{
 			return Ok(_permissionManager.GetPermission(permissionId));
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status409Conflict)]
+		[SwaggerResponse(HttpStatusCode.Created, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.Conflict, typeof(Error))]
+		[OpenApiOperation("Create permission", "Creates permission for provided group and role")]
 		public ActionResult<string> CreatePermission([FromBody] PermissionCreationPayload payload)
 		{
 			var (roleId, groupId, isReadOnly) = ParsePermission(payload);
+			var permissionId = _permissionManager.CreatePermission(roleId, groupId, isReadOnly);
 
-			return Ok(_permissionManager.CreatePermission(roleId, groupId, isReadOnly).ToString());
+			return Created($"/permission/{permissionId}", permissionId.ToString());
 		}
 
 		[HttpPut("{permissionId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Update permission by id", "Provided permission replaces existing permission with given id")]
 		public ActionResult ReplacePermission([FromBody] Permission permission, [FromRoute] Guid permissionId)
 		{
 			if (permissionId != permission.Id)
@@ -68,8 +77,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{permissionId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Delete permission by id", "Deletes permission by provided id")]
 		public ActionResult DeletePermission([FromRoute] Guid permissionId)
 		{
 			_permissionManager.DeletePermission(permissionId);

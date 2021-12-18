@@ -1,23 +1,27 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
 using Keebox.Common.Types;
 using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Models.EntityCreation;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
+	[Authenticate, AuthorizePrivileged]
+	[OpenApiTags("Privileged", "Account")]
 	[Route(RouteMap.Account.Base)]
-	[Authenticate] [AuthorizePrivileged]
 	public class AccountController : ControllerBase
 	{
 		public AccountController(IAccountManager accountManager, ITokenService tokenService, ILogger<AccountController> logger)
@@ -28,9 +32,10 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(Account))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get account by id", "Gets account by id")]
 		public ActionResult<Account> GetAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Getting information about account {accountId}.");
@@ -39,7 +44,8 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<Account>))]
+		[OpenApiOperation("Get accounts", "Gets accounts")]
 		public ActionResult<IEnumerable<Account>> ListAccounts()
 		{
 			_logger.LogInformation("Getting list of all accounts.");
@@ -48,8 +54,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[OpenApiOperation("Create account", "Creates account")]
 		public ActionResult<string> CreateAccount([FromBody] AccountCreationPayload creationPayload)
 		{
 			if (creationPayload.Type == null) throw new ArgumentException("Type is not provided.");
@@ -71,18 +78,19 @@ namespace Keebox.SecretsService.Controllers
 						token = creationPayload.Token ?? throw new ArgumentException("Token is not provided.");
 					}
 
-					_accountManager.CreateTokenAccount(creationPayload.Name, token);
+					var accountId = _accountManager.CreateTokenAccount(creationPayload.Name, token);
 
-					return Ok(token);
+					return Created($"account/{accountId}", token);
 				default:
 					throw new ArgumentOutOfRangeException();
 			}
 		}
 
 		[HttpPut("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Update account by id", "Provided account replaces existing account with given id")]
 		public ActionResult ReplaceAccount([FromBody] Account account, [FromRoute] Guid accountId)
 		{
 			if (accountId != account.Id) throw new ArgumentException("Ids do not match");
@@ -95,8 +103,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{accountId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Delete account by id", "Deletes account by id")]
 		public ActionResult DeleteAccount([FromRoute] Guid accountId)
 		{
 			_logger.LogInformation($"Deleting account with id {accountId}.");
@@ -107,8 +116,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpPost(RouteMap.Account.Assign)]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[OpenApiOperation("Assign role to account", "Assignes role to account")]
 		public ActionResult AssignRoleToAccount([FromBody] AssignCreationPayload payload)
 		{
 			if (payload.RoleId == null) throw new ArgumentException("Role id is not provided.");
@@ -118,7 +128,7 @@ namespace Keebox.SecretsService.Controllers
 
 			_accountManager.AssignRoleToAccount(payload.RoleId.Value, payload.AccountId.Value);
 
-			return Ok();
+			return NoContent();
 		}
 
 		private readonly IAccountManager _accountManager;

@@ -1,19 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net;
 
 using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.Managers;
 using Keebox.SecretsService.Middlewares.Attributes;
+using Keebox.SecretsService.Models;
 using Keebox.SecretsService.Models.EntityCreation;
 
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+
+using NSwag.Annotations;
 
 
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
-	[Authenticate] [AuthorizePrivileged]
+	[Authenticate, AuthorizePrivileged]
+	[OpenApiTags("Privileged", "Role")]
 	[Route(RouteMap.Role)]
 	public class RoleController : ControllerBase
 	{
@@ -23,34 +27,40 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpGet("{roleId:guid}")]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(Role))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Get role by id", "Gets role by provided id")]
 		public ActionResult<Role> GetRole([FromRoute] Guid roleId)
 		{
 			return Ok(_roleManager.GetRole(roleId));
 		}
 
 		[HttpGet]
-		[ProducesResponseType(StatusCodes.Status200OK)]
+		[SwaggerResponse(HttpStatusCode.OK, typeof(IEnumerable<Role>))]
+		[OpenApiOperation("Get all roles", "Gets all created roles")]
 		public ActionResult<IEnumerable<Role>> ListRoles()
 		{
 			return Ok(_roleManager.GetRoles());
 		}
 
 		[HttpPost]
-		[ProducesResponseType(StatusCodes.Status200OK)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status409Conflict)]
+		[SwaggerResponse(HttpStatusCode.Created, typeof(string))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.Conflict, typeof(Error))]
+		[OpenApiOperation("Create role", "Creates role with specific name")]
 		public ActionResult<string> CreateRole([FromBody] RoleCreationPayload payload)
 		{
-			return Ok(_roleManager.CreateRole(payload.Name ?? string.Empty).ToString());
+			var roleId = _roleManager.CreateRole(payload.Name ?? string.Empty);
+
+			return Created($"role/{roleId}", roleId.ToString());
 		}
 
 		[HttpPut("{roleId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status400BadRequest)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.BadRequest, typeof(Error))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Update role by id", "Provided role replaces existing role  with given id")]
 		public ActionResult ReplaceRole([FromBody] Role role, [FromRoute] Guid roleId)
 		{
 			if (roleId != role.Id) throw new ArgumentException("Ids do not match");
@@ -61,8 +71,9 @@ namespace Keebox.SecretsService.Controllers
 		}
 
 		[HttpDelete("{roleId:guid}")]
-		[ProducesResponseType(StatusCodes.Status204NoContent)]
-		[ProducesResponseType(StatusCodes.Status404NotFound)]
+		[SwaggerResponse(HttpStatusCode.NoContent, typeof(void))]
+		[SwaggerResponse(HttpStatusCode.NotFound, typeof(Error))]
+		[OpenApiOperation("Delete role by id", "Deletes role by provided id")]
 		public ActionResult DeleteRole([FromRoute] Guid roleId)
 		{
 			_roleManager.DeleteRole(roleId);

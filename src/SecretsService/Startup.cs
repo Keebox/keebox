@@ -1,7 +1,5 @@
 using System;
-using System.IO;
 
-using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DependencyInjection;
 using Keebox.Common.Helpers;
 using Keebox.Common.Helpers.Serialization;
@@ -18,7 +16,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
+using NSwag;
+using NSwag.Generation.Processors.Security;
+
 using Serilog;
+
+using ConfigurationManager = Keebox.Common.Managers.ConfigurationManager;
 
 
 namespace Keebox.SecretsService
@@ -94,6 +97,21 @@ namespace Keebox.SecretsService
 				options.Filters.Add<ExceptionsFilter>();
 				options.InputFormatters.Add(new BypassFormDataInputFormatter());
 			});
+
+			services.AddOpenApiDocument(settings =>
+			{
+				settings.AddSecurity("JwtBearer", Array.Empty<string>(), new OpenApiSecurityScheme
+				{
+					Name = "Authorization",
+					Description = "Jwt token which sets into Authorization header.",
+					In = OpenApiSecurityApiKeyLocation.Header,
+					Type = OpenApiSecuritySchemeType.Http,
+					Scheme = "Bearer",
+					BearerFormat = "JWT"
+				});
+
+				settings.DocumentName = "v1";
+			});
 		}
 
 		public static void Configure(IApplicationBuilder app, IWebHostEnvironment env, IHostApplicationLifetime applicationLifetime)
@@ -102,6 +120,25 @@ namespace Keebox.SecretsService
 			{
 				app.UseDeveloperExceptionPage();
 			}
+
+			app.UseOpenApi(settings =>
+			{
+				settings.PostProcess = (document, _) =>
+				{
+					document.Info.Version = "v0";
+					document.Info.Title = "Keebox API";
+					document.Info.Description = "API for Keebox secrets management service";
+
+					document.Servers.Clear();
+
+					document.Servers.Add(new OpenApiServer
+					{
+						Url = "http://localhost:9000",
+						Description = "Development server"
+					});
+				};
+			});
+
 
 			app.UseRouting();
 			app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
