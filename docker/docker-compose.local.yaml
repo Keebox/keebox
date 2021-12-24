@@ -17,6 +17,9 @@ services:
     container_name: keebox
     ports:
       - 9000:80
+    environment:
+      - KEEBOX_ROOT_USER_NAME=keebox
+      - KEEBOX_ROOT_USER_TOKEN=keebox
     volumes:
       - ./overrides.yaml:/etc/Keebox/overrides.yaml
       - keebox_defaults:/app/config

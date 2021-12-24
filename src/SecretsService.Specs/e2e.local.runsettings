@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RunSettings>
+    <RunConfiguration>
+        <EnvironmentVariables>
+            <KEEBOX_AUTOTEST_ACCOUNT_TOKEN>keebox</KEEBOX_AUTOTEST_ACCOUNT_TOKEN>
+        </EnvironmentVariables>
+    </RunConfiguration>
+</RunSettings>

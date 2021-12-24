@@ -1,11 +1,13 @@
 ﻿{
   "profiles": {
-    "SecretsProvider": {
+    "SecretsService": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "applicationUrl": "http://localhost:9000",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "KEEBOX_ROOT_USER_NAME": "keebox",
+        "KEEBOX_ROOT_USER_TOKEN": "keebox"
       }
     }
   }

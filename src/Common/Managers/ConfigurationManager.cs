@@ -37,6 +37,7 @@ namespace Keebox.Common.Managers
 		{
 			return new Configuration
 			{
+				Status = Status.NotInitialized,
 				Engine = StorageEngineType.InMemory,
 				DefaultFormat = FormatType.Json,
 				EnableWebUi = true

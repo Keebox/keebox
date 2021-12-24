@@ -1,7 +1,7 @@
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-alpine  AS base
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:6.0-bullseye-slim AS build
 WORKDIR /src
 
 COPY ["./Common", "./Common"]

@@ -2,9 +2,12 @@
 using System.IO;
 using System.Linq;
 
+using Keebox.Common.DataAccess.Entities;
 using Keebox.Common.DataAccess.Repositories;
+using Keebox.Common.DataAccess.Repositories.Abstractions;
 using Keebox.Common.Helpers;
 using Keebox.Common.Managers;
+using Keebox.Common.Security;
 using Keebox.Common.Types;
 
 using Microsoft.Extensions.Configuration;
@@ -63,22 +66,43 @@ namespace Keebox.Common.DependencyInjection
 			contentManager.Save(signingKeyPath, secretKeyRawBuffer);
 		}
 
-		public static Configuration SetAdminAccessTokenIfNotPersist(
+		public static Configuration GenerateDefaultTokenConfiguration(
 			this IServiceProvider serviceProvider, Configuration appConfiguration, IConfiguration serviceProviderConfiguration)
 		{
 			if (appConfiguration.RootToken is not null) return appConfiguration;
 
-			var tokenService = serviceProvider.GetRequiredService<ITokenService>();
 			var configurationManager = serviceProvider.GetRequiredService<IConfigurationManager>();
-			var roleRepository = serviceProvider.GetRequiredService<IRepositoryContext>().GetRoleRepository();
+			var repositoryContext = serviceProvider.GetRequiredService<IRepositoryContext>();
+			var cryptoService = serviceProvider.GetRequiredService<ICryptoService>();
+
+			var roleRepository = repositoryContext.GetRoleRepository();
+			var accountRepository = repositoryContext.GetAccountRepository();
+			var assignmentRepository = repositoryContext.GetAssignmentRepository();
 
 			var adminRoleName = Enum.GetName(typeof(SystemRole), SystemRole.Admin)!.ToLower();
+
+			var defaultUserName = Environment.GetEnvironmentVariable(Constants.RootUserNameConfigurationKey);
+			var defaultUserToken = Environment.GetEnvironmentVariable(Constants.RootUserTokenConfigurationKey);
 
 			var adminRole = roleRepository.List()
 				.Single(r => r.IsSystem && r.Name.Equals(adminRoleName, StringComparison.OrdinalIgnoreCase));
 
-			var adminToken = tokenService.GenerateNonExpiresJwtToken(Guid.Empty, new[] { adminRole });
-			var newAppConfiguration = configurationManager.Merge(appConfiguration, new Configuration { RootToken = adminToken });
+			if (appConfiguration.Status == Status.NotInitialized)
+			{
+				if (defaultUserName is null) throw new ArgumentException("No default user name specified.");
+				if (defaultUserToken is null) throw new ArgumentException("No default user token specified.");
+
+				var defaultAccountId = accountRepository.Create(new Account
+				{
+					Name = defaultUserName,
+					TokenHash = cryptoService.GetHash(defaultUserToken)
+				});
+
+				assignmentRepository.Assign(defaultAccountId, adminRole.Id);
+			}
+
+			var newAppConfiguration = configurationManager.Merge(appConfiguration,
+				new Configuration { RootToken = defaultUserToken, Status = Status.Initialized });
 
 			configurationManager.Save(serviceProviderConfiguration["DefaultSettingsPath"], newAppConfiguration);
 

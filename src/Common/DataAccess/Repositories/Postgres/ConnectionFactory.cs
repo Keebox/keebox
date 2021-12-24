@@ -7,6 +7,7 @@ using Keebox.Common.Types;
 using LinqToDB.Configuration;
 using LinqToDB.Data;
 using LinqToDB.DataProvider.PostgreSQL;
+using LinqToDB.DataProvider.SqlServer;
 using LinqToDB.Mapping;
 
 
@@ -30,12 +31,16 @@ namespace Keebox.Common.DataAccess.Repositories.Postgres
 
 		public DataConnection Create()
 		{
-			return new DataConnection(new LinqToDbConnectionOptions(
+			var connection = new DataConnection(new LinqToDbConnectionOptions(
 					new LinqToDbConnectionOptionsBuilder()
 						.UseConnectionString(new PostgreSQLDataProvider(), _storageConnection.ConnectionString)
 						.UseMappingSchema(_schema)
 				)
 			);
+
+			connection.RetryPolicy = new SqlServerRetryPolicy(10, TimeSpan.FromSeconds(5), null);
+
+			return connection;
 		}
 
 		private readonly MappingSchema _schema;

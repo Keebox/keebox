@@ -1,10 +1,10 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 
 using Keebox.Common.DataAccess.Entities;
 
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -37,7 +37,7 @@ namespace Keebox.Common.Helpers
 		{
 			var signingKey = _keyProvider.GetTokenSigningKey();
 
-			var tokenHandler = new JwtSecurityTokenHandler();
+			var tokenHandler = new JsonWebTokenHandler();
 			var roleClaims = roles.Select(role => new Claim(ClaimTypes.Role, role.IsSystem ? role.Name : role.Id.ToString()));
 
 			var tokenDescriptor = new SecurityTokenDescriptor
@@ -47,13 +47,11 @@ namespace Keebox.Common.Helpers
 				{
 					new(ClaimTypes.NameIdentifier, userId.ToString())
 				}.Concat(roleClaims)),
-				Expires = lifetime.HasValue ? _dateTimeProvider.UtcNow().Add(lifetime.Value) : null,
+				Expires = lifetime.HasValue ? _dateTimeProvider.UtcNow().Add(lifetime.Value) : _dateTimeProvider.UtcNow().AddYears(50),
 				SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(signingKey), SecurityAlgorithms.HmacSha256Signature)
 			};
 
-			var token = tokenHandler.CreateToken(tokenDescriptor);
-
-			return tokenHandler.WriteToken(token);
+			return tokenHandler.CreateToken(tokenDescriptor);
 		}
 
 		private readonly IKeyProvider _keyProvider;
