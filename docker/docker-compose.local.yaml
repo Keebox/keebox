@@ -9,14 +9,14 @@ services:
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=keebox_db
     ports:
-      - 5432:5432
+      - "5432:5432"
   keebox:
     depends_on:
       - keebox_db
     build: ../src
     container_name: keebox
     ports:
-      - 9000:80
+      - "9000:80"
     environment:
       - KEEBOX_ROOT_USER_NAME=keebox
       - KEEBOX_ROOT_USER_TOKEN=keebox

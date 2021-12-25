@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 
 using Keebox.SecretsService.Specs.Lib.Models;
 
@@ -41,14 +40,28 @@ public class ApiRequestSender
 			BaseUrl = new Uri(baseUrl)
 		};
 
-		var adminJwtToken = Login(token, out _, out _);
-
-		_internalClient.Authenticator = new JwtAuthenticator(adminJwtToken);
+		var adminJwtToken = Login(token, out _);
+		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(adminJwtToken));
 	}
 
-	public ApiRequestSender ChangeTokenTo(string token)
+	public ApiRequestSender ChangeToAccount(string token)
 	{
-		_internalClient.Authenticator = new JwtAuthenticator(token);
+		var jwtToken = Login(token, out _);
+		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(jwtToken));
+		return this;
+	}
+
+	public ApiRequestSender EraseToken()
+	{
+		_internalClient.Authenticator = null;
+		return this;
+	}
+
+	public ApiRequestSender BecomeAdmin()
+	{
+		var adminJwtToken = Login(ConfigurationHelper.AdminToken, out _);
+
+		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(adminJwtToken));
 		return this;
 	}
 
@@ -57,18 +70,16 @@ public class ApiRequestSender
 		var request = new RestRequest
 		{
 			Method = Method.POST,
-			Resource = Endpoints.AccountCreationEndpoint,
+			Resource = Endpoints.AccountEndpoint,
 			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(account), ParameterType.RequestBody) }
 		};
 
-		var response = _internalClient.Execute<string>(request);
+		var response = _internalClient.Execute(request);
 
-		if (!response.IsSuccessful) throw new InvalidOperationException($"Cannot send request. Status code: {response.StatusCode}");
-
-		return response.Data;
+		return response.Content;
 	}
 
-	public string Login(string privateToken, out int statusCode, out RestResponseCookie[] cookies)
+	public string Login(string privateToken, out IRestResponse response)
 	{
 		var request = new RestRequest
 		{
@@ -80,12 +91,70 @@ public class ApiRequestSender
 			}
 		};
 
-		var response = _internalClient.Execute<string>(request);
+		response = _internalClient.Execute(request);
+		return response.Content;
+	}
 
-		statusCode = (int)response.StatusCode;
-		cookies = response.Cookies.ToArray();
+	public string GetAllRoles(out IRestResponse response)
+	{
+		var request = new RestRequest
+		{
+			Method = Method.GET,
+			Resource = Endpoints.RoleEndpoint,
+		};
 
-		return response.Data;
+		response = _internalClient.Execute(request);
+		return response.Content;
+	}
+
+	public string GetRole(string id, out IRestResponse response)
+	{
+		var request = new RestRequest
+		{
+			Method = Method.GET,
+			Resource = $"{Endpoints.RoleEndpoint}/{id}"
+		};
+
+		response = _internalClient.Execute(request);
+		return response.Content;
+	}
+
+	public string CreateRole(string name, out IRestResponse response)
+	{
+		var request = new RestRequest
+		{
+			Method = Method.POST,
+			Resource = Endpoints.RoleEndpoint,
+			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(new { Name = name }), ParameterType.RequestBody) }
+		};
+
+		response = _internalClient.Execute(request);
+		return response.Content;
+	}
+
+	public string UpdateRole(Role role, out IRestResponse response)
+	{
+		var request = new RestRequest
+		{
+			Method = Method.PUT,
+			Resource = $"{Endpoints.RoleEndpoint}/{role.Id}",
+			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(role), ParameterType.RequestBody) }
+		};
+
+		response = _internalClient.Execute(request);
+		return response.Content;
+	}
+
+	public string DeleteRole(string id, out IRestResponse response)
+	{
+		var request = new RestRequest
+		{
+			Method = Method.DELETE,
+			Resource = $"{Endpoints.RoleEndpoint}/{id}"
+		};
+
+		response = _internalClient.Execute(request);
+		return response.Content;
 	}
 
 	private const string ContentType = "application/json";

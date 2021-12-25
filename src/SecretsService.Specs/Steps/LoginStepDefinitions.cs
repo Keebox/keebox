@@ -1,10 +1,10 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+
+using AutoFixture;
 
 using FluentAssertions;
 
 using Keebox.SecretsService.Specs.Lib;
-using Keebox.SecretsService.Specs.Lib.Models;
 
 using RestSharp;
 
@@ -13,82 +13,40 @@ using TechTalk.SpecFlow;
 
 namespace Keebox.SecretsService.Specs.Steps;
 
-[Serializable]
-public record LoginData
-{
-	public int StatusCode;
-	public string AccountAccessToken;
-	public string AccountPrivateToken;
-	public RestResponseCookie[] Cookies;
-}
-
-[Binding]
-public class LoginPreparationStepDefinitions
-{
-	public LoginPreparationStepDefinitions(LoginData loginData)
-	{
-		_loginData = loginData;
-	}
-
-	[Given(@"a temporary account")]
-	public void GivenATemporaryAccount()
-	{
-		var requestSender = new ApiClient().WithToken(ConfigurationHelper.AdminToken);
-
-		_loginData.AccountPrivateToken = requestSender.CreateAccount(new Account
-		{
-			Type = 1,
-			Name = $"auto-{Guid.NewGuid().ToString().ToLower()}",
-			GenerateToken = true
-		});
-	}
-
-	private readonly LoginData _loginData;
-}
-
 [Binding]
 public class LoginStepDefinitions
 {
-	public LoginStepDefinitions(LoginData loginData)
+	public LoginStepDefinitions(ScenarioContext scenarioContext)
 	{
-		_loginData = loginData;
-		_requestSender = new ApiClient().WithoutToken();
+		_scenarioContext = scenarioContext;
 	}
 
-	[Given(@"the account token")]
-	public void GivenTheAccountToken()
+	[Given(@"the valid account token")]
+	public void GivenTheValidAccountToken()
 	{
-		/* Account Token already set in constructor */
+		var temporaryAccountToken = _scenarioContext.Get<string>("CreatedAccountToken");
+		_scenarioContext.Add("AccountToken", temporaryAccountToken);
 	}
 
-	[When(@"the login request has been sent")]
-	public void WhenTheLoginRequestHasBeenSent()
+	[Given(@"the wrong account token")]
+	public void GivenTheWrongAccountToken()
 	{
-		var jwtToken = _requestSender.Login(_loginData.AccountPrivateToken, out var statusCode, out var cookies);
-
-		_loginData.AccountAccessToken = jwtToken;
-		_loginData.StatusCode = statusCode;
-		_loginData.Cookies = cookies;
-	}
-
-	[Then(@"the status code should be (.*)")]
-	public void ThenTheStatusCodeShouldBe(int expectedStatusCode)
-	{
-		_loginData.StatusCode.Should().Be(expectedStatusCode);
+		_scenarioContext.Add("AccountToken", _fixture.Create<string>());
 	}
 
 	[Then(@"access token should be returned")]
 	public void ThenAccessTokenShouldBeReturned()
 	{
-		_loginData.AccountAccessToken.Should().NotBeNullOrEmpty();
+		_scenarioContext.GetBody<string>().Should().NotBeNullOrEmpty();
 	}
 
 	[Then(@"access token should be in cookie")]
 	public void ThenAccessTokenShouldBeInCookie()
 	{
-		_loginData.Cookies.Single(cookie => cookie.Name.Equals("access-token")).Value.Should().NotBeNullOrEmpty();
+		_scenarioContext.GetResponse().Cookies.Single(cookie => cookie.Name.Equals("access-token")).Value.Should().NotBeNullOrEmpty();
 	}
 
-	private readonly LoginData _loginData;
-	private readonly ApiRequestSender _requestSender;
+	private Fixture _fixture = new();
+
+	private readonly ScenarioContext _scenarioContext;
 }
