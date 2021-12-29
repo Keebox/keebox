@@ -11,26 +11,6 @@ namespace Keebox.SecretsService.Specs.Lib;
 
 public static class ScenarioContextExtensions
 {
-	public static T GetBody<T>(this ScenarioContext context)
-	{
-		return context.Get<T>(ContextKeys.Body);
-	}
-
-	public static void SetBody<T>(this ScenarioContext context, string body)
-	{
-		context.Set(JsonConvert.DeserializeObject<T>(body), ContextKeys.Body);
-	}
-
-	public static Error GetError(this ScenarioContext context)
-	{
-		return context.Get<Error>(ContextKeys.Error);
-	}
-
-	public static void SetError(this ScenarioContext context, string errorBody)
-	{
-		context.Set(JsonConvert.DeserializeObject<Error>(errorBody), ContextKeys.Error);
-	}
-
 	public static IRestResponse GetResponse(this ScenarioContext context)
 	{
 		return context.Get<IRestResponse>(ContextKeys.Response);
@@ -39,5 +19,33 @@ public static class ScenarioContextExtensions
 	public static void SetResponse(this ScenarioContext context, IRestResponse response)
 	{
 		context.Set(response, ContextKeys.Response);
+	}
+
+	public static RestRequest GetRequest(this ScenarioContext context)
+	{
+		RestRequest request;
+		if (!context.ContainsKey(ContextKeys.Request))
+		{
+			request = new RestRequest();
+			SetRequest(context, request);
+		}
+		else
+		{
+			request = context.Get<RestRequest>(ContextKeys.Request);
+		}
+
+		return request;
+	}
+
+	public static void SetRequest(this ScenarioContext context, RestRequest request)
+	{
+		context.Set(request, ContextKeys.Request);
+	}
+
+	public static T GetResponseBody<T>(this ScenarioContext context)
+	{
+		var content = GetResponse(context).Content;
+
+		return JsonConvert.DeserializeObject<T>(content);
 	}
 }

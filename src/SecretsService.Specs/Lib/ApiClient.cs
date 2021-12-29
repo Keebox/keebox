@@ -48,12 +48,14 @@ public class ApiRequestSender
 	{
 		var jwtToken = Login(token, out _);
 		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(jwtToken));
+
 		return this;
 	}
 
 	public ApiRequestSender EraseToken()
 	{
 		_internalClient.Authenticator = null;
+
 		return this;
 	}
 
@@ -62,6 +64,7 @@ public class ApiRequestSender
 		var adminJwtToken = Login(ConfigurationHelper.AdminToken, out _);
 
 		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(adminJwtToken));
+
 		return this;
 	}
 
@@ -92,6 +95,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
@@ -104,6 +108,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
@@ -116,6 +121,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
@@ -129,6 +135,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
@@ -142,6 +149,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
@@ -154,7 +162,13 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
+	}
+
+	public IRestResponse SendRequest(RestRequest request)
+	{
+		return _internalClient.Execute(request);
 	}
 
 	private const string ContentType = "application/json";
