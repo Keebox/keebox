@@ -107,16 +107,22 @@ namespace Keebox.SecretsService.Specs.Features
         testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 7
-        testRunner.When("a create role request with the same name has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Given("same role name in body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 8
-        testRunner.Then("the status code should be 409", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("method is \'POST\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 9
-        testRunner.And("the status code in message should be 409", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.And("endpoint is \'/role\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 10
-        testRunner.And("the message of error should be \'Role already exists.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 11
+        testRunner.Then("the status code should be 409", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 12
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -129,7 +135,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting roles via admin account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 12
+#line 14
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -149,16 +155,22 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 13
+#line 15
         testRunner.Given("an admin account and its token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 14
-        testRunner.When("the get all roles request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 16
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 15
+#line 17
+        testRunner.And("endpoint is \'/role\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 18
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 19
         testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 16
+#line 20
         testRunner.And("roles should be returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -172,7 +184,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting roles via ordinary account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 18
+#line 22
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -192,18 +204,23 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 19
+#line 23
         testRunner.Given("an ordinary account and its token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 20
-        testRunner.When("the get all roles request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 24
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 21
+#line 25
+        testRunner.And("endpoint is \'/role\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 26
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 27
         testRunner.Then("the status code should be 403", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 22
-        testRunner.And("the message of error should be \'You don\'t have permission to perform this action." +
-                        "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 28
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -216,49 +233,6 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting specific role", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 24
-    this.ScenarioInitialize(scenarioInfo);
-#line hidden
-            bool isScenarioIgnored = default(bool);
-            bool isFeatureIgnored = default(bool);
-            if ((tagsOfScenario != null))
-            {
-                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((this._featureTags != null))
-            {
-                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
-            }
-            if ((isScenarioIgnored || isFeatureIgnored))
-            {
-                testRunner.SkipScenario();
-            }
-            else
-            {
-                this.ScenarioStart();
-#line 25
-        testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
-#line hidden
-#line 26
-        testRunner.When("a get role request by id has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
-#line hidden
-#line 27
-        testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
-#line hidden
-#line 28
-        testRunner.And("role should be returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-            }
-            this.ScenarioCleanup();
-        }
-        
-        [NUnit.Framework.TestAttribute()]
-        [NUnit.Framework.DescriptionAttribute("Getting non existing role")]
-        public virtual void GettingNonExistingRole()
-        {
-            string[] tagsOfScenario = ((string[])(null));
-            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
-            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting non existing role", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
 #line 30
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
@@ -280,19 +254,71 @@ namespace Keebox.SecretsService.Specs.Features
             {
                 this.ScenarioStart();
 #line 31
-        testRunner.Given("a non existing role id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+        testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 32
-        testRunner.When("a get role request by id has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
 #line 33
-        testRunner.Then("the status code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
 #line 34
-        testRunner.And("the message of error should be \'Role not found.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
 #line hidden
 #line 35
-        testRunner.And("the status code in message should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+        testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 36
+        testRunner.And("role should be returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+            }
+            this.ScenarioCleanup();
+        }
+        
+        [NUnit.Framework.TestAttribute()]
+        [NUnit.Framework.DescriptionAttribute("Getting non existing role")]
+        public virtual void GettingNonExistingRole()
+        {
+            string[] tagsOfScenario = ((string[])(null));
+            System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
+            TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting non existing role", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
+#line 38
+    this.ScenarioInitialize(scenarioInfo);
+#line hidden
+            bool isScenarioIgnored = default(bool);
+            bool isFeatureIgnored = default(bool);
+            if ((tagsOfScenario != null))
+            {
+                isScenarioIgnored = tagsOfScenario.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((this._featureTags != null))
+            {
+                isFeatureIgnored = this._featureTags.Where(__entry => __entry != null).Where(__entry => String.Equals(__entry, "ignore", StringComparison.CurrentCultureIgnoreCase)).Any();
+            }
+            if ((isScenarioIgnored || isFeatureIgnored))
+            {
+                testRunner.SkipScenario();
+            }
+            else
+            {
+                this.ScenarioStart();
+#line 39
+        testRunner.Given("a non existing role id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 40
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 41
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 42
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 43
+        testRunner.Then("the status code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 44
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -305,7 +331,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Getting specific role via ordinary account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 37
+#line 46
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -325,21 +351,26 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 38
+#line 47
         testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 39
+#line 48
         testRunner.Given("an ordinary account and its token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 40
-        testRunner.When("a get role request by id has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 49
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 41
+#line 50
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 51
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 52
         testRunner.Then("the status code should be 403", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 42
-        testRunner.And("the message of error should be \'You don\'t have permission to perform this action." +
-                        "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 53
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -352,7 +383,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Updating role with new name", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 44
+#line 55
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -372,25 +403,37 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 45
+#line 56
         testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 46
+#line 57
         testRunner.Given("a new role name", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 47
-        testRunner.When("an update role request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 58
+        testRunner.Given("method is \'PUT\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 48
+#line 59
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 60
+        testRunner.And("role is in body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 61
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 62
         testRunner.Then("the status code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 49
-        testRunner.When("a get role request by id has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 63
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 50
+#line 64
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 65
         testRunner.Then("the status code should be 200", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 51
+#line 66
         testRunner.And("role should be returned", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
@@ -404,7 +447,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Updating role via ordinary account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 53
+#line 68
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -424,21 +467,29 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 54
+#line 69
         testRunner.Given("a role id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 55
+#line 70
         testRunner.Given("an ordinary account and its token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 56
-        testRunner.When("an update role request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 71
+        testRunner.Given("method is \'PUT\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 57
+#line 72
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 73
+        testRunner.And("role is in body", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 74
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 75
         testRunner.Then("the status code should be 403", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 58
-        testRunner.And("the message of error should be \'You don\'t have permission to perform this action." +
-                        "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 76
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -451,7 +502,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deleting role by id", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 60
+#line 78
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -471,17 +522,32 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 61
+#line 79
         testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 62
-        testRunner.When("a delete request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 80
+        testRunner.Given("method is \'DELETE\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 63
+#line 81
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 82
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 83
         testRunner.Then("the status code should be 204", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 64
-        testRunner.And("role should not exists", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 84
+        testRunner.Given("method is \'GET\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
+#line hidden
+#line 85
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 86
+        testRunner.Then("the status code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
+#line hidden
+#line 87
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -494,7 +560,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deleting role via ordinary account", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 66
+#line 89
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -514,21 +580,26 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 67
+#line 90
         testRunner.Given("a new created role", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 68
+#line 91
         testRunner.Given("an ordinary account and its token", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 69
-        testRunner.When("a delete request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 92
+        testRunner.Given("method is \'DELETE\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 70
+#line 93
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 94
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 95
         testRunner.Then("the status code should be 403", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 71
-        testRunner.And("the message of error should be \'You don\'t have permission to perform this action." +
-                        "\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 96
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();
@@ -541,7 +612,7 @@ namespace Keebox.SecretsService.Specs.Features
             string[] tagsOfScenario = ((string[])(null));
             System.Collections.Specialized.OrderedDictionary argumentsOfScenario = new System.Collections.Specialized.OrderedDictionary();
             TechTalk.SpecFlow.ScenarioInfo scenarioInfo = new TechTalk.SpecFlow.ScenarioInfo("Deleting non existing role", null, tagsOfScenario, argumentsOfScenario, this._featureTags);
-#line 73
+#line 98
     this.ScenarioInitialize(scenarioInfo);
 #line hidden
             bool isScenarioIgnored = default(bool);
@@ -561,20 +632,23 @@ namespace Keebox.SecretsService.Specs.Features
             else
             {
                 this.ScenarioStart();
-#line 74
+#line 99
         testRunner.Given("a non existing role id", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 75
-        testRunner.When("a delete request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line 100
+        testRunner.Given("method is \'DELETE\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Given ");
 #line hidden
-#line 76
+#line 101
+        testRunner.And("endpoint is \'/role/{RoleId}\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line hidden
+#line 102
+        testRunner.When("request has been sent", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "When ");
+#line hidden
+#line 103
         testRunner.Then("the status code should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "Then ");
 #line hidden
-#line 77
-        testRunner.And("the message of error should be \'Role not found.\'", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
-#line hidden
-#line 78
-        testRunner.And("the status code in message should be 404", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
+#line 104
+        testRunner.And("response body is error", ((string)(null)), ((TechTalk.SpecFlow.Table)(null)), "And ");
 #line hidden
             }
             this.ScenarioCleanup();

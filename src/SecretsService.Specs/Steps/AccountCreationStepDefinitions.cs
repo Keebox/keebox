@@ -19,6 +19,14 @@ public class AccountCreationStepDefinitions
 		_requestSender = apiRequestSender;
 	}
 
+	[Given(@"account token set to request body")]
+	public void GivenAccountTokenSetToRequestBody()
+	{
+		var request = _scenarioContext.GetRequest();
+		var privateToken = _scenarioContext.Get<string>("AccountToken");
+		request.AddJsonBody(new { Token = privateToken });
+	}
+
 	[Given(@"an ordinary account and its token")]
 	public void GivenAnOrdinaryAccountAndItsToken()
 	{

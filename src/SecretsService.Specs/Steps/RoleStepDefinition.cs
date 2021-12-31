@@ -9,6 +9,8 @@ using Keebox.SecretsService.Specs.Lib.Models;
 
 using Newtonsoft.Json;
 
+using RestSharp;
+
 using TechTalk.SpecFlow;
 
 
@@ -26,7 +28,7 @@ public class RoleStepDefinition
 	[Then(@"roles should be returned")]
 	public void ThenRolesShouldBeReturned()
 	{
-		var roles = _scenarioContext.GetBody<Role[]>();
+		var roles = _scenarioContext.GetResponseBody<Role[]>();
 
 		roles.Should().NotBeNullOrEmpty();
 	}
@@ -39,8 +41,8 @@ public class RoleStepDefinition
 		_requestSender.BecomeAdmin();
 		var id = _requestSender.CreateRole(roleName, out _);
 
-		_scenarioContext.Add("RoleName", roleName);
-		_scenarioContext.Add("RoleId", JsonConvert.DeserializeObject<string>(id));
+		_scenarioContext.Add(RoleNameKey, roleName);
+		_scenarioContext.Add(RoleIdKey, JsonConvert.DeserializeObject<string>(id));
 	}
 
 	[Given(@"a new role with name (.*)")]
@@ -49,50 +51,61 @@ public class RoleStepDefinition
 		_requestSender.BecomeAdmin();
 		var id = _requestSender.CreateRole(name, out _);
 
-		_scenarioContext.Add("RoleName", name);
-		_scenarioContext.Add("RoleId", JsonConvert.DeserializeObject<string>(id));
+		_scenarioContext.Add(RoleNameKey, name);
+		_scenarioContext.Add(RoleIdKey, JsonConvert.DeserializeObject<string>(id));
 	}
 
 	[Given(@"a non existing role id")]
 	public void GivenANonExistingRoleId()
 	{
 		_requestSender.BecomeAdmin();
-		_scenarioContext.Add("RoleId", _fixture.Create<string>());
+		_scenarioContext.Add(RoleIdKey, _fixture.Create<string>());
 	}
 
 	[Then(@"role should be returned")]
 	public void ThenRoleShouldBeReturned()
 	{
-		var role = _scenarioContext.GetBody<Role>();
+		var role = _scenarioContext.GetResponseBody<Role>();
 
-		role.Id.Should().Be(_scenarioContext.Get<string>("RoleId"));
-		role.Name.Should().Be(_scenarioContext.Get<string>("RoleName"));
+		role.Id.Should().Be(_scenarioContext.Get<string>(RoleIdKey));
+		role.Name.Should().Be(_scenarioContext.Get<string>(RoleNameKey));
 		role.IsSystem.Should().BeFalse();
 	}
 
 	[Given(@"a new role name")]
 	public void GivenANewRoleName()
 	{
-		_scenarioContext.Set(_fixture.Create<string>(), "RoleName");
+		_scenarioContext.Set(_fixture.Create<string>(), RoleNameKey);
 	}
 
 	[Given(@"a role id")]
 	public void GivenARoleId()
 	{
-		_scenarioContext.Set(_fixture.Create<string>(), "RoleId");
-		_scenarioContext.Set(_fixture.Create<string>(), "RoleName");
+		_scenarioContext.Set(_fixture.Create<string>(), RoleIdKey);
+		_scenarioContext.Set(_fixture.Create<string>(), RoleNameKey);
 	}
 
-	[Then(@"role should not exists")]
-	public void ThenRoleShouldNotExists()
+	[Given(@"same role name in body")]
+	public void GivenSameRoleNameInBody()
 	{
-		_requestSender.GetRole(_scenarioContext.Get<string>("RoleId"), out var response);
+		var name = _scenarioContext.Get<string>(RoleNameKey);
+		var request = _scenarioContext.GetRequest();
+		request.AddJsonBody(new { Name = name });
+	}
 
-		response.StatusCode.Should().Be(404);
+	[Given(@"role is in body")]
+	public void GivenRoleIsInBody()
+	{
+		var roleId = _scenarioContext.Get<string>(RoleIdKey);
+		var roleName = _scenarioContext.Get<string>(RoleNameKey);
+		var request = _scenarioContext.GetRequest();
+		request.AddJsonBody(new { Id = roleId, Name = roleName });
 	}
 
 	private readonly Fixture _fixture = new();
 
 	private readonly ScenarioContext _scenarioContext;
 	private readonly ApiRequestSender _requestSender;
+	private const string RoleIdKey = "RoleId";
+	private const string RoleNameKey = "RoleName";
 }

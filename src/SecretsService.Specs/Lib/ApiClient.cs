@@ -48,12 +48,14 @@ public class ApiRequestSender
 	{
 		var jwtToken = Login(token, out _);
 		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(jwtToken));
+
 		return this;
 	}
 
 	public ApiRequestSender EraseToken()
 	{
 		_internalClient.Authenticator = null;
+
 		return this;
 	}
 
@@ -62,6 +64,7 @@ public class ApiRequestSender
 		var adminJwtToken = Login(ConfigurationHelper.AdminToken, out _);
 
 		_internalClient.Authenticator = new JwtAuthenticator(JsonConvert.DeserializeObject<string>(adminJwtToken));
+
 		return this;
 	}
 
@@ -92,30 +95,7 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
-		return response.Content;
-	}
 
-	public string GetAllRoles(out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.GET,
-			Resource = Endpoints.RoleEndpoint,
-		};
-
-		response = _internalClient.Execute(request);
-		return response.Content;
-	}
-
-	public string GetRole(string id, out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.GET,
-			Resource = $"{Endpoints.RoleEndpoint}/{id}"
-		};
-
-		response = _internalClient.Execute(request);
 		return response.Content;
 	}
 
@@ -129,32 +109,13 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
+
 		return response.Content;
 	}
 
-	public string UpdateRole(Role role, out IRestResponse response)
+	public IRestResponse SendRequest(RestRequest request)
 	{
-		var request = new RestRequest
-		{
-			Method = Method.PUT,
-			Resource = $"{Endpoints.RoleEndpoint}/{role.Id}",
-			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(role), ParameterType.RequestBody) }
-		};
-
-		response = _internalClient.Execute(request);
-		return response.Content;
-	}
-
-	public string DeleteRole(string id, out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.DELETE,
-			Resource = $"{Endpoints.RoleEndpoint}/{id}"
-		};
-
-		response = _internalClient.Execute(request);
-		return response.Content;
+		return _internalClient.Execute(request);
 	}
 
 	private const string ContentType = "application/json";
