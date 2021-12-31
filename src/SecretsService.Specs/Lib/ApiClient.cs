@@ -99,32 +99,6 @@ public class ApiRequestSender
 		return response.Content;
 	}
 
-	public string GetAllRoles(out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.GET,
-			Resource = Endpoints.RoleEndpoint,
-		};
-
-		response = _internalClient.Execute(request);
-
-		return response.Content;
-	}
-
-	public string GetRole(string id, out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.GET,
-			Resource = $"{Endpoints.RoleEndpoint}/{id}"
-		};
-
-		response = _internalClient.Execute(request);
-
-		return response.Content;
-	}
-
 	public string CreateRole(string name, out IRestResponse response)
 	{
 		var request = new RestRequest
@@ -132,33 +106,6 @@ public class ApiRequestSender
 			Method = Method.POST,
 			Resource = Endpoints.RoleEndpoint,
 			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(new { Name = name }), ParameterType.RequestBody) }
-		};
-
-		response = _internalClient.Execute(request);
-
-		return response.Content;
-	}
-
-	public string UpdateRole(Role role, out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.PUT,
-			Resource = $"{Endpoints.RoleEndpoint}/{role.Id}",
-			Parameters = { new Parameter(ContentType, JsonConvert.SerializeObject(role), ParameterType.RequestBody) }
-		};
-
-		response = _internalClient.Execute(request);
-
-		return response.Content;
-	}
-
-	public string DeleteRole(string id, out IRestResponse response)
-	{
-		var request = new RestRequest
-		{
-			Method = Method.DELETE,
-			Resource = $"{Endpoints.RoleEndpoint}/{id}"
 		};
 
 		response = _internalClient.Execute(request);

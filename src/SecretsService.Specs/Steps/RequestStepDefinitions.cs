@@ -13,9 +13,10 @@ namespace Keebox.SecretsService.Specs.Steps;
 [Binding]
 public class RequestStepDefinitions
 {
-	public RequestStepDefinitions(ScenarioContext scenarioContext)
+	public RequestStepDefinitions(ScenarioContext scenarioContext, ApiRequestSender requestSender)
 	{
 		_scenarioContext = scenarioContext;
+		_requestSender = requestSender;
 	}
 
 	[Given(@"method is '(.*)'")]
@@ -34,9 +35,9 @@ public class RequestStepDefinitions
 	[Given(@"endpoint is '(.*)'")]
 	public void GivenEndpointIs(string endpoint)
 	{
-		if (KeyRegex.IsMatch(endpoint))
+		if (_keyRegex.IsMatch(endpoint))
 		{
-			var groups = KeyRegex.Match(endpoint).Groups.Values.Skip(1).ToArray();
+			var groups = _keyRegex.Match(endpoint).Groups.Values.Skip(1).ToArray();
 			foreach (var g in groups)
 			{
 				var value = _scenarioContext.Get<string>(g.Value[1..^1]);
@@ -47,7 +48,16 @@ public class RequestStepDefinitions
 		_scenarioContext.GetRequest().Resource = endpoint;
 	}
 
-	private readonly Regex KeyRegex = new Regex("(\\{.+\\})");
+	[When(@"request has been sent")]
+	public void WhenRequestHasBeenSent()
+	{
+		var request = _scenarioContext.GetRequest();
+		var response = _requestSender.SendRequest(request);
+		_scenarioContext.SetResponse(response);
+	}
+	
+	private readonly Regex _keyRegex = new("(\\{.+\\})");
 
 	private readonly ScenarioContext _scenarioContext;
+	private readonly ApiRequestSender _requestSender;
 }

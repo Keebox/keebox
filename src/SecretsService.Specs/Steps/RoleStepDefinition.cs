@@ -85,13 +85,6 @@ public class RoleStepDefinition
 		_scenarioContext.Set(_fixture.Create<string>(), RoleNameKey);
 	}
 
-	private readonly Fixture _fixture = new();
-
-	private readonly ScenarioContext _scenarioContext;
-	private readonly ApiRequestSender _requestSender;
-	private const string RoleIdKey = "RoleId";
-	private const string RoleNameKey = "RoleName";
-
 	[Given(@"same role name in body")]
 	public void GivenSameRoleNameInBody()
 	{
@@ -108,4 +101,11 @@ public class RoleStepDefinition
 		var request = _scenarioContext.GetRequest();
 		request.AddJsonBody(new { Id = roleId, Name = roleName });
 	}
+
+	private readonly Fixture _fixture = new();
+
+	private readonly ScenarioContext _scenarioContext;
+	private readonly ApiRequestSender _requestSender;
+	private const string RoleIdKey = "RoleId";
+	private const string RoleNameKey = "RoleName";
 }
