@@ -19,11 +19,12 @@ public class LoginStepDefinitions
 		_scenarioContext = scenarioContext;
 	}
 
-	[Given(@"the valid account token")]
-	public void GivenTheValidAccountToken()
+	[Given(@"private token in the body")]
+	public void GivenPrivateTokenInTheBody()
 	{
 		var temporaryAccountToken = _scenarioContext.Get<string>("CreatedAccountToken");
-		_scenarioContext.Add("AccountToken", temporaryAccountToken);
+		var request = _scenarioContext.GetRequest();
+		request.AddJsonBody(new { Token = temporaryAccountToken });
 	}
 
 	[Given(@"the wrong account token")]

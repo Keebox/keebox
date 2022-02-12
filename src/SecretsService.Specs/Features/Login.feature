@@ -4,8 +4,9 @@ Exists a possibility to log into account using the provided token
 
     Scenario: Login with token
         Given an ordinary account and its token
-        Given method is 'POST'
-        Given endpoint is '/login'
+        Given private token in the body
+        And method is 'POST'
+        And endpoint is '/login'
         When request has been sent
         Then the status code should be 200
         And access token should be returned

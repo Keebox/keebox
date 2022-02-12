@@ -24,6 +24,7 @@ public class RequestStepDefinitions
 	{
 		var request = _scenarioContext.GetRequest();
 		request.Method = method;
+
 		if (method == Method.GET)
 		{
 			request.Body = null;
@@ -38,6 +39,7 @@ public class RequestStepDefinitions
 		if (_keyRegex.IsMatch(endpoint))
 		{
 			var groups = _keyRegex.Match(endpoint).Groups.Values.Skip(1).ToArray();
+
 			foreach (var g in groups)
 			{
 				var value = _scenarioContext.Get<string>(g.Value[1..^1]);
@@ -55,7 +57,7 @@ public class RequestStepDefinitions
 		var response = _requestSender.SendRequest(request);
 		_scenarioContext.SetResponse(response);
 	}
-	
+
 	private readonly Regex _keyRegex = new("(\\{.+\\})");
 
 	private readonly ScenarioContext _scenarioContext;
