@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using TechTalk.SpecFlow;
 
 
-namespace Keebox.SecretsService.Specs.Steps;
+namespace Keebox.SecretsService.Specs.Steps.Helpers;
 
 [Binding]
 public class AccountCreationStepDefinitions

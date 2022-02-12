@@ -8,7 +8,7 @@ using RestSharp;
 using TechTalk.SpecFlow;
 
 
-namespace Keebox.SecretsService.Specs.Steps;
+namespace Keebox.SecretsService.Specs.Steps.WebApi;
 
 [Binding]
 public class RequestStepDefinitions

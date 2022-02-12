@@ -1,6 +1,6 @@
 ﻿@E2E
 Feature: RoleManagement
-All operations with roles can be performed
+    All operations with roles can be performed
 
     Scenario: Creating role with already existing name
         Given a new created role

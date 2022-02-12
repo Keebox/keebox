@@ -9,17 +9,15 @@ using Keebox.SecretsService.Specs.Lib.Models;
 
 using Newtonsoft.Json;
 
-using RestSharp;
-
 using TechTalk.SpecFlow;
 
 
 namespace Keebox.SecretsService.Specs.Steps;
 
 [Binding]
-public class RoleStepDefinition
+public class RoleManagementStepDefinitions
 {
-	public RoleStepDefinition(ScenarioContext scenarioContext, ApiRequestSender requestSender)
+	public RoleManagementStepDefinitions(ScenarioContext scenarioContext, ApiRequestSender requestSender)
 	{
 		_scenarioContext = scenarioContext;
 		_requestSender = requestSender;
@@ -106,6 +104,7 @@ public class RoleStepDefinition
 
 	private readonly ScenarioContext _scenarioContext;
 	private readonly ApiRequestSender _requestSender;
+
 	private const string RoleIdKey = "RoleId";
 	private const string RoleNameKey = "RoleName";
 }

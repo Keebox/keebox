@@ -109,8 +109,18 @@ public class ApiRequestSender
 		};
 
 		response = _internalClient.Execute(request);
-
 		return response.Content;
+	}
+
+	public string GetAccounts()
+	{
+		var request = new RestRequest
+		{
+			Method = Method.GET,
+			Resource = Endpoints.AccountEndpoint
+		};
+
+		return _internalClient.Execute(request).Content;
 	}
 
 	public IRestResponse SendRequest(RestRequest request)
