@@ -57,8 +57,7 @@ namespace Keebox.SecretsService.Controllers
 				throw new SecretsNotProvidedException();
 
 			_secretManager.AddSecrets(payload.Route, payload.Data!.ToDictionary(x => x.Key, x => x.Value.ToString()!),
-				_fileConverter.Convert(payload.Files),
-				ExtractSecretsFromRequest(payload));
+				_fileConverter.Convert(payload.Files), ExtractSecretsFromRequest(payload));
 
 			return NoContent();
 		}
@@ -78,13 +77,16 @@ namespace Keebox.SecretsService.Controllers
 
 			if (payload.Route is null) throw new EmptyRouteException();
 
+			var format = payload.Format ?? _configuration.DefaultFormat;
+			var formatter = _formatterResolver.Resolve(format);
 			var secrets = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
+
+			HttpContext.Response.ContentType = ResolveContentType(format);
 
 			if (secrets.Length == 1)
 			{
 				var secret = secrets.Single();
-
-				if (!secret.IsFile) return Ok(secret.Value);
+				if (!secret.IsFile) return Ok(formatter.Format(new[] { secret }));
 
 				return File(new MemoryStream(_fileConverter.Decode(secret.Value)), "application/octet-stream");
 			}
@@ -93,11 +95,6 @@ namespace Keebox.SecretsService.Controllers
 			{
 				secrets = secrets.Where(x => !x.IsFile).ToArray();
 			}
-
-			var format = payload.Format ?? _configuration.DefaultFormat;
-			var formatter = _formatterResolver.Resolve(format);
-
-			HttpContext.Response.ContentType = ResolveContentType(format);
 
 			return Ok(formatter.Format(secrets));
 		}
