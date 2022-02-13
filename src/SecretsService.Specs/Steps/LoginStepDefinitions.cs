@@ -6,8 +6,6 @@ using FluentAssertions;
 
 using Keebox.SecretsService.Specs.Lib;
 
-using RestSharp;
-
 using TechTalk.SpecFlow;
 
 
@@ -21,11 +19,12 @@ public class LoginStepDefinitions
 		_scenarioContext = scenarioContext;
 	}
 
-	[Given(@"the valid account token")]
-	public void GivenTheValidAccountToken()
+	[Given(@"private token in the body")]
+	public void GivenPrivateTokenInTheBody()
 	{
 		var temporaryAccountToken = _scenarioContext.Get<string>("CreatedAccountToken");
-		_scenarioContext.Add("AccountToken", temporaryAccountToken);
+		var request = _scenarioContext.GetRequest();
+		request.AddJsonBody(new { Token = temporaryAccountToken });
 	}
 
 	[Given(@"the wrong account token")]
@@ -37,7 +36,7 @@ public class LoginStepDefinitions
 	[Then(@"access token should be returned")]
 	public void ThenAccessTokenShouldBeReturned()
 	{
-		_scenarioContext.GetBody<string>().Should().NotBeNullOrEmpty();
+		_scenarioContext.GetResponse().Content.Should().NotBeNull();
 	}
 
 	[Then(@"access token should be in cookie")]
@@ -46,7 +45,7 @@ public class LoginStepDefinitions
 		_scenarioContext.GetResponse().Cookies.Single(cookie => cookie.Name.Equals("access-token")).Value.Should().NotBeNullOrEmpty();
 	}
 
-	private Fixture _fixture = new();
+	private readonly Fixture _fixture = new();
 
 	private readonly ScenarioContext _scenarioContext;
 }

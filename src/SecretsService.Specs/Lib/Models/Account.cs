@@ -2,6 +2,8 @@
 
 public record Account
 {
+	public string Id { get; init; }
+
 	public int Type { get; init; }
 
 	public string Name { get; init; }
