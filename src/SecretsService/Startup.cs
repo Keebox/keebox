@@ -87,7 +87,7 @@ namespace Keebox.SecretsService
 			var appConfiguration = services.RegisterApplicationConfiguration(_configuration!);
 			var completeConfigurationContext = services.ConfigureRepositoryContext(appConfiguration);
 
-			appConfiguration = completeConfigurationContext.SetAdminAccessTokenIfNotPersist(appConfiguration, _configuration!);
+			appConfiguration = completeConfigurationContext.GenerateDefaultTokenConfiguration(appConfiguration, _configuration!);
 
 			services.AddSingleton(appConfiguration);
 			services.AddTransient<ITokenValidator, TokenValidator>();

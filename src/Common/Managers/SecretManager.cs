@@ -36,7 +36,7 @@ namespace Keebox.Common.Managers
 				: dictionary;
 		}
 
-		public IEnumerable<Secret> GetSecrets(string path, string[] secrets)
+		public (PathType,IEnumerable<Secret>) GetSecrets(string path, string[] secrets)
 		{
 			var pathType = _pathResolver.Resolve(path);
 
@@ -55,15 +55,15 @@ namespace Keebox.Common.Managers
 					if (secret is null)
 						throw new NotFoundException("Group does not contain such secret");
 
-					return new[] { secret };
+					return (pathType,new[] { secret });
 				}
 				case PathType.Group:
 				{
 					var (groupName, folderPath) = _pathResolver.DeconstructPath(path);
 					var group = _groupRepository.Get(groupName, folderPath);
 
-					return _secretRepository.GetGroupSecrets(group.Id)
-						.Where(x => secrets.Length == 0 || secrets.Contains(x.Name));
+					return (pathType, _secretRepository.GetGroupSecrets(group.Id)
+						.Where(x => secrets.Length == 0 || secrets.Contains(x.Name)));
 				}
 				case PathType.None:
 					throw new NotFoundException("Path not found");

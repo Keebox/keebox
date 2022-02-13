@@ -1,10 +1,10 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
+﻿using System.Security.Claims;
 
 using Keebox.Common.DataAccess.Repositories;
 using Keebox.Common.DataAccess.Repositories.Abstractions;
 using Keebox.Common.Security;
 
+using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -36,11 +36,11 @@ namespace Keebox.Common.Helpers
 			identity = null;
 
 			var signingKey = _keyProvider.GetTokenSigningKey();
-			var tokenHandler = new JwtSecurityTokenHandler();
+			var tokenHandler = new JsonWebTokenHandler();
 
 			try
 			{
-				identity = tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
+				var result = tokenHandler.ValidateToken(jwtToken, new TokenValidationParameters
 				{
 					ValidateAudience = false,
 					ValidateIssuer = true,
@@ -48,7 +48,9 @@ namespace Keebox.Common.Helpers
 					ValidateIssuerSigningKey = true,
 					ValidIssuer = Constants.JwtTokenIssuer,
 					IssuerSigningKey = new SymmetricSecurityKey(signingKey)
-				}, out _);
+				});
+
+				identity = new ClaimsPrincipal(result.ClaimsIdentity);
 
 				return true;
 			}

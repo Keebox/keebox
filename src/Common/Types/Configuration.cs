@@ -8,6 +8,8 @@ namespace Keebox.Common.Types
 	{
 		public bool? EnableWebUi { get; set; }
 
+		public Status Status { get; set; }
+
 		public FormatType? DefaultFormat { get; set; }
 
 		public StorageEngineType? Engine { get; set; }

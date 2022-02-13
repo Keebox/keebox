@@ -25,7 +25,7 @@ namespace Keebox.Common.Managers
 		{
 			if (_roleRepository.Exists(name))
 			{
-				throw new AlreadyExistsException("Role already exists");
+				throw new AlreadyExistsException("Role already exists.");
 			}
 
 			return _roleRepository.Create(name);
@@ -56,7 +56,7 @@ namespace Keebox.Common.Managers
 		{
 			if (!_roleRepository.Exists(roleId))
 			{
-				throw new NotFoundException("Role not found");
+				throw new NotFoundException("Role not found.");
 			}
 		}
 

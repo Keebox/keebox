@@ -16,9 +16,9 @@ using NSwag.Annotations;
 namespace Keebox.SecretsService.Controllers
 {
 	[ApiController]
+	[Route(RouteMap.Role)]
 	[Authenticate, AuthorizePrivileged]
 	[OpenApiTags("Privileged", "Role")]
-	[Route(RouteMap.Role)]
 	public class RoleController : ControllerBase
 	{
 		public RoleController(IRoleManager roleManager)

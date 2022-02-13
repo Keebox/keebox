@@ -62,7 +62,8 @@ namespace Keebox.Common.UnitTests.Managers
 			{
 				RootToken = secondConfiguration.RootToken,
 				ConnectionString = firstConfiguration.ConnectionString,
-				Engine = firstConfiguration.Engine
+				Engine = firstConfiguration.Engine,
+				Status = firstConfiguration.Status
 			};
 
 			// act
