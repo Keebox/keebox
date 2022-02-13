@@ -78,9 +78,9 @@ namespace Keebox.SecretsService.Controllers
 
 			if (payload.Route is null) throw new EmptyRouteException();
 
-			var secrets = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload)).ToArray();
+			var (type, secrets) = _secretManager.GetSecrets(payload.Route, ExtractSecretsFromRequest(payload));
 
-			if (secrets.Length == 1)
+			if (type == PathType.Secret)
 			{
 				var secret = secrets.Single();
 
