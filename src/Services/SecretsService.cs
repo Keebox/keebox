@@ -2,6 +2,8 @@
 using DataAccess.Entities;
 using DataAccess.Repository;
 
+using Microsoft.EntityFrameworkCore;
+
 using Services.Extensions;
 
 
@@ -10,91 +12,14 @@ namespace Services;
 public class SecretsService : ISecretsService
 {
 	private readonly IRepository<Group> _groupRepository;
+	private readonly IRepository<Secret> _secretRepository;
 
-	public SecretsService(IRepository<Group> groupRepository)
+	public SecretsService(IRepository<Group> groupRepository, IRepository<Secret> secretRepository)
 	{
 		_groupRepository = groupRepository;
+		_secretRepository = secretRepository;
 	}
 
-	// public void Save(string path, Dictionary<string, string> secrets)
-	// {
-	// 	var (groupPath, groupName) = path.DeconstructPath();
-	// 	var groupExists = _context.Groups.Any(x => x.Name.Equals(groupName) && x.Path.Equals(groupPath));
-	//
-	// 	if (groupExists)
-	// 	{
-	// 		var group = _context.Groups.Single(x => x.Name.Equals(groupName) && x.Path.Equals(groupPath));
-	//
-	// 		foreach (var secret in secrets)
-	// 		{
-	// 			var groupSecret = group.Secrets.SingleOrDefault(x => x.Name.Equals(secret.Key));
-	// 			if (groupSecret is null)
-	// 			{
-	// 				var newSecret = new Secret
-	// 				{
-	// 					Name = secret.Key,
-	// 					Value = secret.Value
-	// 				};
-	//
-	// 				group.Secrets.Add(newSecret);
-	// 			}
-	// 			else
-	// 			{
-	// 				groupSecret.Value = secret.Value;
-	// 			}
-	// 		}
-	//
-	// 		var secretNames = secrets.Keys.Concat(files.Keys);
-	//
-	// 		var deletedSecrets = group.Secrets.Where(x => !secretNames.Contains(x.Name));
-	//
-	// 		foreach (var secret in deletedSecrets)
-	// 		{
-	// 			_context.Remove(secret);
-	// 		}
-	// 	}
-	// 	else
-	// 	{
-	// 		var group = new Group
-	// 		{
-	// 			Name = groupName,
-	// 			Path = groupPath,
-	// 			Secrets = secrets.Select(x => new Secret
-	// 			{
-	// 				Name = x.Key,
-	// 				Value = x.Value
-	// 			}).Concat(files.Select(x => new Secret
-	// 			{
-	// 				Name = x.Key,
-	// 				File = x.Value
-	// 			})).ToArray()
-	// 		};
-	//
-	// 		_context.Groups.Add(group);
-	// 	}
-	//
-	// 	_context.SaveChanges();
-	// }
-	//
-	// public void Save(string path, string secret)
-	// {
-	// 	throw new NotImplementedException();
-	// }
-	//
-	// public void Save(string path, byte[] file)
-	// {
-	// 	throw new NotImplementedException();
-	// }
-	//
-	// public object Get(string path)
-	// {
-	// 	throw new NotImplementedException();
-	// }
-	//
-	// public void Delete(string path)
-	// {
-	// 	throw new NotImplementedException();
-	// }
 	public void CreateGroup(string path, Dictionary<string, string> secrets)
 	{
 		var group = new Group
@@ -108,10 +33,43 @@ public class SecretsService : ISecretsService
 
 	public void UpdateGroup(string path, Dictionary<string, string> secrets)
 	{
-		var group = _groupRepository.Queryable.Single(x => x.Path.Equals(path));
+		var group = _groupRepository.Queryable.Include(x => x.Secrets).Single(x => x.Path.Equals(path));
 
-		group.Secrets = secrets.Select(x => new Secret { Name = x.Key, Value = x.Value }).ToArray();
+		var deletedSecrets = group.Secrets.Where(x => !secrets.ContainsKey(x.Name));
+
+		foreach (var secret in deletedSecrets)
+		{
+			_secretRepository.Delete(secret.Id);
+		}
+
+		var secretsLookup = group.Secrets.ToDictionary(x => x.Name, x => x);
+
+		group.Secrets = secrets.Select(x =>
+		{
+			if (!secretsLookup.TryGetValue(x.Key, out var secret))
+			{
+				return new Secret { Name = x.Key, Value = x.Value };
+			}
+
+			secret.Value = x.Value;
+
+			return secret;
+		}).ToArray();
 
 		_groupRepository.Update(group);
+	}
+
+	public Secret[] GetGroupSecrets(string path)
+	{
+		var group = _groupRepository.Queryable.Include(x => x.Secrets).Single(x => x.Path.Equals(path));
+
+		return group.Secrets.ToArray();
+	}
+
+	public Secret GetSecret(string path)
+	{
+		var (groupPath, name) = path.DeconstructPath();
+
+		return _secretRepository.Queryable.Single(x => x.Name.Equals(name) && x.Group.Path.Equals(groupPath));
 	}
 }

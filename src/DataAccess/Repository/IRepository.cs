@@ -1,5 +1,7 @@
 ﻿using DataAccess.Entities;
 
+using Microsoft.EntityFrameworkCore.Query;
+
 
 namespace DataAccess.Repository;
 

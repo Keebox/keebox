@@ -39,4 +39,29 @@ public class SecretsController : ControllerBase
 				throw new ArgumentException("Updating secret is not yet supported");
 		}
 	}
+
+	[HttpGet]
+	public object GetSecrets([FromRoute] string route)
+	{
+		var pathType = _pathResolver.Resolve(route);
+
+		switch (pathType)
+		{
+			case PathType.None:
+				throw new ArgumentException("Not found");
+			case PathType.Group:
+				var secrets = _secretsService.GetGroupSecrets(route);
+
+				return secrets.ToDictionary(x => x.Name, x => x.Value);
+			case PathType.Secret:
+				var secret = _secretsService.GetSecret(route);
+
+				return secret.Value!;
+			default:
+				throw new ArgumentOutOfRangeException();
+		}
+	}
+
+	[HttpDelete]
+	public void DeleteSecrets([FromRoute] string route) { }
 }

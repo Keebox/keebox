@@ -15,8 +15,8 @@ public sealed class SecretsMigration : AutoReversingMigration
 			.Table("group")
 			.InSchema("public")
 			.WithColumn(nameof(Group.Id).ToSnakeCase()).AsGuid().NotNullable().PrimaryKey().WithDefault(SystemMethods.NewGuid)
-			.WithColumn(nameof(Group.Path).ToSnakeCase()).AsString(512).NotNullable()
-			.WithColumn(nameof(Group.CreatedAt).ToSnakeCase()).AsDateTime().NotNullable()
+			.WithColumn(nameof(Group.Path).ToSnakeCase()).AsString(512).Unique().NotNullable()
+			.WithColumn(nameof(Group.CreatedAt).ToSnakeCase()).AsDateTimeOffset().NotNullable()
 			.WithDefaultValue(SystemMethods.CurrentUTCDateTime);
 
 		Create
@@ -26,7 +26,7 @@ public sealed class SecretsMigration : AutoReversingMigration
 			.WithColumn(nameof(Secret.Name).ToSnakeCase()).AsString(256).NotNullable()
 			.WithColumn(nameof(Secret.Value).ToSnakeCase()).AsString().Nullable()
 			.WithColumn(nameof(Secret.File).ToSnakeCase()).AsBinary().Nullable()
-			.WithColumn(nameof(Secret.CreatedAt).ToSnakeCase()).AsDateTime().NotNullable()
+			.WithColumn(nameof(Secret.CreatedAt).ToSnakeCase()).AsDateTimeOffset().NotNullable()
 			.WithDefaultValue(SystemMethods.CurrentUTCDateTime)
 			.WithColumn(nameof(Secret.GroupId).ToSnakeCase()).AsGuid().NotNullable();
 

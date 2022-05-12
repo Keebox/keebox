@@ -20,23 +20,21 @@ public class PathResolver : IPathResolver
 
 	public PathType Resolve(string path)
 	{
-		var (path2, name) = path.DeconstructPath();
-
-		if (_groupRepository.Queryable.Any(x => x.Path.Equals(path2)))
+		if (_groupRepository.Queryable.Any(x => x.Path.Equals(path)))
 		{
 			return PathType.Group;
 		}
 
-		if (_groupRepository.Queryable.Any(x => path2.StartsWith(x.Path)))
-		{
-			throw new ArgumentException("Part of path is already points to existing group");
-		}
+		var (groupPath, name) = path.DeconstructPath();
 
-		var (path3, name2) = path2.DeconstructPath();
-
-		if (_secretRepository.Queryable.Any(x => x.Name.Equals(name) && x.Group.Path.Equals(path3)))
+		if (_secretRepository.Queryable.Any(x => x.Name.Equals(name) && x.Group.Path.Equals(groupPath)))
 		{
 			return PathType.Secret;
+		}
+
+		if (_groupRepository.Queryable.Any(x => path.StartsWith(x.Path)))
+		{
+			throw new ArgumentException("Part of path is already points to existing group");
 		}
 
 		return PathType.None;
