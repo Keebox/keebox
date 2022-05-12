@@ -1,4 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using DataAccess.Extensions;
+
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 
@@ -12,5 +14,6 @@ public class SecretConfiguration : IEntityTypeConfiguration<Secret>
 		builder.HasKey(x => x.Id);
 		builder.Property(x => x.Id).ValueGeneratedOnAdd();
 		builder.Property(x => x.CreatedAt).ValueGeneratedOnAdd();
+		builder.HasOne(x => x.Group).WithMany(group => group.Secrets).HasForeignKey(x => x.GroupId);
 	}
 }
