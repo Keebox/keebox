@@ -12,4 +12,8 @@ public interface ISecretsService
 	Secret[] GetGroupSecrets(string path);
 
 	Secret GetSecret(string path);
+
+	void DeleteGroup(string path);
+
+	void DeleteSecret(string route);
 }

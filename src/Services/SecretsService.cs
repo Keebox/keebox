@@ -72,4 +72,20 @@ public class SecretsService : ISecretsService
 
 		return _secretRepository.Queryable.Single(x => x.Name.Equals(name) && x.Group.Path.Equals(groupPath));
 	}
+
+	public void DeleteGroup(string path)
+	{
+		var group = _groupRepository.Queryable.Single(x => x.Path.Equals(path));
+
+		_groupRepository.Delete(group);
+	}
+
+	public void DeleteSecret(string path)
+	{
+		var (groupPath, name) = path.DeconstructPath();
+
+		var secret = _secretRepository.Queryable.Single(x => x.Name.Equals(name) && x.Group.Path.Equals(groupPath));
+
+		_secretRepository.Delete(secret);
+	}
 }

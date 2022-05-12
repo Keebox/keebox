@@ -63,5 +63,22 @@ public class SecretsController : ControllerBase
 	}
 
 	[HttpDelete]
-	public void DeleteSecrets([FromRoute] string route) { }
+	public void DeleteSecrets([FromRoute] string route)
+	{
+		var pathType = _pathResolver.Resolve(route);
+
+		switch (pathType)
+		{
+			case PathType.None:
+				throw new ArgumentException("Not found");
+			case PathType.Group:
+				_secretsService.DeleteGroup(route);
+
+				break;
+			case PathType.Secret:
+				_secretsService.DeleteSecret(route);
+
+				break;
+		}
+	}
 }

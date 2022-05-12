@@ -36,6 +36,12 @@ internal class Repository<T> : IRepository<T> where T : Entity
 		_context.SaveChanges();
 	}
 
+	public void Delete(T entity)
+	{
+		Entities.Remove(entity);
+		_context.SaveChanges();
+	}
+
 	public void Delete(Guid id)
 	{
 		var entity = GetById(id);

@@ -13,6 +13,8 @@ public interface IRepository<T> where T : Entity
 
 	void Insert(T entity);
 
+	void Delete(T entity);
+
 	void Delete(Guid id);
 
 	void Update(T entity);

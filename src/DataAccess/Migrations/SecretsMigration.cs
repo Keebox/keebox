@@ -1,4 +1,6 @@
-﻿using DataAccess.Entities;
+﻿using System.Data;
+
+using DataAccess.Entities;
 using DataAccess.Extensions;
 
 using FluentMigrator;
@@ -31,6 +33,6 @@ public sealed class SecretsMigration : AutoReversingMigration
 			.WithColumn(nameof(Secret.GroupId).ToSnakeCase()).AsGuid().NotNullable();
 
 		Create.ForeignKey().FromTable("secret").InSchema("public").ForeignColumn(nameof(Secret.GroupId).ToSnakeCase()).ToTable("group")
-			.InSchema("public").PrimaryColumn(nameof(Group.Id).ToSnakeCase());
+			.InSchema("public").PrimaryColumn(nameof(Group.Id).ToSnakeCase()).OnDelete(Rule.Cascade);
 	}
 }
