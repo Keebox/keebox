@@ -1,5 +1,4 @@
-﻿using DataAccess.Contexts;
-using DataAccess.Entities;
+﻿using DataAccess.Entities;
 using DataAccess.Repository;
 
 using Services.Extensions;

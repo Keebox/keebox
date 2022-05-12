@@ -1,7 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-
-namespace DataAccess.Entities;
+﻿namespace DataAccess.Entities;
 
 public class Group : Entity
 {
